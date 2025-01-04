@@ -1,0 +1,25 @@
+# Source for the following rules: https://raw.githubusercontent.com/github/gitignore/main/Global/Linux.gitignore
+*~
+
+# Source for the following rules: https://raw.githubusercontent.com/github/gitignore/main/Global/macOS.gitignore
+# General
+.DS_Store
+
+# Source for the following rules: https://raw.githubusercontent.com/github/gitignore/main/Global/Windows.gitignore
+# Windows thumbnail cache files
+Thumbs.db
+
+# Folder config file
+[Dd]esktop.ini
+
+# Source for the following rules: https://raw.githubusercontent.com/github/gitignore/main/Python.gitignore
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+db.sqlite3
+.pdm-python
+.venv
+
+.bootstrap-5.3.3-examples
