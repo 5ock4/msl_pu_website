@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags %}
+
+{% block body_class %}template-newspage{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="row">
+                <h6 class="col">{{ page.title }}</h6>
+                <h6 class="col text-end" style="font-weight: normal">{{ page.author }}, {{ page.date }}</h6>
+            </div>
+            <p class="card-text">{{ page.body|richtext }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

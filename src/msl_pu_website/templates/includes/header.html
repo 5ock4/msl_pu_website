@@ -1,3 +1,5 @@
+{% load wagtailcore_tags wagtailuserbar %}
+
 <header class="border-bottom py-3 mb-4">
   <img src="/static/images/msl-web-header.svg" class="img-fluid mx-auto d-block" alt="Moravskoslezská liga v PÚ">
   <ul class="nav nav-pills justify-content-center">
@@ -27,4 +29,6 @@
       <a class="nav-link disabled" aria-disabled="true">Tipování</a>
     </li>
   </ul>
+
+  {% wagtailuserbar "top-right" %}
 </header>
