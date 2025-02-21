@@ -1,11 +1,21 @@
-{% load wagtailcore_tags wagtailuserbar %}
+{% load wagtailcore_tags wagtailuserbar navigation_tags %}
 
 <header class="border-bottom py-3 mb-4">
-  <img src="/static/images/msl-web-header.svg" class="img-fluid mx-auto d-block" alt="Moravskoslezská liga v PÚ">
+  {% get_site_root as site_root %}
+  <a href="{% pageurl site_root %}">
+    <img src="/static/images/msl-web-header.svg" class="img-fluid mx-auto d-block" alt="Moravskoslezská liga v PÚ">
+  </a>
+
   <ul class="nav nav-pills justify-content-center">
-    <li class="nav-item">
-      <a class="nav-link active" aria-current="page" href="#">Aktuality</a>
+    {% for menuitem in site_root.get_children.live.in_menu %}
+    <li class="nav-item bg-hover">
+      <a
+        class="nav-link {% if request.path == menuitem.url %}active{% endif %}"
+        aria-current="page" 
+        href="{% pageurl menuitem %}"
+      >{{ menuitem.title }}</a>
     </li>
+    {% endfor %}
     <li class="nav-item">
       <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">O MS lize</a>
       <ul class="dropdown-menu">
