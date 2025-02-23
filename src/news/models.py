@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.db import models
 
 # Add these:
@@ -12,7 +14,7 @@ class NewsIndexPage(Page): ...
 
 
 class NewsPage(Page):
-    date = models.DateField("Post date")
+    date = models.DateField("Post date", default=date.today, editable=False)
     author = models.CharField(max_length=20)
     body = RichTextField(blank=True)
 
@@ -22,7 +24,6 @@ class NewsPage(Page):
     ]
 
     content_panels = Page.content_panels + [
-        FieldPanel("date"),
         FieldPanel("author"),
         FieldPanel("body"),
     ]

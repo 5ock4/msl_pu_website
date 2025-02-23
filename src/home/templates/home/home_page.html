@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static wagtailcore_tags%}
+{% load static wagtailcore_tags navigation_tags%}
 
 {% block body_class %}template-homepage{% endblock %}
 
@@ -10,17 +10,25 @@
     <div class="col-5">
       {% wagtail_site as current_site %}
       {% with current_site.root_page as root_page %}
-        {% for post in root_page.get_children.first.get_children %} {# TODO: not use first but specific #}
-            <div class="card mb-3">
+        {% for post in root_page.get_children.first.get_children.all|slice:":3" %}
+            <a href="{% pageurl post %}" class="no-underline">
+              <div class="card mb-3 bg-hover fixed-height-card-200">
                 <div class="card-body">
-                    <div class="row">
-                        <h6 class="col"><a href="{% pageurl post %}">{{ post.title }}</a></h6>
-                    </div>
-                    <p class="card-text">{{ post.specific.body|richtext }}</p>
+                  <div class="row">
+                    <h6 class="col">{{ post.title }}</h6>
+                  </div>
+                  <p class="card-text">{{ post.specific.body|richtext }}</p>
                 </div>
-            </div>
+              </div>
+            </a>
         {% endfor %}
       {% endwith %}
+      {% get_news as news %}
+      <a href="{% pageurl news %}" class="no-underline">
+        <div class="card mb-3 bg-hover">
+          <p class="card-text text-center"><span>&#8943;</span></p>
+        </div>
+      </a>
     </div>
     <div class="col-7">
       <div class="row align-items-center">
@@ -45,7 +53,7 @@
           </select>
         </div>
       </div>
-      <table class="table">
+      <table class="table table-sm table-hover">
         <thead>
           <tr>
             <th scope="col">Pořadí</th>

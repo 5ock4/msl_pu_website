@@ -1,5 +1,16 @@
 .bg-hover:hover {
-    background-color: #ededed; /* Change this to your desired hover color */
+    background-image: linear-gradient(to right, #0000ff0a , #c900000a);
     transition: background-color 0.6s ease;
     border-radius: 0.25rem; /* Same as Bootstrap's .nav-link.active */
 }
+
+.no-underline {
+    text-decoration: none;
+}
+
+.fixed-height-card-200 {
+    height: 200px !important;
+    overflow: hidden;
+}
+
+/* https://stackoverflow.com/questions/40807258/how-do-i-stop-bootstraps-table-background-color-setting-for-print-media-over-rid */

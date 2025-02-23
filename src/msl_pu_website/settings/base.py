@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     "home",
     "search",
     "news",
+    "about_msl",
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.embeds",
