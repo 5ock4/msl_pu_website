@@ -1,3 +1,5 @@
+import random
+
 from django import template
 from wagtail.models import Site, Page
 
@@ -15,3 +17,7 @@ def get_news(context):
     root_page: Page = Site.find_for_request(context["request"]).root_page
     news_page: Page = root_page.get_children().filter(title="Aktuality")[0]  # TODO: implement some EN:CZ translation dict
     return news_page
+
+@register.simple_tag
+def random_1_to_300():
+    return random.randint(1, 300)
