@@ -24,61 +24,59 @@
         {% endfor %}
       {% endwith %}
       {% get_news as news %}
-      <a href="{% pageurl news %}" class="no-underline">
-        <div class="card mb-3 bg-hover">
-          <p class="card-text text-center"><span>&#8943;</span></p>
-        </div>
-      </a>
+      {% if news %}
+        <a href="{% pageurl news %}" class="no-underline">
+          <div class="card mb-3 bg-hover">
+            <p class="card-text text-center"><span>&#8943;</span></p>
+          </div>
+        </a>
+      {% endif %}
     </div>
     <div class="col-7">
-      <div class="row align-items-center">
-        <div class="col-auto">
-          <ul class="nav nav-tabs">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Muži</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Ženy</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">35+</a>
-            </li>
-          </ul>
-        </div>
-        <div class="col-auto ms-auto">
-          <select class="form-select" aria-label="Default select example">
-            <option selected value="1">2025</option>
-            <option value="2">2024</option>
-            <option value="3">2023</option>
-          </select>
+      <div class="card mb-3">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-auto">
+              <ul class="nav nav-tabs">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="#">Muži</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Ženy</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">35+</a>
+                </li>
+              </ul>
+            </div>
+            <div class="col-auto ms-auto">
+              <select class="form-select" aria-label="Default select example">
+                <option selected value="1">2025</option>
+                <option value="2">2024</option>
+                <option value="3">2023</option>
+              </select>
+            </div>
+          </div>
+          <table class="table table-sm table-hover">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Tým</th>
+                <th scope="col">Body</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for team in teams %}
+              <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ team.name }}</td>
+                <td>{% random_1_to_300 %}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
       </div>
-      <table class="table table-sm table-hover">
-        <thead>
-          <tr>
-            <th scope="col">Pořadí</th>
-            <th scope="col">Tým</th>
-            <th scope="col">Body</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>Svinov</td>
-            <td>253</td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Oprechtice</td>
-            <td>134</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td>Vrbice</td>
-            <td>87</td>
-          </tr>
-        </tbody>
-      </table>
     </div>
   </div>
 </div>

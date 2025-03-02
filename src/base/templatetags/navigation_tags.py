@@ -1,3 +1,5 @@
+import random
+
 from django import template
 from wagtail.models import Site, Page
 
@@ -13,5 +15,8 @@ def get_site_root(context):
 @register.simple_tag(takes_context=True)
 def get_news(context):
     root_page: Page = Site.find_for_request(context["request"]).root_page
-    news_page: Page = root_page.get_children().filter(title="Aktuality")[0]  # TODO: implement some EN:CZ translation dict
+    try:
+        news_page: Page = root_page.get_children().filter(title="Aktuality")[0]  # TODO: implement some EN:CZ translation dict
+    except IndexError:
+        news_page = None
     return news_page

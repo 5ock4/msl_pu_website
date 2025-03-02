@@ -1,0 +1,182 @@
+[
+    {
+        "model": "about_msl.team",
+        "pk": 1,
+        "fields": {
+            "name": "Prchalov",
+            "district": "NJ",
+            "category": "M"
+        }
+    },
+    {
+        "model": "about_msl.team",
+        "pk": 2,
+        "fields": {
+            "name": "Jistebník",
+            "district": "NJ",
+            "category": "M"
+        }
+    },
+    {
+        "model": "about_msl.team",
+        "pk": 3,
+        "fields": {
+            "name": "Brušperk",
+            "district": "FM",
+            "category": "M"
+        }
+    },
+    {
+        "model": "about_msl.team",
+        "pk": 4,
+        "fields": {
+            "name": "Hukovice",
+            "district": "NJ",
+            "category": "M"
+        }
+    },
+    {
+        "model": "about_msl.team",
+        "pk": 5,
+        "fields": {
+            "name": "Petřvaldík",
+            "district": "NJ",
+            "category": "M"
+        }
+    },
+    {
+        "model": "about_msl.team",
+        "pk": 6,
+        "fields": {
+            "name": "Hájov",
+            "district": "NJ",
+            "category": "M"
+        }
+    },
+    {
+        "model": "about_msl.team",
+        "pk": 7,
+        "fields": {
+            "name": "Větřkovice",
+            "district": "OP",
+            "category": "M"
+        }
+    },
+    {
+        "model": "about_msl.team",
+        "pk": 8,
+        "fields": {
+            "name": "Dolní Lištná",
+            "district": "FM",
+            "category": "M"
+        }
+    },
+    {
+        "model": "about_msl.team",
+        "pk": 9,
+        "fields": {
+            "name": "Lubno",
+            "district": "FM",
+            "category": "M"
+        }
+    },
+    {
+        "model": "about_msl.team",
+        "pk": 10,
+        "fields": {
+            "name": "Trojanovice",
+            "district": "NJ",
+            "category": "M"
+        }
+    },
+    {
+        "model": "about_msl.team",
+        "pk": 11,
+        "fields": {
+            "name": "Markvartovice",
+            "district": "OP",
+            "category": "M"
+        }
+    },
+    {
+        "model": "about_msl.team",
+        "pk": 12,
+        "fields": {
+            "name": "Bystřička",
+            "district": "VS",
+            "category": "M"
+        }
+    },
+    {
+        "model": "about_msl.team",
+        "pk": 13,
+        "fields": {
+            "name": "Vrbice B",
+            "district": "KI",
+            "category": "M"
+        }
+    },
+    {
+        "model": "about_msl.team",
+        "pk": 14,
+        "fields": {
+            "name": "Mošnov",
+            "district": "NJ",
+            "category": "M"
+        }
+    },
+    {
+        "model": "about_msl.team",
+        "pk": 15,
+        "fields": {
+            "name": "Brušperk B",
+            "district": "FM",
+            "category": "M"
+        }
+    },
+    {
+        "model": "about_msl.team",
+        "pk": 16,
+        "fields": {
+            "name": "Oprechtice",
+            "district": "FM",
+            "category": "M"
+        }
+    },
+    {
+        "model": "about_msl.team",
+        "pk": 17,
+        "fields": {
+            "name": "Malenovice",
+            "district": "FM",
+            "category": "M"
+        }
+    },
+    {
+        "model": "about_msl.team",
+        "pk": 18,
+        "fields": {
+            "name": "Proskovice",
+            "district": "NJ",
+            "category": "M"
+        }
+    },
+    {
+        "model": "about_msl.team",
+        "pk": 19,
+        "fields": {
+            "name": "Metylovice",
+            "district": "FM",
+            "category": "M"
+        }
+    },
+    {
+        "model": "about_msl.team",
+        "pk": 20,
+        "fields": {
+            "name": "Košatka",
+            "district": "OV",
+            "category": "M"
+        }
+    }
+]
