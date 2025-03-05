@@ -27,3 +27,7 @@ class NewsPage(Page):
         FieldPanel("author"),
         FieldPanel("body"),
     ]
+
+    class Meta:
+        verbose_name = "Aktualita"
+        verbose_name_plural = "Aktuality"
