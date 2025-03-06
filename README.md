@@ -15,8 +15,8 @@ Wagtail (and Django) utilizes [MVT](https://www.geeksforgeeks.org/django-project
 ## Wagtail apps
 Bellow explained from **FE** point of view:
 #### /msl_pu_website
-Main app (entry point for the website) Contains static files (css, images, js), contains following templates:
-* `base.html` - parent template for all other templates, contains head and body for the whole website
+Main app (entry point for the website) Contains no models, only static files (css, images, js), deployment settings and following templates:
+* `base.html` - parent template for all other templates, contains head and body for the whole website (and stuff that is visible all the time)
 * `header.html` - main image and navigation menu
 * ...
 
