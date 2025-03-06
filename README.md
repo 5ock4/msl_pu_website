@@ -32,7 +32,7 @@ News app ("Aktuality")- contains following templates:
 #### /about_msl
 About MSL app ("O MSL") - currently no templates
 
-#### /base
+#### /util
 Should contain only reusable pieces of code that can be used in any other app - eg. helper functions in `navigation_tags.py`.
 
 #### /search
