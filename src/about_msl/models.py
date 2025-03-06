@@ -1,11 +1,49 @@
-from django.db import models
-from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib import admin
-
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
+from wagtail.fields import RichTextField
+from wagtail.models import Page
 from wagtail.admin.panels import FieldPanel
 
 
-# Create your models here.
+# ---------------------
+# --- Wagtail Pages ---
+# ---------------------
+class AboutMSLPage(Page):
+    class Meta:
+        verbose_name = "O MSL"
+        verbose_name_plural = "O MSL"
+
+class HistoryPage(Page):
+    body = RichTextField(blank=True)
+
+    content_panels = Page.content_panels + [
+        FieldPanel('body'),
+    ]
+
+    class Meta:
+        verbose_name = "Historie"
+        verbose_name_plural = "Historie"
+
+
+class RoundsPage(Page):
+    body = RichTextField(blank=True)
+
+    class Meta:
+        verbose_name = "Ligová kola"
+        verbose_name_plural = "Ligová kola"
+
+
+class PointsAndFinancesPage(Page):
+    body = RichTextField(blank=True)
+
+    class Meta:
+        verbose_name = "Body a fin. ohodnocení"
+        verbose_name_plural = "Body a fin. ohodnocení"
+
+# --------------------------------
+# --- DB models for Admin view ---
+# --------------------------------
 class Team(models.Model):
     class CategoryChoices(models.TextChoices):
         MUZI = 'M', 'Muži'

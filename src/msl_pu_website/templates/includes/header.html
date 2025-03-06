@@ -1,4 +1,4 @@
-{% load wagtailcore_tags wagtailuserbar navigation_tags %}
+{% load wagtailcore_tags wagtailuserbar navigation_tags util_tags%}
 
 <header class="border-bottom py-3 mb-4">
   {% get_site_root as site_root %}
@@ -8,24 +8,28 @@
 
   <ul class="nav nav-pills justify-content-center">
     {% for menuitem in site_root.get_children.live.in_menu %}
-    <li class="nav-item bg-hover">
-      <a
-        class="nav-link {% if request.path == menuitem.url %}active{% endif %}"
-        aria-current="page" 
-        href="{% pageurl menuitem %}"
-      >{{ menuitem.title }}</a>
-    </li>
+    {% is_about_msl_page menuitem.specific as is_about_msl_page %}
+      {% if is_about_msl_page %}
+         <li class="nav-item">
+            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+              {{ menuitem.title }} {# TODO: better to not have this hardcoded here  #}
+            </a>
+            <ul class="dropdown-menu">
+              {% for about_msl_item in menuitem.get_children.live.in_menu %}
+                <li><a class="dropdown-item" href="{% pageurl about_msl_item %}">{{ about_msl_item.title }}</a></li>
+              {% endfor %}
+            </ul>
+          </li>
+      {% else %}
+        <li class="nav-item bg-hover">
+          <a
+            class="nav-link {% if request.path == menuitem.url %}active{% endif %}"
+            aria-current="page" 
+            href="{% pageurl menuitem %}"
+          >{{ menuitem.title }}</a>
+        </li>
+      {% endif %}
     {% endfor %}
-    <li class="nav-item">
-      <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">O MS lize</a>
-      <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="#">Historie</a></li>
-        <li><a class="dropdown-item" href="#">Bodové a finanční ohodnocení</a></li>
-      <li><hr class="dropdown-divider"></li>
-        <li><a class="dropdown-item" href="#">Účastníci</a></li>
-        <li><a class="dropdown-item" href="#">Ligová kola</a></li>
-      </ul>
-    </li>
     <li class="nav-item">
       <a class="nav-link" href="#">Přihláška</a>
     </li>
