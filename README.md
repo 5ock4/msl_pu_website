@@ -53,3 +53,10 @@ Server can be started in debug mode with VS Code "Run and Debug". It starts the 
 * For branches use format: `feature/feature-name` or `fix/bug-name` or `chore/what-was-done`
 * Commit messages should follow [conventional commits standard](https://www.conventionalcommits.org/en/v1.0.0/):
 eg. "feat: add new feature", "fix: fix bug in feature", "chore: update dependencies"
+
+### How to recompile custom-bootstrap.css
+Every change in `custom-bootstrap.scss` must me recompiled into `custom-bootstrap.css` - this is included in `base.html`
+https://getbootstrap.com/docs/5.3/customize/sass/#compiling
+```
+sass src/msl_pu_website/static/scss/custom-bootstrap.scss src/msl_pu_website/static/css/custom-bootstrap.css
+```

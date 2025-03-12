@@ -23,3 +23,5 @@ __pycache__/
 .venv
 
 .bootstrap-5.3.3-examples
+
+/node_modules
