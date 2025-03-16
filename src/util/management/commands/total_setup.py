@@ -1,15 +1,6 @@
-import json
-import shutil
-from pathlib import Path
-from typing import List
-
 from django.conf import settings
-# from django.contrib.sites.models import Site
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
-
-from wagtail.models import Site
-from wagtail.models import Page
 
 
 class Command(BaseCommand):
