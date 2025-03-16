@@ -12,6 +12,41 @@
             ],
             "django": true,
             "justMyCode": true
+        },
+        // Custom Django commands found in src/util/management/commands
+        // Inspired by: https://github.com/cod1sta/snippets/tree/master/blog
+        {
+            "name": "CMD: total_reset",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/manage.py",
+            "args": [
+                "total_reset"
+            ],
+            "django": true,
+            "justMyCode": true  
+        },
+        {
+            "name": "CMD: total_setup",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/manage.py",
+            "args": [
+                "total_setup"
+            ],
+            "django": true,
+            "justMyCode": true
+        },
+        {
+            "name": "CMD: setup_page_tree",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/manage.py",
+            "args": [
+                "setup_page_tree",
+            ],
+            "django": true,
+            "justMyCode": true
         }
     ]
 }
