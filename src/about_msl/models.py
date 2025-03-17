@@ -10,6 +10,8 @@ from wagtail.admin.panels import FieldPanel
 # --- Wagtail Pages ---
 # ---------------------
 class AboutMSLPage(Page):
+    body = RichTextField(blank=True)
+
     class Meta:
         verbose_name = "O MSL"
         verbose_name_plural = "O MSL"
