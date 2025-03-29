@@ -1,6 +1,8 @@
 from django import template
 from wagtail.models import Site, Page
 
+from about_msl.models import SeasonParameters
+
 
 register = template.Library()
 
@@ -18,3 +20,7 @@ def get_news(context):
     except IndexError:
         news_page = None
     return news_page
+
+@register.simple_tag
+def get_season_years():
+    return SeasonParameters.objects.values_list('season_year', flat=True).distinct().order_by('-season_year')

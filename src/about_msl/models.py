@@ -27,7 +27,6 @@ class HistoryPage(Page):
 
 
 class RoundsPage(Page):
-    # body = RichTextField(blank=True)
 
     class Meta:
         verbose_name = "Ligová kola"
@@ -35,7 +34,20 @@ class RoundsPage(Page):
 
 
 class PointsAndFinancesPage(Page):
-    # body = RichTextField(blank=True)
+    def get_context(self, request):
+        context = super().get_context(request)
+
+        # Get the selected year from the request, default to current year if not specified
+        selected_year = request.GET.get('season_year')
+
+        # Filter season_parameters based on the selected year
+        season_parameters = SeasonParameters.objects.filter(season_year=selected_year).order_by('-points')
+        
+        context.update({
+            'season_parameters': season_parameters,
+            'selected_year': selected_year,
+        })
+        return context
 
     class Meta:
         verbose_name = "Body a fin. ohodnocení"
