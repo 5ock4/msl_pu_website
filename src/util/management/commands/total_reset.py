@@ -41,3 +41,8 @@ class Command(BaseCommand):
         # this is a wagtail specific management command to setup some initial Wagtail pages
         # only needed if you are using Wagtail
         call_command("setup_page_tree", verbosity=verbosity)
+        # load fixtures
+        call_command("loaddata", "teams.json", verbosity=verbosity)
+        call_command("loaddata", "seasonteams.json", verbosity=verbosity)
+        call_command("loaddata", "seasonparameters.json", verbosity=verbosity)
+        call_command("loaddata", "seasonrounds.json", verbosity=verbosity)

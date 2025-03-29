@@ -1,0 +1,146 @@
+[
+    {
+        "model": "about_msl.seasonrounds",
+        "pk": 1,
+        "fields": {
+            "season_year": 2024,
+            "round": "Brušperk [FM]",
+            "datetime": "2024-06-08T12:00:00Z",
+            "date_registration": "2024-05-26",
+            "categories": "Muži, Ženy, 35+",
+            "results_ready": true
+        }
+    },
+    {
+        "model": "about_msl.seasonrounds",
+        "pk": 2,
+        "fields": {
+            "season_year": 2024,
+            "round": "Oprechtice [FM]",
+            "datetime": "2024-06-15T13:00:00Z",
+            "date_registration": "2024-06-02",
+            "categories": "Muži, Ženy, 35+",
+            "results_ready": true
+        }
+    },
+    {
+        "model": "about_msl.seasonrounds",
+        "pk": 3,
+        "fields": {
+            "season_year": 2024,
+            "round": "Svinov [OV]",
+            "datetime": "2024-06-29T13:00:00Z",
+            "date_registration": "2024-06-16",
+            "categories": "Muži, Ženy, 35+",
+            "results_ready": true
+        }
+    },
+    {
+        "model": "about_msl.seasonrounds",
+        "pk": 4,
+        "fields": {
+            "season_year": 2024,
+            "round": "Metylovice [FM]",
+            "datetime": "2024-07-06T13:00:00Z",
+            "date_registration": "2024-06-23",
+            "categories": "Muži, Ženy, 35+",
+            "results_ready": true
+        }
+    },
+    {
+        "model": "about_msl.seasonrounds",
+        "pk": 5,
+        "fields": {
+            "season_year": 2024,
+            "round": "Košatka [OV]",
+            "datetime": "2024-07-13T13:00:00Z",
+            "date_registration": "2024-06-30",
+            "categories": "Muži, Ženy",
+            "results_ready": true
+        }
+    },
+    {
+        "model": "about_msl.seasonrounds",
+        "pk": 6,
+        "fields": {
+            "season_year": 2024,
+            "round": "Proskovice [OV]",
+            "datetime": "2024-07-27T11:00:00Z",
+            "date_registration": "2024-07-14",
+            "categories": "Muži, Ženy",
+            "results_ready": true
+        }
+    },
+    {
+        "model": "about_msl.seasonrounds",
+        "pk": 7,
+        "fields": {
+            "season_year": 2024,
+            "round": "Vrbice [KI]",
+            "datetime": "2024-08-03T13:00:00Z",
+            "date_registration": "2024-07-21",
+            "categories": "Muži, Ženy, 35+",
+            "results_ready": true
+        }
+    },
+    {
+        "model": "about_msl.seasonrounds",
+        "pk": 8,
+        "fields": {
+            "season_year": 2024,
+            "round": "Větřkovice [OP]",
+            "datetime": "2024-08-04T11:00:00Z",
+            "date_registration": "2024-07-22",
+            "categories": "Muži, Ženy",
+            "results_ready": true
+        }
+    },
+    {
+        "model": "about_msl.seasonrounds",
+        "pk": 9,
+        "fields": {
+            "season_year": 2024,
+            "round": "Petřvaldík [NJ]",
+            "datetime": "2024-08-10T13:00:00Z",
+            "date_registration": "2024-07-28",
+            "categories": "Muži, Ženy, 35+",
+            "results_ready": true
+        }
+    },
+    {
+        "model": "about_msl.seasonrounds",
+        "pk": 10,
+        "fields": {
+            "season_year": 2024,
+            "round": "Mošnov [NJ]",
+            "datetime": "2024-08-24T12:00:00Z",
+            "date_registration": "2024-08-11",
+            "categories": "Muži, Ženy, 35+",
+            "results_ready": true
+        }
+    },
+    {
+        "model": "about_msl.seasonrounds",
+        "pk": 11,
+        "fields": {
+            "season_year": 2024,
+            "round": "Bartovice [OV]",
+            "datetime": "2024-09-07T12:00:00Z",
+            "date_registration": "2024-08-25",
+            "categories": "Muži, Ženy, 35+",
+            "results_ready": true
+        }
+    },
+    {
+        "model": "about_msl.seasonrounds",
+        "pk": 12,
+        "fields": {
+            "season_year": 2024,
+            "round": "Jistebník [NJ]",
+            "datetime": "2024-09-21T11:00:00Z",
+            "date_registration": "2024-09-01",
+            "categories": "Muži, Ženy",
+            "results_ready": true
+        }
+    }
+]

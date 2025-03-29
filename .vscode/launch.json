@@ -13,10 +13,32 @@
             "django": true,
             "justMyCode": true
         },
+        {
+            "name": "makemigrations",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/manage.py",
+            "args": [
+                "makemigrations"
+            ],
+            "django": true,
+            "justMyCode": true
+        },
+        {
+            "name": "migrate",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/manage.py",
+            "args": [
+                "migrate"
+            ],
+            "django": true,
+            "justMyCode": true
+        },
         // Custom Django commands found in src/util/management/commands
         // Inspired by: https://github.com/cod1sta/snippets/tree/master/blog
         {
-            "name": "CMD: total_reset",
+            "name": "total_reset",
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/src/manage.py",
@@ -27,7 +49,7 @@
             "justMyCode": true  
         },
         {
-            "name": "CMD: total_setup",
+            "name": "total_setup",
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/src/manage.py",
@@ -38,7 +60,7 @@
             "justMyCode": true
         },
         {
-            "name": "CMD: setup_page_tree",
+            "name": "setup_page_tree",
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/src/manage.py",
@@ -47,6 +69,6 @@
             ],
             "django": true,
             "justMyCode": true
-        }
+        },
     ]
 }
