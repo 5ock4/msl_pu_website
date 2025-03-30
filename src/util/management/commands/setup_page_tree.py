@@ -8,9 +8,10 @@ from django.core.management.base import BaseCommand
 from wagtail.models import Page, Site
 from wagtail.images.models import Image
 
-from about_msl.models import AboutMSLPage, HistoryPage, PointsAndFinancesPage, RoundsPage
+from msl_about.models import AboutMSLPage, HistoryPage, PointsAndFinancesPage, RoundsPage
 import home
 from home.models import HomePage
+from msl_enroll.models import EnrollPage
 from news.models import NewsIndexPage, NewsPage
 
 
@@ -29,7 +30,8 @@ class Command(BaseCommand):
     def _setup(self):
         self._setup_root_page()
         self._setup_news_pages()
-        self._setup_about_msl()
+        self._setup_msl_about()
+        self._setup_enroll_page()
 
     def _setup_root_page(self):
         self.stdout.write("Setting up root page...")
@@ -86,32 +88,43 @@ class Command(BaseCommand):
                 )
             )
 
-    def _setup_about_msl(self):
-        self.stdout.write("Setting up 'about_msl'...")
+    def _setup_msl_about(self):
+        self.stdout.write("Setting up 'msl_about'...")
         home_page = HomePage.objects.first()
-        about_msl = AboutMSLPage(
+        msl_about = AboutMSLPage(
             title="O MS lize",
             show_in_menus=True
         )
-        home_page.add_child(instance=about_msl)
-        about_msl.add_child(
+        home_page.add_child(instance=msl_about)
+        msl_about.add_child(
             instance=HistoryPage(
                 title="Historie",
                 show_in_menus=True
             )
         )
-        about_msl.add_child(
+        msl_about.add_child(
             instance=RoundsPage(
                 title="Ligová kola",
                 show_in_menus=True
             )
         )
-        about_msl.add_child(
+        msl_about.add_child(
             instance=PointsAndFinancesPage(
                 title="Body a fin. ohodnocení",
                 show_in_menus=True
             )
         )
+
+    def _setup_enroll_page(self):
+        """Creates the language specific home pages."""
+        self.stdout.write("Setting up 'news'...")
+        home_page = HomePage.objects.first()
+        news_index_page = EnrollPage(
+            title="Přihláška",
+            slug="prihlaska-do-ms-ligy",
+            show_in_menus=True
+        )
+        home_page.add_child(instance=news_index_page)
 
     def handle(self, raise_error=False, *args, **options):
         # Root Page and a default homepage are created by wagtail migrations so check

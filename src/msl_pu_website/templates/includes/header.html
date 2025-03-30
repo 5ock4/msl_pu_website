@@ -8,15 +8,15 @@
 
   <ul class="nav nav-pills justify-content-center">
     {% for menuitem in site_root.get_children.live.in_menu %}
-    {% is_about_msl_page menuitem.specific as is_about_msl_page %}
-      {% if is_about_msl_page %}
+    {% is_msl_about_page menuitem.specific as is_msl_about_page %}
+      {% if is_msl_about_page %}
          <li class="nav-item">
-            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+            <a class="nav-link dropdown-toggle {% if menuitem.url in request.path %}active{% endif %}" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
               {{ menuitem.title }} {# TODO: better to not have this hardcoded here  #}
             </a>
             <ul class="dropdown-menu">
-              {% for about_msl_item in menuitem.get_children.live.in_menu %}
-                <li><a class="dropdown-item" href="{% pageurl about_msl_item %}">{{ about_msl_item.title }}</a></li>
+              {% for msl_about_item in menuitem.get_children.live.in_menu %}
+                <li><a class="dropdown-item" href="{% pageurl msl_about_item %}">{{ msl_about_item.title }}</a></li>
               {% endfor %}
             </ul>
           </li>
@@ -30,9 +30,6 @@
         </li>
       {% endif %}
     {% endfor %}
-    <li class="nav-item">
-      <a class="nav-link" href="#">Přihláška</a>
-    </li>
     <li class="nav-item">
       <a class="nav-link" href="#">Dokumenty</a>
     </li>

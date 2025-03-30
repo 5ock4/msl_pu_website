@@ -1,6 +1,6 @@
 [
     {
-        "model": "about_msl.seasonrounds",
+        "model": "msl_about.seasonrounds",
         "pk": 1,
         "fields": {
             "season_year": 2024,
@@ -12,7 +12,7 @@
         }
     },
     {
-        "model": "about_msl.seasonrounds",
+        "model": "msl_about.seasonrounds",
         "pk": 2,
         "fields": {
             "season_year": 2024,
@@ -24,7 +24,7 @@
         }
     },
     {
-        "model": "about_msl.seasonrounds",
+        "model": "msl_about.seasonrounds",
         "pk": 3,
         "fields": {
             "season_year": 2024,
@@ -36,7 +36,7 @@
         }
     },
     {
-        "model": "about_msl.seasonrounds",
+        "model": "msl_about.seasonrounds",
         "pk": 4,
         "fields": {
             "season_year": 2024,
@@ -48,7 +48,7 @@
         }
     },
     {
-        "model": "about_msl.seasonrounds",
+        "model": "msl_about.seasonrounds",
         "pk": 5,
         "fields": {
             "season_year": 2024,
@@ -60,7 +60,7 @@
         }
     },
     {
-        "model": "about_msl.seasonrounds",
+        "model": "msl_about.seasonrounds",
         "pk": 6,
         "fields": {
             "season_year": 2024,
@@ -72,7 +72,7 @@
         }
     },
     {
-        "model": "about_msl.seasonrounds",
+        "model": "msl_about.seasonrounds",
         "pk": 7,
         "fields": {
             "season_year": 2024,
@@ -84,7 +84,7 @@
         }
     },
     {
-        "model": "about_msl.seasonrounds",
+        "model": "msl_about.seasonrounds",
         "pk": 8,
         "fields": {
             "season_year": 2024,
@@ -96,7 +96,7 @@
         }
     },
     {
-        "model": "about_msl.seasonrounds",
+        "model": "msl_about.seasonrounds",
         "pk": 9,
         "fields": {
             "season_year": 2024,
@@ -108,7 +108,7 @@
         }
     },
     {
-        "model": "about_msl.seasonrounds",
+        "model": "msl_about.seasonrounds",
         "pk": 10,
         "fields": {
             "season_year": 2024,
@@ -120,7 +120,7 @@
         }
     },
     {
-        "model": "about_msl.seasonrounds",
+        "model": "msl_about.seasonrounds",
         "pk": 11,
         "fields": {
             "season_year": 2024,
@@ -132,7 +132,7 @@
         }
     },
     {
-        "model": "about_msl.seasonrounds",
+        "model": "msl_about.seasonrounds",
         "pk": 12,
         "fields": {
             "season_year": 2024,

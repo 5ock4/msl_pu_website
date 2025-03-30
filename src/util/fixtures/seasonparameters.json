@@ -1,6 +1,6 @@
 [
     {
-        "model": "about_msl.seasonparameters",
+        "model": "msl_about.seasonparameters",
         "pk": 1,
         "fields": {
             "season_year": 2024,
@@ -10,7 +10,7 @@
         }
     },
     {
-        "model": "about_msl.seasonparameters",
+        "model": "msl_about.seasonparameters",
         "pk": 2,
         "fields": {
             "season_year": 2024,
@@ -20,7 +20,7 @@
         }
     },
     {
-        "model": "about_msl.seasonparameters",
+        "model": "msl_about.seasonparameters",
         "pk": 3,
         "fields": {
             "season_year": 2024,
@@ -30,7 +30,7 @@
         }
     },
     {
-        "model": "about_msl.seasonparameters",
+        "model": "msl_about.seasonparameters",
         "pk": 4,
         "fields": {
             "season_year": 2024,
@@ -40,7 +40,7 @@
         }
     },
     {
-        "model": "about_msl.seasonparameters",
+        "model": "msl_about.seasonparameters",
         "pk": 5,
         "fields": {
             "season_year": 2024,
@@ -50,7 +50,7 @@
         }
     },
     {
-        "model": "about_msl.seasonparameters",
+        "model": "msl_about.seasonparameters",
         "pk": 6,
         "fields": {
             "season_year": 2024,
@@ -60,7 +60,7 @@
         }
     },
     {
-        "model": "about_msl.seasonparameters",
+        "model": "msl_about.seasonparameters",
         "pk": 7,
         "fields": {
             "season_year": 2024,
@@ -70,7 +70,7 @@
         }
     },
     {
-        "model": "about_msl.seasonparameters",
+        "model": "msl_about.seasonparameters",
         "pk": 8,
         "fields": {
             "season_year": 2024,
@@ -80,7 +80,7 @@
         }
     },
     {
-        "model": "about_msl.seasonparameters",
+        "model": "msl_about.seasonparameters",
         "pk": 9,
         "fields": {
             "season_year": 2024,
@@ -90,7 +90,7 @@
         }
     },
     {
-        "model": "about_msl.seasonparameters",
+        "model": "msl_about.seasonparameters",
         "pk": 10,
         "fields": {
             "season_year": 2024,
@@ -100,7 +100,7 @@
         }
     },
     {
-        "model": "about_msl.seasonparameters",
+        "model": "msl_about.seasonparameters",
         "pk": 11,
         "fields": {
             "season_year": 2024,
@@ -110,7 +110,7 @@
         }
     },
     {
-        "model": "about_msl.seasonparameters",
+        "model": "msl_about.seasonparameters",
         "pk": 12,
         "fields": {
             "season_year": 2024,
@@ -120,7 +120,7 @@
         }
     },
     {
-        "model": "about_msl.seasonparameters",
+        "model": "msl_about.seasonparameters",
         "pk": 13,
         "fields": {
             "season_year": 2024,
@@ -130,7 +130,7 @@
         }
     },
     {
-        "model": "about_msl.seasonparameters",
+        "model": "msl_about.seasonparameters",
         "pk": 14,
         "fields": {
             "season_year": 2024,
@@ -140,7 +140,7 @@
         }
     },
     {
-        "model": "about_msl.seasonparameters",
+        "model": "msl_about.seasonparameters",
         "pk": 15,
         "fields": {
             "season_year": 2024,
@@ -150,7 +150,7 @@
         }
     },
     {
-        "model": "about_msl.seasonparameters",
+        "model": "msl_about.seasonparameters",
         "pk": 16,
         "fields": {
             "season_year": 2024,
@@ -160,7 +160,7 @@
         }
     },
     {
-        "model": "about_msl.seasonparameters",
+        "model": "msl_about.seasonparameters",
         "pk": 17,
         "fields": {
             "season_year": 2024,
@@ -170,7 +170,7 @@
         }
     },
     {
-        "model": "about_msl.seasonparameters",
+        "model": "msl_about.seasonparameters",
         "pk": 18,
         "fields": {
             "season_year": 2024,
@@ -180,7 +180,7 @@
         }
     },
     {
-        "model": "about_msl.seasonparameters",
+        "model": "msl_about.seasonparameters",
         "pk": 19,
         "fields": {
             "season_year": 2024,

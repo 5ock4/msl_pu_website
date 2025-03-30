@@ -1,6 +1,6 @@
 [
     {
-        "model": "about_msl.seasonteams",
+        "model": "msl_about.seasonteams",
         "pk": 1,
         "fields": {
             "team": ["Prchalov", "NJ", "M"],
@@ -8,7 +8,7 @@
         }
     },
     {
-        "model": "about_msl.seasonteams",
+        "model": "msl_about.seasonteams",
         "pk": 2,
         "fields": {
             "team": ["Jistebník", "NJ", "M"],
@@ -16,7 +16,7 @@
         }
     },
     {
-        "model": "about_msl.seasonteams",
+        "model": "msl_about.seasonteams",
         "pk": 3,
         "fields": {
             "team": ["Brušperk", "FM", "M"],
@@ -24,7 +24,7 @@
         }
     },
     {
-        "model": "about_msl.seasonteams",
+        "model": "msl_about.seasonteams",
         "pk": 4,
         "fields": {
             "team": ["Hukovice", "NJ", "M"],
@@ -32,7 +32,7 @@
         }
     },
     {
-        "model": "about_msl.seasonteams",
+        "model": "msl_about.seasonteams",
         "pk": 5,
         "fields": {
             "team": ["Petřvaldík", "NJ", "M"],
@@ -40,7 +40,7 @@
         }
     },
     {
-        "model": "about_msl.seasonteams",
+        "model": "msl_about.seasonteams",
         "pk": 6,
         "fields": {
             "team": ["Hájov", "NJ", "M"],
@@ -48,7 +48,7 @@
         }
     },
     {
-        "model": "about_msl.seasonteams",
+        "model": "msl_about.seasonteams",
         "pk": 7,
         "fields": {
             "team": ["Větřkovice", "OP", "M"],
@@ -56,7 +56,7 @@
         }
     },
     {
-        "model": "about_msl.seasonteams",
+        "model": "msl_about.seasonteams",
         "pk": 8,
         "fields": {
             "team": ["Dolní Lištná", "FM", "M"],
@@ -64,7 +64,7 @@
         }
     },
     {
-        "model": "about_msl.seasonteams",
+        "model": "msl_about.seasonteams",
         "pk": 9,
         "fields": {
             "team": ["Lubno", "FM", "M"],
@@ -72,7 +72,7 @@
         }
     },
     {
-        "model": "about_msl.seasonteams",
+        "model": "msl_about.seasonteams",
         "pk": 10,
         "fields": {
             "team": ["Trojanovice", "NJ", "M"],

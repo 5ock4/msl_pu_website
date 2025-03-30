@@ -29,7 +29,7 @@ News app ("Aktuality")- contains following templates:
 * `news_index_page.html` - list of news
 * `news_page.html` - single news page
 
-#### /about_msl
+#### /msl_about
 About MSL app ("O MSL") - currently no templates
 
 #### /util

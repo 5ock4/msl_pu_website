@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags %}
+
+{% block body_class %}template-mslenroll{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="row">
+                <h6 class="col">{{ page.title }}</h6>
+            </div>
+            <div class="row">
+                <form action="." method="post">
+                    {% csrf_token %}
+                    {{ form }}
+                    <input type="submit" value="Přihásit se do MSL">
+                </form>
+            </div>
+            <div class="row">
+                {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

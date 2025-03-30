@@ -1,7 +1,7 @@
 import random
 from django import template
 
-from about_msl.models import AboutMSLPage
+from msl_about.models import AboutMSLPage
 
 
 register = template.Library()
@@ -12,5 +12,5 @@ def random_1_to_300():
     return random.randint(1, 300)
 
 @register.simple_tag()
-def is_about_msl_page(object):
+def is_msl_about_page(object):
     return isinstance(object, AboutMSLPage)

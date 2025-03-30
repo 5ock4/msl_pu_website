@@ -4,7 +4,13 @@ from django.db import models
 from wagtail.fields import RichTextField
 from wagtail.models import Page
 from wagtail.admin.panels import FieldPanel
+from django.db.models import Max
 
+
+class CategoryChoices(models.TextChoices):
+        MUZI = 'M', 'Muži'
+        ZENY = 'Ž', 'Ženy'
+        VETERANI = '35+', '35+'
 
 # ---------------------
 # --- Wagtail Pages ---
@@ -38,7 +44,8 @@ class PointsAndFinancesPage(Page):
         context = super().get_context(request)
 
         # Get the selected year from the request, default to current year if not specified
-        selected_year = request.GET.get('season_year')
+        selected_year = request.GET.get('season_year') or \
+            SeasonParameters.objects.aggregate(Max('season_year'))['season_year__max']
 
         # Filter season_parameters based on the selected year
         season_parameters = SeasonParameters.objects.filter(season_year=selected_year).order_by('-points')
@@ -62,11 +69,6 @@ class TeamManager(models.Manager):
 
 
 class Team(models.Model):
-    class CategoryChoices(models.TextChoices):
-        MUZI = 'M', 'Muži'
-        ZENY = 'Ž', 'Ženy'
-        VETERANI = '35+', '35+'
-
     name = models.CharField('Název týmu', max_length=50, blank=False)
     district = models.CharField('Okres', max_length=2, blank=False, default='XX')
     category = models.CharField(

@@ -1,6 +1,6 @@
 from wagtail.models import Page
 
-from about_msl.models import Team
+from msl_about.models import Team
 
 
 class HomePage(Page):
