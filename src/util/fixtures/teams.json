@@ -1,6 +1,6 @@
 [
     {
-        "model": "about_msl.team",
+        "model": "msl_about.team",
         "pk": 1,
         "fields": {
             "name": "Prchalov",
@@ -9,7 +9,7 @@
         }
     },
     {
-        "model": "about_msl.team",
+        "model": "msl_about.team",
         "pk": 2,
         "fields": {
             "name": "Jistebník",
@@ -18,7 +18,7 @@
         }
     },
     {
-        "model": "about_msl.team",
+        "model": "msl_about.team",
         "pk": 3,
         "fields": {
             "name": "Brušperk",
@@ -27,7 +27,7 @@
         }
     },
     {
-        "model": "about_msl.team",
+        "model": "msl_about.team",
         "pk": 4,
         "fields": {
             "name": "Hukovice",
@@ -36,7 +36,7 @@
         }
     },
     {
-        "model": "about_msl.team",
+        "model": "msl_about.team",
         "pk": 5,
         "fields": {
             "name": "Petřvaldík",
@@ -45,7 +45,7 @@
         }
     },
     {
-        "model": "about_msl.team",
+        "model": "msl_about.team",
         "pk": 6,
         "fields": {
             "name": "Hájov",
@@ -54,7 +54,7 @@
         }
     },
     {
-        "model": "about_msl.team",
+        "model": "msl_about.team",
         "pk": 7,
         "fields": {
             "name": "Větřkovice",
@@ -63,7 +63,7 @@
         }
     },
     {
-        "model": "about_msl.team",
+        "model": "msl_about.team",
         "pk": 8,
         "fields": {
             "name": "Dolní Lištná",
@@ -72,7 +72,7 @@
         }
     },
     {
-        "model": "about_msl.team",
+        "model": "msl_about.team",
         "pk": 9,
         "fields": {
             "name": "Lubno",
@@ -81,7 +81,7 @@
         }
     },
     {
-        "model": "about_msl.team",
+        "model": "msl_about.team",
         "pk": 10,
         "fields": {
             "name": "Trojanovice",
@@ -90,7 +90,7 @@
         }
     },
     {
-        "model": "about_msl.team",
+        "model": "msl_about.team",
         "pk": 11,
         "fields": {
             "name": "Markvartovice",
@@ -99,7 +99,7 @@
         }
     },
     {
-        "model": "about_msl.team",
+        "model": "msl_about.team",
         "pk": 12,
         "fields": {
             "name": "Bystřička",
@@ -108,7 +108,7 @@
         }
     },
     {
-        "model": "about_msl.team",
+        "model": "msl_about.team",
         "pk": 13,
         "fields": {
             "name": "Vrbice B",
@@ -117,7 +117,7 @@
         }
     },
     {
-        "model": "about_msl.team",
+        "model": "msl_about.team",
         "pk": 14,
         "fields": {
             "name": "Mošnov",
@@ -126,7 +126,7 @@
         }
     },
     {
-        "model": "about_msl.team",
+        "model": "msl_about.team",
         "pk": 15,
         "fields": {
             "name": "Brušperk B",
@@ -135,7 +135,7 @@
         }
     },
     {
-        "model": "about_msl.team",
+        "model": "msl_about.team",
         "pk": 16,
         "fields": {
             "name": "Oprechtice",
@@ -144,7 +144,7 @@
         }
     },
     {
-        "model": "about_msl.team",
+        "model": "msl_about.team",
         "pk": 17,
         "fields": {
             "name": "Malenovice",
@@ -153,7 +153,7 @@
         }
     },
     {
-        "model": "about_msl.team",
+        "model": "msl_about.team",
         "pk": 18,
         "fields": {
             "name": "Proskovice",
@@ -162,7 +162,7 @@
         }
     },
     {
-        "model": "about_msl.team",
+        "model": "msl_about.team",
         "pk": 19,
         "fields": {
             "name": "Metylovice",
@@ -171,7 +171,7 @@
         }
     },
     {
-        "model": "about_msl.team",
+        "model": "msl_about.team",
         "pk": 20,
         "fields": {
             "name": "Košatka",

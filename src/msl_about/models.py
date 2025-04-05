@@ -4,7 +4,13 @@ from django.db import models
 from wagtail.fields import RichTextField
 from wagtail.models import Page
 from wagtail.admin.panels import FieldPanel
+from django.db.models import Max
 
+
+class CategoryChoices(models.TextChoices):
+        MUZI = 'M', 'Muži'
+        ZENY = 'Ž', 'Ženy'
+        VETERANI = '35+', '35+'
 
 # ---------------------
 # --- Wagtail Pages ---
@@ -27,7 +33,6 @@ class HistoryPage(Page):
 
 
 class RoundsPage(Page):
-    body = RichTextField(blank=True)
 
     class Meta:
         verbose_name = "Ligová kola"
@@ -35,7 +40,21 @@ class RoundsPage(Page):
 
 
 class PointsAndFinancesPage(Page):
-    body = RichTextField(blank=True)
+    def get_context(self, request):
+        context = super().get_context(request)
+
+        # Get the selected year from the request, default to current year if not specified
+        selected_year = request.GET.get('season_year') or \
+            SeasonParameters.objects.aggregate(Max('season_year'))['season_year__max']
+
+        # Filter season_parameters based on the selected year
+        season_parameters = SeasonParameters.objects.filter(season_year=selected_year).order_by('-points')
+        
+        context.update({
+            'season_parameters': season_parameters,
+            'selected_year': selected_year,
+        })
+        return context
 
     class Meta:
         verbose_name = "Body a fin. ohodnocení"
@@ -44,12 +63,12 @@ class PointsAndFinancesPage(Page):
 # --------------------------------
 # --- DB models for Admin view ---
 # --------------------------------
-class Team(models.Model):
-    class CategoryChoices(models.TextChoices):
-        MUZI = 'M', 'Muži'
-        ZENY = 'Ž', 'Ženy'
-        VETERANI = '35+', '35+'
+class TeamManager(models.Manager):
+    def get_by_natural_key(self, name, district, category):
+        return self.get(name=name, district=district, category=category)
 
+
+class Team(models.Model):
     name = models.CharField('Název týmu', max_length=50, blank=False)
     district = models.CharField('Okres', max_length=2, blank=False, default='XX')
     category = models.CharField(
@@ -59,6 +78,8 @@ class Team(models.Model):
         choices=CategoryChoices.choices,
         default=CategoryChoices.MUZI
     )
+
+    objects = TeamManager()
 
     class Meta:
         verbose_name = "Tým"
@@ -73,7 +94,7 @@ class Team(models.Model):
 
 class SeasonTeams(models.Model):
     
-    season = models.IntegerField(
+    season_year = models.IntegerField(
         'Sezóna (rok)',
         blank=False,
         validators=[MinValueValidator(2000), MaxValueValidator(2100)],
@@ -84,12 +105,11 @@ class SeasonTeams(models.Model):
         verbose_name = "Tým v sezóně"
         verbose_name_plural = "Týmy v sezónách"
         constraints = [
-            models.UniqueConstraint(fields=['season', 'team'], name='unique_season_teams')
+            models.UniqueConstraint(fields=['season_year', 'team'], name='unique_season_teams')
         ]
 
     def __str__(self):
-        return f'Sezóna: {self.season}, {self.team}'
-    
+        return f'Sezóna: {self.season_year}, {self.team}'
     @property
     @admin.display(description='Kategorie')
     def team_category(self):
@@ -98,18 +118,16 @@ class SeasonTeams(models.Model):
 
 
 class SeasonParameters(models.Model):
-    season = models.IntegerField(
+    season_year = models.IntegerField(
         'Sezóna (rok)',
         blank=False,
         validators=[MinValueValidator(2000), MaxValueValidator(2100)],
     )
-    ranking = models.IntegerField(
-        'Umístění',
-        blank=False,
-        validators=[
-            MinValueValidator(1, 'Umístění musí být alespoň 1'),
-            MaxValueValidator(50, 'Umístění nemůže být větší než 50')
-        ])
+    ranking_def = models.CharField(
+        'Definice umístění',
+        unique=True,
+        max_length=2,
+    )
     points = models.IntegerField('Bodové ohodnocení', blank=False)
     finance = models.IntegerField('Finanční ohodnocení', blank=False)
 
@@ -117,15 +135,15 @@ class SeasonParameters(models.Model):
         verbose_name = "Parametry sezóny"
         verbose_name_plural = "Parametry sezón"
         constraints = [
-            models.UniqueConstraint(fields=['season', 'ranking'], name='unique_season_parameters')
+            models.UniqueConstraint(fields=['season_year', 'ranking_def'], name='unique_season_parameters')
         ]
 
     def __str__(self):
-        return f'Sezóna: {self.season}, Umístění: {self.ranking}.'
+        return f'Sezóna: {self.season_year}, Umístění: {self.ranking_def}.'
 
 
 class SeasonRounds(models.Model):
-    season = models.IntegerField(
+    season_year = models.IntegerField(
         'Sezóna (rok)',
         blank=False,
         validators=[MinValueValidator(2000), MaxValueValidator(2100)],
@@ -145,8 +163,8 @@ class SeasonRounds(models.Model):
         verbose_name = "Ligová kola"
         verbose_name_plural = "Ligová kola"
         constraints = [
-            models.UniqueConstraint(fields=['season', 'round'], name='unique_season_rounds')
+            models.UniqueConstraint(fields=['season_year', 'round'], name='unique_season_rounds')
         ]
 
     def __str__(self):
-        return f'Sezóna: {self.season}, Kolo: {self.round}'
+        return f'Sezóna: {self.season_year}, Kolo: {self.round}'

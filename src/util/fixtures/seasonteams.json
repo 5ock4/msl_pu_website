@@ -1,0 +1,82 @@
+[
+    {
+        "model": "msl_about.seasonteams",
+        "pk": 1,
+        "fields": {
+            "team": ["Prchalov", "NJ", "M"],
+            "season_year": 2024
+        }
+    },
+    {
+        "model": "msl_about.seasonteams",
+        "pk": 2,
+        "fields": {
+            "team": ["Jistebník", "NJ", "M"],
+            "season_year": 2024
+        }
+    },
+    {
+        "model": "msl_about.seasonteams",
+        "pk": 3,
+        "fields": {
+            "team": ["Brušperk", "FM", "M"],
+            "season_year": 2024
+        }
+    },
+    {
+        "model": "msl_about.seasonteams",
+        "pk": 4,
+        "fields": {
+            "team": ["Hukovice", "NJ", "M"],
+            "season_year": 2024
+        }
+    },
+    {
+        "model": "msl_about.seasonteams",
+        "pk": 5,
+        "fields": {
+            "team": ["Petřvaldík", "NJ", "M"],
+            "season_year": 2024
+        }
+    },
+    {
+        "model": "msl_about.seasonteams",
+        "pk": 6,
+        "fields": {
+            "team": ["Hájov", "NJ", "M"],
+            "season_year": 2024
+        }
+    },
+    {
+        "model": "msl_about.seasonteams",
+        "pk": 7,
+        "fields": {
+            "team": ["Větřkovice", "OP", "M"],
+            "season_year": 2024
+        }
+    },
+    {
+        "model": "msl_about.seasonteams",
+        "pk": 8,
+        "fields": {
+            "team": ["Dolní Lištná", "FM", "M"],
+            "season_year": 2024
+        }
+    },
+    {
+        "model": "msl_about.seasonteams",
+        "pk": 9,
+        "fields": {
+            "team": ["Lubno", "FM", "M"],
+            "season_year": 2024
+        }
+    },
+    {
+        "model": "msl_about.seasonteams",
+        "pk": 10,
+        "fields": {
+            "team": ["Trojanovice", "NJ", "M"],
+            "season_year": 2024
+        }
+    }
+]

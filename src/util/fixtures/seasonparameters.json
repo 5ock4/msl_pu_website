@@ -1,0 +1,192 @@
+[
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 1,
+        "fields": {
+            "season_year": 2024,
+            "ranking_def": "1",
+            "points": 25,
+            "finance": 700
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 2,
+        "fields": {
+            "season_year": 2024,
+            "ranking_def": "2",
+            "points": 22,
+            "finance": 600
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 3,
+        "fields": {
+            "season_year": 2024,
+            "ranking_def": "3",
+            "points": 20,
+            "finance": 500
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 4,
+        "fields": {
+            "season_year": 2024,
+            "ranking_def": "4",
+            "points": 18,
+            "finance": 400
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 5,
+        "fields": {
+            "season_year": 2024,
+            "ranking_def": "5",
+            "points": 16,
+            "finance": 350
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 6,
+        "fields": {
+            "season_year": 2024,
+            "ranking_def": "6",
+            "points": 15,
+            "finance": 300
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 7,
+        "fields": {
+            "season_year": 2024,
+            "ranking_def": "7",
+            "points": 14,
+            "finance": 200
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 8,
+        "fields": {
+            "season_year": 2024,
+            "ranking_def": "8",
+            "points": 13,
+            "finance": 150
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 9,
+        "fields": {
+            "season_year": 2024,
+            "ranking_def": "9",
+            "points": 12,
+            "finance": 100
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 10,
+        "fields": {
+            "season_year": 2024,
+            "ranking_def": "10",
+            "points": 11,
+            "finance": 50
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 11,
+        "fields": {
+            "season_year": 2024,
+            "ranking_def": "11",
+            "points": 10,
+            "finance": 0
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 12,
+        "fields": {
+            "season_year": 2024,
+            "ranking_def": "12",
+            "points": 9,
+            "finance": 0
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 13,
+        "fields": {
+            "season_year": 2024,
+            "ranking_def": "13",
+            "points": 8,
+            "finance": 0
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 14,
+        "fields": {
+            "season_year": 2024,
+            "ranking_def": "14",
+            "points": 7,
+            "finance": 0
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 15,
+        "fields": {
+            "season_year": 2024,
+            "ranking_def": "15",
+            "points": 6,
+            "finance": 0
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 16,
+        "fields": {
+            "season_year": 2024,
+            "ranking_def": "D",
+            "points": 0,
+            "finance": 0
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 17,
+        "fields": {
+            "season_year": 2024,
+            "ranking_def": "N",
+            "points": 5,
+            "finance": 0
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 18,
+        "fields": {
+            "season_year": 2024,
+            "ranking_def": "U",
+            "points": 5,
+            "finance": 0
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 19,
+        "fields": {
+            "season_year": 2024,
+            "ranking_def": "U-",
+            "points": 0,
+            "finance": 0
+        }
+    }
+]

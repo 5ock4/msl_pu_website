@@ -17,8 +17,8 @@ class TeamViewSet(SnippetViewSet):
 class SeasonTeamsViewSet(SnippetViewSet):
     model = SeasonTeams
     icon = "cog"
-    list_display = ["season", "team", "team_category"]
-    list_filter = {"season": ["exact"]}
+    list_display = ["season_year", "team", "team_category"]
+    list_filter = {"season_year": ["exact"]}
     list_per_page = 20
     menu_label = "Týmy v sezónách"
     menu_order = 201
@@ -27,8 +27,8 @@ class SeasonTeamsViewSet(SnippetViewSet):
 class SeasonParametersViewSet(SnippetViewSet):
     model = SeasonParameters
     icon = "cog"
-    list_display = ["season", "ranking", "points", "finance"]
-    list_filter = {"season": ["exact"], "ranking": ["exact"]}
+    list_display = ["season_year", "ranking_def", "points", "finance"]
+    list_filter = {"season_year": ["exact"], "ranking_def": ["exact"]}
     list_per_page = 20
     menu_label = "Parametry sezón"
     menu_order = 202
@@ -37,12 +37,11 @@ class SeasonParametersViewSet(SnippetViewSet):
 class SeasonRoundsViewSet(SnippetViewSet):
     model = SeasonRounds
     icon = "cog"
-    list_display = ["season", "round", "datetime", "date_registration", "categories", "results_ready"]
-    list_filter = {"season": ["exact"], "round": ["exact"]}
+    list_display = ["season_year", "round", "datetime", "date_registration", "categories", "results_ready"]
+    list_filter = {"season_year": ["exact"]}
     list_per_page = 20
     menu_label = "Ligová kola"
     menu_order = 203
-
 
 
 class AboutMSLGroup(SnippetViewSetGroup):

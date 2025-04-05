@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags navigation_tags %}
+
+{% block body_class %}template-aboutmslpoints{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <h6>{{ page.title }}</h6>
+                </div>
+            </div>
+            <div class="row mb-3 justify-content-end">
+                <div class="col-auto">
+                    <form method="get" action="">
+                        <select class="form-select" name="season_year" onchange="this.form.submit()" aria-label="Select year">
+                        {% get_season_years as season_years %}
+                        {% for year in season_years %}
+                            <option value="{{ year }}" {% if request.GET.season_year == year|stringformat:"s" %}selected{% endif %}>{{ year }}</option>
+                        {% endfor %}
+                        </select>
+                    </form>
+                </div>
+            </div>
+            <div class="table-responsive p-3">
+                <table class="table table-sm table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col">Umístění</th>
+                        <th scope="col">Body</th>
+                        <th scope="col">Finance</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for param in season_parameters %}
+                    <tr>
+                        <td>{{ param.ranking_def }}</td>
+                        <td>{{ param.points }}</td>
+                        <td>{{ param.finance }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

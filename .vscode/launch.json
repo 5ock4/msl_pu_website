@@ -8,10 +8,67 @@
             "program": "${workspaceFolder}/src/manage.py",
             "args": [
                 "runserver",
-                "0.0.0.0:8000"
+                "localhost:8000"
             ],
             "django": true,
             "justMyCode": true
-        }
+        },
+        {
+            "name": "makemigrations",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/manage.py",
+            "args": [
+                "makemigrations"
+            ],
+            "django": true,
+            "justMyCode": true
+        },
+        {
+            "name": "migrate",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/manage.py",
+            "args": [
+                "migrate"
+            ],
+            "django": true,
+            "justMyCode": true
+        },
+        // Custom Django commands found in src/util/management/commands
+        // Inspired by: https://github.com/cod1sta/snippets/tree/master/blog
+        {
+            "name": "total_reset",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/manage.py",
+            "args": [
+                "total_reset"
+            ],
+            "django": true,
+            "justMyCode": true  
+        },
+        {
+            "name": "total_setup",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/manage.py",
+            "args": [
+                "total_setup"
+            ],
+            "django": true,
+            "justMyCode": true
+        },
+        {
+            "name": "setup_page_tree",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/manage.py",
+            "args": [
+                "setup_page_tree",
+            ],
+            "django": true,
+            "justMyCode": true
+        },
     ]
 }
