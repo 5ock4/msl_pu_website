@@ -119,12 +119,12 @@ class Command(BaseCommand):
         """Creates the language specific home pages."""
         self.stdout.write("Setting up 'news'...")
         home_page = HomePage.objects.first()
-        news_index_page = EnrollPage(
-            title="Přihláška",
+        enroll_page = EnrollPage(
+            title="Přihláška do MSL 2025",
             slug="prihlaska-do-ms-ligy",
             show_in_menus=True
         )
-        home_page.add_child(instance=news_index_page)
+        home_page.add_child(instance=enroll_page)
 
     def handle(self, raise_error=False, *args, **options):
         # Root Page and a default homepage are created by wagtail migrations so check

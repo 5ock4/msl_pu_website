@@ -7,7 +7,7 @@ from .models import Team, SeasonTeams, SeasonParameters, SeasonRounds
 class TeamViewSet(SnippetViewSet):
     model = Team
     icon = "cog"
-    list_display = ["name", "district", "category"]
+    list_display = ["name", "district", "team_category"]
     list_filter = {"category": ["exact"], "district": ["exact"]}
     list_per_page = 20
     menu_label = "Týmy"
@@ -17,10 +17,10 @@ class TeamViewSet(SnippetViewSet):
 class SeasonTeamsViewSet(SnippetViewSet):
     model = SeasonTeams
     icon = "cog"
-    list_display = ["season_year", "team", "team_category"]
+    list_display = ["season_year", "team", "team_category", "registered", "date_registration", "paid"]
     list_filter = {"season_year": ["exact"]}
     list_per_page = 20
-    menu_label = "Týmy v sezónách"
+    menu_label = "Přihlášky týmů"
     menu_order = 201
 
 

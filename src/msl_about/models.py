@@ -70,7 +70,7 @@ class TeamManager(models.Manager):
 
 class Team(models.Model):
     name = models.CharField('Název týmu', max_length=50, blank=False)
-    district = models.CharField('Okres', max_length=2, blank=False, default='XX')
+    district = models.CharField('Okres', max_length=2, blank=False, default='*')
     category = models.CharField(
         'Kategorie',
         max_length=50,
@@ -88,8 +88,14 @@ class Team(models.Model):
             models.UniqueConstraint(fields=['name', 'district', 'category'], name='unique_team')
         ]
 
+    @property
+    @admin.display(description='Kategorie')
+    def team_category(self):
+        """Returns the category of the team."""
+        return self.get_category_display()
+
     def __str__(self):
-        return f'{self.name} [{self.district}]'
+        return f'{self.name} [{self.district}] - {self.team_category}'
 
 
 class SeasonTeams(models.Model):
@@ -100,16 +106,22 @@ class SeasonTeams(models.Model):
         validators=[MinValueValidator(2000), MaxValueValidator(2100)],
     )
     team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='season_teams', verbose_name='Tým')
+    team_representative = models.CharField('Zástupce týmu', max_length=100, null=True)
+    team_representative_email = models.EmailField('E-mail', null=True)
+    registered = models.BooleanField('Registrován', default=False)
+    date_registration = models.DateField('Datum registrace', blank=True, null=True)
+    paid = models.BooleanField('Zaplaceno', default=False)
 
     class Meta:
-        verbose_name = "Tým v sezóně"
-        verbose_name_plural = "Týmy v sezónách"
+        verbose_name = "Přihláška týmu"
+        verbose_name_plural = "Přihlášky týmů"
         constraints = [
             models.UniqueConstraint(fields=['season_year', 'team'], name='unique_season_teams')
         ]
 
     def __str__(self):
         return f'Sezóna: {self.season_year}, {self.team}'
+
     @property
     @admin.display(description='Kategorie')
     def team_category(self):
