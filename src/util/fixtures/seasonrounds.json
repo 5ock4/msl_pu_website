@@ -142,5 +142,149 @@
             "categories": "Muži, Ženy",
             "results_ready": true
         }
+    },
+    {
+        "model": "msl_about.seasonrounds",
+        "pk": 13,
+        "fields": {
+            "season_year": 2025,
+            "round": "Brušperk [FM]",
+            "datetime": "2025-06-07T11:00:00Z",
+            "date_registration": "2025-05-25",
+            "categories": "Muži, Ženy, 35+",
+            "results_ready": false
+        }
+    },
+    {
+        "model": "msl_about.seasonrounds",
+        "pk": 14,
+        "fields": {
+            "season_year": 2025,
+            "round": "Oprechtice [FM]",
+            "datetime": "2025-06-21T13:00:00Z",
+            "date_registration": "2025-06-08",
+            "categories": "Muži, Ženy, 35+",
+            "results_ready": false
+        }
+    },
+    {
+        "model": "msl_about.seasonrounds",
+        "pk": 15,
+        "fields": {
+            "season_year": 2025,
+            "round": "Metylovice [FM]",
+            "datetime": "2025-07-05T13:00:00Z",
+            "date_registration": "2025-06-22",
+            "categories": "Muži, Ženy, 35+",
+            "results_ready": false
+        }
+    },
+    {
+        "model": "msl_about.seasonrounds",
+        "pk": 16,
+        "fields": {
+            "season_year": 2025,
+            "round": "Svinov [OV]",
+            "datetime": "2025-07-06T11:00:00Z",
+            "date_registration": "2025-06-23",
+            "categories": "Muži, Ženy, 35+",
+            "results_ready": false
+        }
+    },
+    {
+        "model": "msl_about.seasonrounds",
+        "pk": 17,
+        "fields": {
+            "season_year": 2025,
+            "round": "Košatka [OV]",
+            "datetime": "2025-07-12T13:00:00Z",
+            "date_registration": "2025-06-29",
+            "categories": "Muži, Ženy",
+            "results_ready": false
+        }
+    },
+    {
+        "model": "msl_about.seasonrounds",
+        "pk": 18,
+        "fields": {
+            "season_year": 2025,
+            "round": "Vrbice [KI]",
+            "datetime": "2025-07-26T13:00:00Z",
+            "date_registration": "2025-06-13",
+            "categories": "Muži, Ženy, 35+",
+            "results_ready": false
+        }
+    },
+    {
+        "model": "msl_about.seasonrounds",
+        "pk": 19,
+        "fields": {
+            "season_year": 2025,
+            "round": "Proskovice [OV]",
+            "datetime": "2025-08-02T12:00:00Z",
+            "date_registration": "2025-07-20",
+            "categories": "Muži, Ženy",
+            "results_ready": false
+        }
+    },
+    {
+        "model": "msl_about.seasonrounds",
+        "pk": 20,
+        "fields": {
+            "season_year": 2025,
+            "round": "Větřkovice [OP]",
+            "datetime": "2025-08-03T11:00:00Z",
+            "date_registration": "2025-07-21",
+            "categories": "Muži, Ženy",
+            "results_ready": false
+        }
+    },
+    {
+        "model": "msl_about.seasonrounds",
+        "pk": 21,
+        "fields": {
+            "season_year": 2025,
+            "round": "Petřvaldík [NJ]",
+            "datetime": "2025-08-09T13:00:00Z",
+            "date_registration": "2025-07-31",
+            "categories": "Muži, Ženy, 35+",
+            "results_ready": false
+        }
+    },
+    {
+        "model": "msl_about.seasonrounds",
+        "pk": 22,
+        "fields": {
+            "season_year": 2025,
+            "round": "Mošnov [NJ]",
+            "datetime": "2025-08-23T12:00:00Z",
+            "date_registration": "2025-08-10",
+            "categories": "Muži, Ženy, 35+",
+            "results_ready": false
+        }
+    },
+    {
+        "model": "msl_about.seasonrounds",
+        "pk": 23,
+        "fields": {
+            "season_year": 2025,
+            "round": "Bartovice [OV]",
+            "datetime": "2025-09-06T12:00:00Z",
+            "date_registration": "2025-08-24",
+            "categories": "Muži, Ženy, 35+",
+            "results_ready": false
+        }
+    },
+    {
+        "model": "msl_about.seasonrounds",
+        "pk": 24,
+        "fields": {
+            "season_year": 2025,
+            "round": "Jistebník [NJ]",
+            "datetime": "2025-09-13T11:00:00Z",
+            "date_registration": "2025-08-31",
+            "categories": "Muži, Ženy",
+            "results_ready": false
+        }
     }
 ]

@@ -1,6 +1,7 @@
 [project]
 dependencies = [
     "Django",
+    "django-widget-tweaks",
     "wagtail",
     "pillow>=11.1.0",
     "pillow-heif>=0.21.0"

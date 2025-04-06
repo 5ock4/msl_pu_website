@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags %}
+
+{% block body_class %}template-mslenroll{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="card shadow-sm mb-3">
+        <div class="card-header bg-gradient-primary py-3">
+            <h5 class="card-title mb-0">{{ page.title }}</h5>
+        </div>
+        <div class="card-body p-4">
+            {% if messages %}
+            <div class="messages mb-4">
+                {% for message in messages %}
+                <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% else %}alert-{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form action="." method="post">
+                {% csrf_token %}
+                
+                <div class="row g-3 mb-3">
+                    <div class="col-md-12">
+                        <label for="{{ enroll_form.new_team.id_for_label }}" class="form-label fw-bold">{{ enroll_form.new_team.label }}</label>
+                        <input type="text" name="{{ enroll_form.new_team.html_name }}" 
+                               id="{{ enroll_form.new_team.id_for_label }}" 
+                               class="form-control {% if enroll_form.new_team.errors %}is-invalid{% endif %}"
+                               value="{{ enroll_form.new_team.value|default:'' }}"
+                               required>
+                        {% if enroll_form.new_team.errors %}
+                        <div class="invalid-feedback d-block">
+                            {% for error in enroll_form.new_team.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-12">
+                        <label for="{{ enroll_form.category.id_for_label }}" class="form-label fw-bold">{{ enroll_form.category.label }}</label>
+                        <select name="{{ enroll_form.category.html_name }}" 
+                                id="{{ enroll_form.category.id_for_label }}" 
+                                class="form-select {% if enroll_form.category.errors %}is-invalid{% endif %}"
+                                required>
+                            {% for value, text in enroll_form.category.field.choices %}
+                                <option value="{{ value }}" {% if enroll_form.category.value == value %}selected{% endif %}>{{ text }}</option>
+                            {% endfor %}
+                        </select>
+                        {% if enroll_form.category.errors %}
+                        <div class="invalid-feedback d-block">
+                            {% for error in enroll_form.category.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label for="{{ enroll_form.team_representative.id_for_label }}" class="form-label fw-bold">{{ enroll_form.team_representative.label }}</label>
+                        <input type="text" name="{{ enroll_form.team_representative.html_name }}" 
+                               id="{{ enroll_form.team_representative.id_for_label }}" 
+                               class="form-control {% if enroll_form.team_representative.errors %}is-invalid{% endif %}"
+                               value="{{ enroll_form.team_representative.value|default:'' }}"
+                               required>
+                        {% if enroll_form.team_representative.errors %}
+                        <div class="invalid-feedback d-block">
+                            {% for error in enroll_form.team_representative.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label for="{{ enroll_form.team_representative_email.id_for_label }}" class="form-label fw-bold">{{ enroll_form.team_representative_email.label }}</label>
+                        <input type="email" name="{{ enroll_form.team_representative_email.html_name }}" 
+                               id="{{ enroll_form.team_representative_email.id_for_label }}" 
+                               class="form-control {% if enroll_form.team_representative_email.errors %}is-invalid{% endif %}"
+                               value="{{ enroll_form.team_representative_email.value|default:'' }}"
+                               required>
+                        {% if enroll_form.team_representative_email.errors %}
+                        <div class="invalid-feedback d-block">
+                            {% for error in enroll_form.team_representative_email.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <div class="form-check">
+                        <input type="checkbox" name="{{ enroll_form.agree_to_terms.html_name }}" 
+                               id="{{ enroll_form.agree_to_terms.id_for_label }}" 
+                               class="form-check-input {% if enroll_form.agree_to_terms.errors %}is-invalid{% endif %}"
+                               {% if enroll_form.agree_to_terms.value %}checked{% endif %}
+                               required>
+                        <label class="form-check-label" for="{{ enroll_form.agree_to_terms.id_for_label }}">
+                            {{ enroll_form.agree_to_terms.label }}
+                        </label>
+                        {% if enroll_form.agree_to_terms.errors %}
+                        <div class="invalid-feedback d-block">
+                            {% for error in enroll_form.agree_to_terms.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if enroll_form.non_field_errors %}
+                <div class="alert alert-danger mb-4">
+                    {% for error in enroll_form.non_field_errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary btn-lg">Přihlásit se do MSL {{ page.year }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

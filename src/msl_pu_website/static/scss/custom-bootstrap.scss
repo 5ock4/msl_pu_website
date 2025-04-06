@@ -5,13 +5,17 @@
 @import "../../../../node_modules/bootstrap/scss/functions";
 
 // 2. Include any default variable overrides here
-$primary: #05062d;
+$enable-gradients: true;
+$primary: #05062d;  
 
 // 3. Include remainder of required Bootstrap stylesheets (including any separate color mode stylesheets)
 @import "../../../../node_modules/bootstrap/scss/variables";
 @import "../../../../node_modules/bootstrap/scss/variables-dark";
 
 // 4. Include any default map overrides here
+.bg-gradient-primary {
+    background-image: linear-gradient(to right, #0000ff0a , #c900000a); /* Change to your desired color */
+}
 
 // 5. Include remainder of required parts
 @import "../../../../node_modules/bootstrap/scss/maps";

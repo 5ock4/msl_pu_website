@@ -1,0 +1,53 @@
+{% load static navigation_tags %}
+
+<!-- Mobile footer (visible only on small screens) TODO - eg. on 4k res does not work well!!! -->
+<footer>
+    <!-- Sponsors section -->
+    <div class="container">
+        <div class="col-12">
+        <div class="border-top mt-4 mb-2 pt-1 text-center">
+            <small class="text-muted">SPONZOŘI</small>
+        </div>
+        <div class="row">
+            <div class="col-6 text-end">
+            <a href="https://www.derutex.cz/" target="_blank">
+                <img src="{% static 'images/derutex.png' %}" class="img-fluid mb-3 link-img" alt="Derutex" style="max-height: 80px;">
+            </a>
+            </div>
+            <div class="col-6 text-start">
+            <a href="http://www.sportservisps.cz/" target="_blank">
+                <img src="{% static 'images/gaba.png' %}" class="img-fluid mb-3 link-img" alt="Gaba" style="max-height: 80px;">
+            </a>
+            </div>
+        </div>
+        </div>
+    </div>
+    <div class="border-top border-bottom py-3 bg-white footer-sticky">
+        <div class="container text-center">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-center align-items-center mb-2">
+                        <p class="mb-0 text-secondary small">© {% now "Y" %} Created by <strong>[ ASS ]</strong> - Adam Strakoš Solutions</p>
+                    </div>
+                    <div class="d-flex justify-content-center mb-2">
+                        <a href="mailto:strakosadam@gmail.com" class="text-secondary email-icon mx-2">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                        <a href="https://www.instagram.com/5ock4/" target="_blank" class="text-secondary mx-2">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://www.facebook.com/5ock4" target="_blank" class="text-secondary mx-2">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="https://github.com/5ock4" target="_blank" class="text-secondary mx-2">
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <a href="/gdpr/" target="_blank" class="text-secondary small">Informace o zpracování osobních údajů (GDPR)</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>

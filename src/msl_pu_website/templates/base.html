@@ -18,23 +18,38 @@
         {% endif %}
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+        <meta property="og:image" content="{% static 'images/msl-fb.png' %}" />
+
         {# Force all links in the live preview panel to be opened in a new tab #}
         {% if request.in_preview_panel %}
         <base target="_blank">
         {% endif %}
 
+        <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon" />
         {# Global stylesheets #}
         <link rel="stylesheet" type="text/css" href="{% static 'css/msl_pu_website.css' %}">
 
         {% block extra_css %}
         <link rel="stylesheet" type="text/css" href="{% static 'css/custom-bootstrap.css' %}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
         {% endblock %}
     </head>
 
     <body class="{% block body_class %}{% endblock %}">
         {% include "includes/header.html" %}
+        
+        <div class="bg-body"></div>
+        
+        <div class="py-3">
+            {# {% if not request.user.is_authenticated or not request.user.is_staff %} #}
+            {% if false %}
+                {% include "includes/reconstruction.html" %}
+            {% else %}
+                {% block content %}{% endblock %}
+            {% endif %}
+        </div>
 
-        {% block content %}{% endblock %}
+        {% include "includes/footer.html" %}
 
         {# Global javascript #}
         <script type="text/javascript" src="{% static 'js/msl_pu_website.js' %}"></script>

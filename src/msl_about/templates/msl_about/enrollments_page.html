@@ -1,0 +1,49 @@
+{% load wagtailcore_tags navigation_tags %}
+
+{% block content %}
+<div class="card mb-3">
+    <div class="card-header bg-gradient-primary py-3">
+        <h5 class="card-title mb-0">{{ enrollments_page.title }}</h5>
+    </div>
+
+    <div class="card-body">
+        <div class="d-flex justify-content-center pb-2">
+            <div class="table-responsive">
+                <table class="table table-sm table-hover w-auto mx-auto">
+                    <thead>
+                    <tr>
+                        <th scope="col" class="px-3">Tým</th>
+                        <th scope="col" class="px-3">Zástupce</th>
+                        <th scope="col" class="px-3">Datum registrace</th>
+                        <th scope="col" class="px-3">Schváleno</th>
+                        <th scope="col" class="px-3">Zaplaceno</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for enrollment in enrollments_filtered %}
+                    <tr>
+                        <td class="px-3">{{ enrollment.team }}</td>
+                        <td class="px-3">{{ enrollment.team_representative }}</td>
+                        <td class="px-3">{{ enrollment.date_registration|date:"d.m." }}</td>
+                        <td class="px-3">
+                            {% if enrollment.reg_confirmed %}
+                                <i class="fas fa-check-circle text-success"></i>
+                            {% else %}
+                                <i class="fas fa-times-circle text-danger"></i>
+                            {% endif %}
+                        </td>
+                        <td class="px-3">
+                            {% if enrollment.paid %}
+                                <i class="fas fa-check-circle text-success"></i>
+                            {% else %}
+                                <i class="fas fa-times-circle text-danger"></i>
+                            {% endif %}
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

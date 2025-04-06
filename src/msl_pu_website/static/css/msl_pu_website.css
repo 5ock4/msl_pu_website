@@ -1,16 +1,86 @@
+.footer-sticky {
+    flex-shrink: 0;
+}
+
+.bg-body {
+    background-image: url('/static/images/msl-web-background_v4.png');
+    background-repeat: repeat;
+    background-position: top left;
+    background-size: 500px 413px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    opacity: 0.03;
+}
+
+/* Add this new class to apply to the header */
+.bg-header {
+    background-color: white; /* Or any other color that matches your design */
+    position: relative;
+    z-index: 10; /* Higher than the background */
+}
+
 .bg-hover:hover {
     background-image: linear-gradient(to right, #0000ff0a , #c900000a);
     transition: background-color 0.6s ease;
     border-radius: 0.25rem; /* Same as Bootstrap's .nav-link.active */
+    box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,.15) !important; /* This is a normal shadow effect */
 }
 
 .no-underline {
     text-decoration: none;
 }
 
-.fixed-height-card-200 {
-    height: 150px !important;
+.fixed-height-card {
+    height: 150px !important;   
     overflow: hidden;
 }
 
+/* Social media icons styling - vertical version */
+.social-icons-vertical {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.social-icons-vertical i {
+    transition: transform 0.3s ease;
+}
+
+.social-icons-vertical i:hover {
+    transform: scale(1.2);
+}
+
+/* Sponsor images styling */
+.link-img {
+    opacity: 0.7;
+    filter: grayscale(30%);
+    transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+.link-img:hover {
+    opacity: 1;
+    filter: grayscale(0%);
+}
+
+
+.card-body-with-fade {
+    position: relative;
+    overflow: hidden;
+  }
+.card-body-with-fade::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+    pointer-events: none;
+}
 /* https://stackoverflow.com/questions/40807258/how-do-i-stop-bootstraps-table-background-color-setting-for-print-media-over-rid */

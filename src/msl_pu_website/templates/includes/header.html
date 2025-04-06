@@ -1,16 +1,22 @@
 {% load wagtailcore_tags wagtailuserbar navigation_tags util_tags%}
 
-<header class="border-bottom py-3 mb-4">
+<header class="border-bottom bg-header">
   {% get_site_root as site_root %}
-  <a href="{% pageurl site_root %}">
-    <img src="/static/images/msl-web-header-narrow.svg" class="img-fluid mx-auto d-block" alt="Moravskoslezská liga v PÚ">
-  </a>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-10 col-xl-8">
+        <a href="{% pageurl site_root %}">
+          <img src="/static/images/msl-web-header.svg" class="img-fluid mx-auto d-block" alt="Moravskoslezská liga v PÚ">
+        </a>
+      </div>
+    </div>
+  </div>
 
-  <ul class="nav nav-pills justify-content-center">
+  <ul class="nav nav-pills justify-content-center py-3">
     {% for menuitem in site_root.get_children.live.in_menu %}
-    {% is_msl_about_page menuitem.specific as is_msl_about_page %}
+      {% is_msl_about_page menuitem.specific as is_msl_about_page %}
       {% if is_msl_about_page %}
-         <li class="nav-item">
+         <li class="nav-item bg-hover">
             <a class="nav-link dropdown-toggle {% if menuitem.url in request.path %}active{% endif %}" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
               {{ menuitem.title }} {# TODO: better to not have this hardcoded here  #}
             </a>
@@ -31,13 +37,16 @@
       {% endif %}
     {% endfor %}
     <li class="nav-item">
-      <a class="nav-link" href="#">Dokumenty</a>
+      <a class="nav-link disabled">Výsledky</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link disabled" href="#">Výsledky</a>
+      <a class="nav-link disabled">Tipování</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link disabled" aria-disabled="true">Tipování</a>
+      <a class="nav-link" href="http://old.msliga.info/phpBB3/index.php" target="_blank" rel="noopener noreferrer">Diskuze</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="http://old.msliga.info/" target="_blank" rel="noopener noreferrer">Starý web</a>
     </li>
   </ul>
 
