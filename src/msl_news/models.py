@@ -10,10 +10,15 @@ from wagtail.admin.panels import FieldPanel
 from wagtail.search import index
 
 
-class NewsIndexPage(Page): ...
+class NewsIndexPage(Page):
+    # This restricts child pages to only NewsPage
+    subpage_types = ['msl_news.NewsPage']
 
 
 class NewsPage(Page):
+    # You can also restrict where this page type can be created
+    parent_page_types = ['msl_news.NewsIndexPage']
+    
     date = models.DateField("Post date", default=date.today, editable=False)
     author = models.CharField(max_length=20)
     body = RichTextField(blank=True)
