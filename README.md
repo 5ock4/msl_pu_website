@@ -54,7 +54,7 @@ Search app - currently no use, can be ignored.
 ### How to run the project
 Server can be started in debug mode with VS Code "Run and Debug". It starts the server on [localhost:8000](http://localhost:8000/) Settings for this debug run can be found in `/.vscode/launch.json`.
 ##### Prerequisites
-* Cusom Bootstrap CSS must be compiled from `custom-bootstrap.scss` (see below)
+* Custom Bootstrap CSS must be compiled from `custom-bootstrap.scss` (see below)
 
 ### Rules for branches naming and commit messages
 * For branches use format: `feature/feature-name` or `fix/bug-name` or `chore/what-was-done`
