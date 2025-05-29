@@ -13,7 +13,6 @@ Wagtail (and Django) utilizes [MVT](https://www.geeksforgeeks.org/django-project
 * templates `.html` files under `/templates` folders - static part of FE
 
 ## Wagtail apps
-Bellow explained from **FE** point of view:
 #### /msl_pu_website
 Main app (entry point for the website) Contains no models, only static files (css, images, js), deployment settings and following templates:
 * `base.html` - parent template for all other templates, contains head and body for the whole website (and stuff that is visible all the time)
@@ -24,13 +23,19 @@ Main app (entry point for the website) Contains no models, only static files (cs
 Homepage app - contains following templates:
 * `home_page.html` - homepage content
 
-#### /news
+#### /msl_news
 News app ("Aktuality")- contains following templates:
 * `news_index_page.html` - list of news
 * `news_page.html` - single news page
 
 #### /msl_about
-About MSL app ("O MSL") - currently no templates
+About MSL app ("O MSL")
+
+#### /msl_results
+Results app ("Výsledky")
+
+#### /msl_tips
+Tips app ("Tipování")
 
 #### /util
 Should contain only reusable pieces of code that can be used in any other app - eg. helper functions in `navigation_tags.py`.
@@ -48,6 +53,8 @@ Search app - currently no use, can be ignored.
 
 ### How to run the project
 Server can be started in debug mode with VS Code "Run and Debug". It starts the server on [localhost:8000](http://localhost:8000/) Settings for this debug run can be found in `/.vscode/launch.json`.
+##### Prerequisites
+* Custom Bootstrap CSS must be compiled from `custom-bootstrap.scss` (see below)
 
 ### Rules for branches naming and commit messages
 * For branches use format: `feature/feature-name` or `fix/bug-name` or `chore/what-was-done`
