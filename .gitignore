@@ -25,3 +25,5 @@ db.sqlite3
 .bootstrap-5.3.3-examples
 
 /node_modules
+
+custom-bootstrap.css*
