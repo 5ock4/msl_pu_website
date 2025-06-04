@@ -4,6 +4,7 @@ dependencies = [
     "django-widget-tweaks",
     "wagtail",
     "pillow>=11.1.0",
-    "pillow-heif>=0.21.0"
+    "pillow-heif>=0.21.0",
+    "pandas>=2.3.0"
 ]
 requires-python = ">=3.13"

@@ -62,3 +62,11 @@ def get_categories(context):
     ordered_categories = [(cat, CategoryChoices(cat).label) for cat in category_order if cat in available_categories]
 
     return ordered_categories
+
+@register.simple_tag(takes_context=True)
+def is_wagtail_admin(context):
+    """Check if the current user is a Wagtail admin user."""
+    request = context.get('request')
+    if not request or not request.user.is_authenticated:
+        return False
+    return request.user.is_staff or request.user.is_superuser or request.user.username == 'RadaMSL'
