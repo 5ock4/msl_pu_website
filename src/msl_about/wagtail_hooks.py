@@ -54,7 +54,7 @@ class SeasonRoundsViewSet(SnippetViewSet):
 
 class AboutMSLGroup(SnippetViewSetGroup):
     items = (TeamViewSet, SeasonTeamsViewSet, SeasonParametersViewSet, SeasonParametersPenalizationsViewSet, SeasonRoundsViewSet)
-    menu_icon = "cog"
+    menu_icon = "cogs"
     menu_label = "Parametry MSL"
     menu_name = "msl_parameters"
     menu_order = 200
