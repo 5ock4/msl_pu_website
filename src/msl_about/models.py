@@ -99,10 +99,17 @@ class EnrollmentsPage(Page):
     def get_context(self, request):
         context = super().get_context(request)
 
-        # Filter season_parameters based on the selected year
-        enrollments_filtered = SeasonTeams.objects \
-            .filter(season_year=timezone.now().year) \
-            .order_by('date_registration')
+        category = request.GET.get('category') or CategoryChoices.MUZI
+
+        # Start with base queryset filtered by season_year
+        enrollments_filtered = SeasonTeams.objects.filter(season_year=timezone.now().year)
+        
+        # Apply category filter if provided
+        if category:
+            enrollments_filtered = enrollments_filtered.filter(team__category=category)
+        
+        # Apply ordering
+        enrollments_filtered = enrollments_filtered.order_by('date_registration')
 
         context.update({
             'enrollments_filtered': enrollments_filtered,
