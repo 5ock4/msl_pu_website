@@ -259,6 +259,8 @@ class SeasonTeams(models.Model):
     date_registration = models.DateField('Datum registrace', blank=True, null=True)
     reg_confirmed = models.BooleanField('Schválení registrace', default=False)
     paid = models.BooleanField('Zaplaceno', default=False)
+    # For manual adjustment in case of equal points in one season
+    results_priority = models.IntegerField('Priorita výsledků', default=0)
 
     class Meta:
         verbose_name = "Přihláška týmu"
