@@ -35,27 +35,3 @@ def get_enrollment_page(context):
     except IndexError:
         enrollment_page = None
     return enrollment_page
-
-@register.simple_tag
-def get_season_params_years():
-    return SeasonParameters.objects.values_list('season_year', flat=True).distinct().order_by('-season_year')
-
-@register.simple_tag
-def get_season_rounds_years():
-    return SeasonRounds.objects.values_list('season_year', flat=True).distinct().order_by('-season_year')
-
-@register.simple_tag(takes_context=True)
-def get_categories(context):
-    if "season_year" in context:
-        season_year = context["season_year"]
-        available_categories = SeasonParameters.objects.filter(season_year=season_year).values_list('category', flat=True).distinct()
-    else:
-        available_categories = SeasonParameters.objects.values_list('category', flat=True).distinct()
-
-    # Define the desired order using CategoryChoices
-    category_order = [CategoryChoices.MUZI, CategoryChoices.ZENY, CategoryChoices.VETERANI]
-
-    # Filter and sort categories based on the defined order, return tuples with value and label
-    ordered_categories = [(cat, CategoryChoices(cat).label) for cat in category_order if cat in available_categories]
-
-    return ordered_categories

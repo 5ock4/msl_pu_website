@@ -1,0 +1,423 @@
+[
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 81,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "1",
+            "points": 25,
+            "finance": 0
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 82,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "2",
+            "points": 22,
+            "finance": 0
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 83,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "3",
+            "points": 20,
+            "finance": 0
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 84,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "4",
+            "points": 18,
+            "finance": 0
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 85,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "5",
+            "points": 16,
+            "finance": 0
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 86,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "6",
+            "points": 15,
+            "finance": 0
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 87,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "7",
+            "points": 14,
+            "finance": 0
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 88,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "8",
+            "points": 13,
+            "finance": 0
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 89,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "9",
+            "points": 12,
+            "finance": 0
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 90,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "10",
+            "points": 11,
+            "finance": 0
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 91,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "11",
+            "points": 10,
+            "finance": 0
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 92,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "12",
+            "points": 9,
+            "finance": 0
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 93,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "13",
+            "points": 8,
+            "finance": 0
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 94,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "14",
+            "points": 7,
+            "finance": 0
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 95,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "15",
+            "points": 6,
+            "finance": 0
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 96,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "D",
+            "points": 0,
+            "finance": 0
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 97,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "N",
+            "points": 5,
+            "finance": 0
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 98,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "U",
+            "points": 5,
+            "finance": 0
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 99,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "U-",
+            "points": 0,
+            "finance": 0
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 100,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "1",
+            "points": 17,
+            "finance": 0,
+            "category": "Ž"
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 101,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "2",
+            "points": 14,
+            "finance": 0,
+            "category": "Ž"
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 102,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "3",
+            "points": 12,
+            "finance": 0,
+            "category": "Ž"
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 103,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "4",
+            "points": 10,
+            "finance": 0,
+            "category": "Ž"
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 104,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "5",
+            "points": 9,
+            "finance": 0,
+            "category": "Ž"
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 105,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "6",
+            "points": 8,
+            "finance": 0,
+            "category": "Ž"
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 106,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "7",
+            "points": 7,
+            "finance": 0,
+            "category": "Ž"
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 107,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "8",
+            "points": 6,
+            "finance": 0,
+            "category": "Ž"
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 108,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "D",
+            "points": 0,
+            "finance": 0,
+            "category": "Ž"
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 109,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "N",
+            "points": 5,
+            "finance": 0,
+            "category": "Ž"
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 110,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "U",
+            "points": 5,
+            "finance": 0,
+            "category": "Ž"
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 111,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "U-",
+            "points": 0,
+            "finance": 0,
+            "category": "Ž"
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 112,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "1",
+            "points": 12,
+            "finance": 0,
+            "category": "35+"
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 113,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "2",
+            "points": 10,
+            "finance": 0,
+            "category": "35+"
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 114,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "3",
+            "points": 8,
+            "finance": 0,
+            "category": "35+"
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 115,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "4",
+            "points": 7,
+            "finance": 0,
+            "category": "35+"
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 116,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "5",
+            "points": 6,
+            "finance": 0,
+            "category": "35+"
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 117,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "D",
+            "points": 0,
+            "finance": 0,
+            "category": "35+"
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 118,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "N",
+            "points": 5,
+            "finance": 0,
+            "category": "35+"
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 119,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "U",
+            "points": 5,
+            "finance": 0,
+            "category": "35+"
+        }
+    },
+    {
+        "model": "msl_about.seasonparameters",
+        "pk": 120,
+        "fields": {
+            "season_year": 2025,
+            "ranking_def": "U-",
+            "points": 0,
+            "finance": 0,
+            "category": "35+"
+        }
+    }
+]
