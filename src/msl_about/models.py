@@ -81,11 +81,14 @@ class PointsAndFinancesPage(Page):
         filtered_season_parameters_35 = SeasonParameters.objects \
             .filter(season_year=selected_year, category=CategoryChoices.VETERANI) \
             .order_by('-points')
+        penalizations = SeasonParametersPenalizations.objects \
+            .filter(season_year=selected_year) \
 
         context.update({
             'filtered_season_parameters_men': filtered_season_parameters_men,
             'filtered_season_parameters_women': filtered_season_parameters_women,
             'filtered_season_parameters_35': filtered_season_parameters_35,
+            'penalizations': penalizations,
             'selected_year': selected_year,
         })
         return context
@@ -303,6 +306,32 @@ class SeasonParameters(models.Model):
 
     def __str__(self):
         return f'Sezóna: {self.season_year}, Umístění: {self.ranking_def}.'
+
+
+class SeasonParametersPenalizations(models.Model):
+    season_year = models.IntegerField(
+        'Sezóna (rok)',
+        blank=False,
+        null=False,
+        validators=[MinValueValidator(2000), MaxValueValidator(2100)],
+    )
+    category = models.CharField(
+        'Kategorie',
+        max_length=50,
+        blank=False,
+        null=False,
+        choices=CategoryChoices.choices,
+        default=CategoryChoices.MUZI
+    )
+    competitors_borrowed = models.IntegerField('Půjčení závodníci', blank=False, null=False)
+    penalization_points = models.IntegerField('Penalizace bodů', blank=False, null=False)
+
+    class Meta:
+        verbose_name = "Penalizace v sezóně"
+        verbose_name_plural = "Penalizace v sezónách"
+        constraints = [
+            models.UniqueConstraint(fields=['season_year', 'category', 'competitors_borrowed'], name='unique_season_penalizations')
+        ]
 
 
 class SeasonRounds(models.Model):

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% load wagtailcore_tags navigation_tags %}
+{% load wagtailcore_tags util_tags template_filters %}
 
 {% block body_class %}template-aboutmslpoints{% endblock %}
 
@@ -102,6 +102,33 @@
                                     <td class="px-3">{% if param.ranking_def|stringformat:"s"|first in "0123456789" %}{{ param.ranking_def }}.{% else %}{{ param.ranking_def }}{% endif %}</td>
                                     <td class="px-3 text-center">{{ param.points }}</td>
                                     <td class="px-3 text-center">{{ param.finance }},-</td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Penalizace -->
+                <div class="col-12 col-md-4">
+                    <h2 class="card-title mb-3 text-center">Bodové penalizace</h2>
+                    <div class="d-flex justify-content-center">
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover w-auto mx-auto">
+                                <thead>
+                                <tr>
+                                    <th scope="col" class="px-3">Kategorie</th>
+                                    <th scope="col" class="px-3">Půjčení závodníci</th>
+                                    <th scope="col" class="px-3">Bodová penalizace</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for penalization in penalizations %}
+                                <tr>
+                                    <td class="px-3">{{ penalization.category|category_label }}</td>
+                                    <td class="px-3 text-center">{{ penalization.competitors_borrowed }}</td>
+                                    <td class="px-3 text-center">{{ penalization.penalization_points }}</td>
                                 </tr>
                                 {% endfor %}
                                 </tbody>

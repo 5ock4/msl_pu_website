@@ -1,7 +1,7 @@
 from wagtail.snippets.models import register_snippet
 from wagtail.snippets.views.snippets import SnippetViewSet, SnippetViewSetGroup
 
-from .models import Team, SeasonTeams, SeasonParameters, SeasonRounds
+from .models import SeasonParametersPenalizations, Team, SeasonTeams, SeasonParameters, SeasonRounds
 
 
 class TeamViewSet(SnippetViewSet):
@@ -33,6 +33,14 @@ class SeasonParametersViewSet(SnippetViewSet):
     menu_label = "Parametry sezón"
     menu_order = 202
 
+class SeasonParametersPenalizationsViewSet(SnippetViewSet):
+    model = SeasonParametersPenalizations
+    icon = "cog"
+    list_display = ["season_year", "category", "competitors_borrowed", "penalization_points"]
+    list_filter = {"season_year": ["exact"]}
+    list_per_page = 20
+    menu_label = "Penalizace v sezónách"
+    menu_order = 202
 
 class SeasonRoundsViewSet(SnippetViewSet):
     model = SeasonRounds
@@ -41,11 +49,11 @@ class SeasonRoundsViewSet(SnippetViewSet):
     list_filter = {"season_year": ["exact"]}
     list_per_page = 20
     menu_label = "Ligová kola"
-    menu_order = 203
+    menu_order = 204
 
 
 class AboutMSLGroup(SnippetViewSetGroup):
-    items = (TeamViewSet, SeasonTeamsViewSet, SeasonParametersViewSet, SeasonRoundsViewSet)
+    items = (TeamViewSet, SeasonTeamsViewSet, SeasonParametersViewSet, SeasonParametersPenalizationsViewSet, SeasonRoundsViewSet)
     menu_icon = "cog"
     menu_label = "Parametry MSL"
     menu_name = "msl_parameters"
