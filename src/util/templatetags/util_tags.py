@@ -2,6 +2,7 @@ import random
 from django import template
 
 from msl_about.models import AboutMSLPage, EnrollmentsPage, RoundsPage, SeasonParameters, SeasonRounds
+from msl_results.models import ResultsPage
 from util.models import CategoryChoices
 
 register = template.Library()
@@ -30,6 +31,22 @@ def show_enrollments(context):
     except:
         pass
     return {'enrollments_filtered': []}
+
+@register.inclusion_tag('msl_results/results_home_page.html', takes_context=True)
+def show_results(context):
+    request = context['request']
+    try:
+        results_page = ResultsPage.objects.first()
+        if results_page:
+            # Use the page's own get_context method
+            page_context = results_page.get_context(request)
+            page_context.update({
+                'results_page': results_page,
+            })
+            return page_context
+    except:
+        pass
+    return {'results_filtered': []}
 
 @register.simple_tag(takes_context=False)
 def get_rounds_page():
@@ -62,3 +79,11 @@ def get_categories(context):
     ordered_categories = [(cat, CategoryChoices(cat).label) for cat in category_order if cat in available_categories]
 
     return ordered_categories
+
+@register.simple_tag(takes_context=True)
+def is_wagtail_admin(context):
+    """Check if the current user is a Wagtail admin user."""
+    request = context.get('request')
+    if not request or not request.user.is_authenticated:
+        return False
+    return request.user.is_staff or request.user.is_superuser or request.user.username == 'RadaMSL'

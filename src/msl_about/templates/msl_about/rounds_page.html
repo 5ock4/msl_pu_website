@@ -28,6 +28,16 @@
         </div>
 
         <div class="card-body">
+            {% if messages %}
+            <div class="messages mb-4">
+                {% for message in messages %}
+                <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% else %}alert-{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
             <div class="d-flex justify-content-center pb-2">
                 <div class="table-responsive">
                     <table class="table table-sm table-hover w-auto mx-auto">
@@ -39,6 +49,10 @@
                             <th scope="col" class="px-3">Datum registrace</th>
                             <th scope="col" class="px-3">Kategorie</th>
                             <th scope="col" class="px-3">Výsledky uveřejněny</th>
+                            {% is_wagtail_admin as is_admin %}
+                            {% if is_admin %}
+                            <th scope="col" class="px-3">Výsledky</th>
+                            {% endif %}
                         </tr>
                         </thead>
                         <tbody>
@@ -55,6 +69,15 @@
                                 {% else %}
                                     <i class="fas fa-times-circle text-danger"></i>
                                 {% endif %}
+                            </td>
+                            {% is_wagtail_admin as is_admin %}
+                            {% if is_admin %}
+                            <td class="px-3">
+                                <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#uploadModal{{ round.id }}">
+                                    <i class="fas fa-upload"></i> Nahrát
+                                </button>
+                            </td>
+                            {% endif %}
                         </tr>
                         {% endfor %}
                         </tbody>
@@ -64,5 +87,34 @@
         </div>
     </div>
 </div>
+
+<!-- Results upload modal window -->
+{% is_wagtail_admin as is_admin %}
+{% if is_admin %}
+    {% for round in season_rounds_filtered %}
+    <div class="modal fade" id="uploadModal{{ round.id }}" tabindex="-1" aria-labelledby="uploadModalLabel{{ round.id }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="uploadModalLabel{{ round.id }}">Nahrát výsledky pro {{ round.round }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" enctype="multipart/form-data" action="{% url 'upload_results' round.id %}">
+                    <div class="modal-body">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="results_file{{ round.id }}" class="form-label">Prosím vyberte .xlsx soubor s výsledky:</label>
+                            <input type="file" class="form-control" id="results_file{{ round.id }}" name="results_file" accept=".xlsx" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Nahrát</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+{% endif %}
 
 {% endblock %}

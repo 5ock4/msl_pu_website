@@ -7,12 +7,14 @@ from wagtail import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
 from search import views as search_views
+from msl_about import views as msl_about_views
 
 urlpatterns = [
     path("django-admin/", admin.site.urls),
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
+    path("upload-results/<int:round_id>/", msl_about_views.upload_results, name="upload_results"),
 ]
 
 
