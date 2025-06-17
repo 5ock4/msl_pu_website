@@ -1,0 +1,114 @@
+{% load wagtailcore_tags util_tags template_filters %}
+
+{% block content %}
+
+<style>
+.sticky-left {
+    position: sticky;
+    left: 0;
+    background-color: white;
+    z-index: 11;
+    border-right: 2px solid #dee2e6;
+    min-width: 120px;
+}
+
+.sticky-right {
+    position: sticky;
+    right: 0;
+    background-color: white;
+    z-index: 10;
+    border-left: 2px solid #dee2e6;
+    font-weight: bold;
+    min-width: 50px;
+}
+
+.table-container {
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+/* Optional: Add shadow effects for better visual separation */
+.sticky-left::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -5px;
+    bottom: 0;
+    width: 5px;
+    background: linear-gradient(to right, rgba(0,0,0,0.1), transparent);
+    pointer-events: none;
+}
+
+.sticky-right::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -5px;
+    bottom: 0;
+    width: 5px;
+    background: linear-gradient(to left, rgba(0,0,0,0.1), transparent);
+    pointer-events: none;
+}
+</style>
+
+<div class="card-body">
+    <div class="row">
+        <!-- Men's table -->
+        <div class="col-12 col-md-12 mb-4 mb-md-0">
+            <div class="d-flex justify-content-center pb-2">
+                <div class="table-responsive">
+                    <div class="table-container">
+                        <table class="table table-sm table-hover w-auto mx-auto">
+                            <thead>
+                            <tr>
+                                <th class="sticky-left">Tým</th>
+                                {% for round in rounds %}
+                                <th class="rotate-cell">
+                                    <span class="rotate-45">{{ round.round }}</span>
+                                </th>
+                                {% endfor %}
+                                <th class="sticky-right"><strong>Σ</strong></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for team_data in teams_with_results %}
+                            <tr>
+                                <td class="sticky-left">{{ forloop.counter }}. {{ team_data.team.name }}</td>
+                                {% for stats in team_data.team_round_stats %}
+                                <td>
+                                    {{ stats.points|default:"-" }}
+                                    {% if stats.ranking_def and stats.ranking_def != 'U' %}
+                                    <sup class="badge bg-danger text-dark ms-1 small" 
+                                            data-bs-toggle="tooltip" 
+                                            data-bs-placement="top" 
+                                            title="{{ stats.ranking_def }}"
+                                            style="font-size: 0.6em; vertical-align: super;">
+                                        {{ stats.ranking_def }}
+                                    </sup>
+                                    {% endif %}
+                                    {% if stats.competitors_borrowed %}
+                                    <sup class="badge bg-warning text-dark ms-1 small" 
+                                            data-bs-toggle="tooltip" 
+                                            data-bs-placement="top" 
+                                            title="Půjčení závodníci: {{ stats.competitors_borrowed }}"
+                                            style="font-size: 0.6em; vertical-align: super;">
+                                        {{ stats.competitors_borrowed }}
+                                    </sup>
+                                    {% endif %}
+                                </td>
+                                {% endfor %}
+                                <td class="sticky-right"><strong>{{ team_data.total_points }}</strong></td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+{% endblock %}

@@ -259,6 +259,8 @@ class SeasonTeams(models.Model):
     date_registration = models.DateField('Datum registrace', blank=True, null=True)
     reg_confirmed = models.BooleanField('Schválení registrace', default=False)
     paid = models.BooleanField('Zaplaceno', default=False)
+    # For manual adjustment in case of equal points in one season
+    results_priority = models.IntegerField('Priorita výsledků', default=0)
 
     class Meta:
         verbose_name = "Přihláška týmu"
@@ -333,6 +335,9 @@ class SeasonParametersPenalizations(models.Model):
             models.UniqueConstraint(fields=['season_year', 'category', 'competitors_borrowed'], name='unique_season_penalizations')
         ]
 
+class SeasonRoundsManager(models.Manager):
+    def get_by_natural_key(self, season_year, round):
+        return self.get(season_year=season_year, round=round)
 
 class SeasonRounds(models.Model):
     season_year = models.IntegerField(
