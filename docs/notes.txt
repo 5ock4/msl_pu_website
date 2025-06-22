@@ -1,0 +1,9 @@
+TODO CICD:
+* workflow kde bude 
+    // TODO: add exception for MEDIA folder, do not copy manage.py (or just with prod settings?) 
+    > ssh msliga "rm -rf app/*/"
+    > scp -r src/*/ src/manage.py src/pdm.lock msliga:~/app
+    -------------------------------------------------------------------------------
+    > rsync -avz --exclude='db.sqlite3' src/ msliga:~/app/
+    > cd app && pdm sync && python manage.py migrate && python manage.py collectstatic
+    > supervisorctl restart app // je to potreba? 
