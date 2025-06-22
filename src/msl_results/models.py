@@ -47,15 +47,19 @@ class ResultsPage(Page):
                     team__category=category
                 ).select_related('round').order_by('round__datetime')
 
+                # Create a dictionary for quick lookup
+                results_by_round = {result.round.id: result for result in team_results}
+                
                 # Create ordered list of points for each round
-                team_round_stats = [
-                    {
-                        'points': result.points if result.round == round else None,
-                        'competitors_borrowed': result.competitors_borrowed if result.round == round else None,
-                        'ranking_def': result.ranking_def if result.round == round else None,
-                    }
-                    for result in team_results for round in rounds
-                ]
+                team_round_stats = []
+                for round in rounds:
+                    result = results_by_round.get(round.id)
+                    team_round_stats.append({
+                        'points': result.points if result else None,
+                        'competitors_borrowed': result.competitors_borrowed if result else None,
+                        'ranking_def': result.ranking_def if result else None,
+                    })
+                
                 total_points = sum(s['points'] for s in team_round_stats if s['points'] is not None)
 
                 teams_with_results.append({
