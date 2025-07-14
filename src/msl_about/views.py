@@ -9,7 +9,7 @@ from .models import SeasonRounds, RoundsPage
 from util.models import CategoryChoices
 
 
-def store_to_results_model(results, round_obj):
+def store_to_results_model(results: pd.DataFrame, round_obj):
     """
     Store results DataFrame to Result model in database
     """

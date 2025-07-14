@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags template_filters %}
+
+{% block title %}{{ round.round }} - Round Detail{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card shadow-sm mb-3">
+        <div class="card-header bg-gradient-primary py-3 d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">{{round.round_number|to_roman}}. kolo, {{ round.round }} &#129170 {{ round.datetime|date:"d.m.Y" }} &#129170 kategorie: {{ category.label }}</h5>
+            <a href="{% pageurl results_page %}?season_year={{ round.datetime|date:'Y' }}&category={{ category.value|urlencode }}" class="btn btn-sm">
+                <i class="fas fa-table"></i> Zpět na výsledky
+            </a>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12 col-md-12 mb-4 mb-md-0">
+                    <div class="d-flex justify-content-center pb-2">
+                        {% if results %}
+                            <div class="table-responsive">
+                                <div class="table-container">
+                                    <table class="table table-sm table-hover w-auto mx-auto">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Team</th>
+                                                <th>LP</th>
+                                                <th>PP</th>
+                                                <th>Výsledný</th>
+                                                <th>Body</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for result in results %}
+                                            <tr>
+                                                <td>{{ forloop.counter }}.</td>
+                                                <td>{{ result.team.name }}</td>
+                                                <td class="{% if result.lp > result.pp and result.lp != 0 and result.pp != 0  %}bg-success bg-opacity-10{% endif %}">
+                                                    {% if result.lp == 0 %}{{ result.ranking_def }}{% else %}{{ result.lp }}{% endif %}
+                                                </td>
+                                                <td class="{% if result.pp > result.lp and result.lp != 0 and result.pp != 0 %}bg-success bg-opacity-10{% endif %}">
+                                                    {% if result.pp == 0 %}{{ result.ranking_def }}{% else %}{{ result.pp }}{% endif %}
+                                                </td>
+                                                <td class="bg-success bg-opacity-10">
+                                                    {% if result.lp == 0 or result.pp == 0 %}{{ result.ranking_def }}{% else %}{{ result.max_lp_pp}}{% endif %}
+                                                    {% if result.competitors_borrowed %}
+                                                    <sup class="badge bg-warning text-dark ms-1 small" 
+                                                            data-bs-toggle="tooltip" 
+                                                            data-bs-placement="top" 
+                                                            title="Půjčení závodníci: {{ result.competitors_borrowed }}"
+                                                            style="font-size: 0.6em; vertical-align: super;">
+                                                        {{ result.competitors_borrowed }}
+                                                    </sup>
+                                                    {% endif %}
+                                                </td>
+                                                <td>{{ result.points }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-light text-center" role="alert">
+                                <strong>Výsledky pro toto kolo nejsou dostupné.</strong>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

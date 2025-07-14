@@ -53,7 +53,6 @@
 
 <div class="card-body">
     <div class="row">
-        <!-- Men's table -->
         <div class="col-12 col-md-12 mb-4 mb-md-0">
             <div class="d-flex justify-content-center pb-2">
                 <div class="table-responsive">
@@ -64,7 +63,9 @@
                                 <th class="sticky-left">Tým</th>
                                 {% for round in rounds %}
                                 <th class="rotate-cell">
-                                    <span class="rotate-45">{{ round.round }}</span>
+                                    <a href="{% url 'round_detail' round.id request.GET.category|default:'M' %}" class="btn btn-light btn-sm">
+                                        <span>{{round.round_number|to_roman}}. {{ round.round }}</span>
+                                    </a>
                                 </th>
                                 {% endfor %}
                                 <th class="sticky-right"><strong>Σ</strong></th>
@@ -78,7 +79,7 @@
                                 <td>
                                     {{ stats.points|default:"-" }}
                                     {% if stats.ranking_def and stats.ranking_def != 'U' %}
-                                    <sup class="badge bg-danger text-dark ms-1 small" 
+                                    <sup class="badge bg-danger text-white ms-1 small" 
                                             data-bs-toggle="tooltip" 
                                             data-bs-placement="top" 
                                             title="{{ stats.ranking_def }}"
