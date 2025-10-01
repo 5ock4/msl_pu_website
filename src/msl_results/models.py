@@ -41,6 +41,10 @@ class ResultsPage(Page):
             teams_with_results = []
             for team_id in teams:
                 team = Team.objects.get(id=team_id)
+                # Get results_priority from SeasonTeams for the selected year
+                season_team = team.season_teams.filter(season_year=SELECTED_YEAR).first()
+                results_priority = season_team.results_priority if season_team else 0
+
                 team_results = Result.objects.filter(
                     team=team, 
                     round__season_year=SELECTED_YEAR, 
@@ -67,14 +71,15 @@ class ResultsPage(Page):
                 teams_with_results.append({
                     'team': team,
                     'team_round_stats': team_round_stats,
-                    'total_points': total_points
+                    'total_points': total_points,
+                    'results_priority': results_priority,
                 })
 
             # -------
             # SORTING
             # -------
             # TODO: Add more sorting rules - number of borrows, number of Ns, Ds
-            teams_with_results.sort(key=lambda x: x['total_points'], reverse=True)
+            teams_with_results.sort(key=lambda x: (x['total_points'], x['results_priority']), reverse=True)
             return teams_with_results
 
         # Get results for all categories
