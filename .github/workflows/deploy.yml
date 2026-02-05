@@ -9,7 +9,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -21,6 +21,17 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
+      - name: Create deployment info file
+        run: |
+          cat > DEPLOY_INFO << EOF
+          Commit Hash: ${{ github.sha }}
+          Commit Message: ${{ github.event.head_commit.message }}
+          Author: ${{ github.event.head_commit.author.name }}
+          Deployed At: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          Branch: ${{ github.ref_name }}
+          Workflow Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          EOF
+
       - name: Sync code to server
         run: |
           rsync -avz -e "ssh -p ${{ secrets.SSH_PORT }}" --delete \
@@ -31,13 +42,20 @@ jobs:
             --exclude='.env' \
             src/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/app/
 
+          # Upload deployment info
+          scp -P ${{ secrets.SSH_PORT }} DEPLOY_INFO ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/app/
+
       - name: Run migrations and collect static files
         run: |
           ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+            set -e
             cd ~/app
-            pdm sync --prod
-            pdm run python manage.py migrate
-            pdm run python manage.py collectstatic --noinput
+            # Activate the virtualenv
+            source /srv/venv/bin/activate
+            # Now python3 -m pdm works inside the venv
+            python3 -m pdm sync --prod
+            python3 -m pdm run python manage.py migrate
+            python3 -m pdm run python manage.py collectstatic --noinput
           EOF
 
       - name: Restart application
@@ -48,4 +66,4 @@ jobs:
 
       - name: Cleanup
         if: always()
-        run: rm -f ~/.ssh/id_rsa
+        run: rm -f ~/.ssh/id_rsa DEPLOY_INFO
