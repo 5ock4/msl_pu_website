@@ -345,6 +345,12 @@ class SeasonRounds(models.Model):
         blank=False,
         validators=[MinValueValidator(2000), MaxValueValidator(2100)],
     )
+    round_number = models.IntegerField(
+        'Číslo kola',
+        blank=False,
+        validators=[MinValueValidator(1)],
+        default=1,
+    )
     round = models.CharField(
         'Kolo',
         max_length=50,

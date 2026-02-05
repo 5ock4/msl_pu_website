@@ -21,18 +21,18 @@ class ResultsPage(Page):
         context = super().get_context(request)
 
         # Get the selected year from the request, default to current year if not specified
-        selected_year = request.GET.get('season_year') or \
+        SELECTED_YEAR = request.GET.get('season_year') or \
             SeasonParameters.objects.aggregate(Max('season_year'))['season_year__max']
-        selected_category = request.GET.get('category')
+        SELECTED_CATEGORY = request.GET.get('category')
 
         # Get all rounds for the selected year
-        rounds = SeasonRounds.objects.filter(season_year=selected_year).order_by('datetime')
+        rounds = SeasonRounds.objects.filter(season_year=SELECTED_YEAR).order_by('datetime')
 
         def get_teams_with_results(category):
             """Helper function to get teams with results for a specific category"""
-            # Get all teams that have results in the selected year for this category
+             # Get all teams that have results in the selected year for this category
             teams = Result.objects.filter(
-                round__season_year=selected_year,
+                round__season_year=SELECTED_YEAR,
                 round__results_ready=True,
                 team__category=category
             ).values_list('team', flat=True).distinct()
@@ -41,46 +41,53 @@ class ResultsPage(Page):
             teams_with_results = []
             for team_id in teams:
                 team = Team.objects.get(id=team_id)
+                # Get results_priority from SeasonTeams for the selected year
+                season_team = team.season_teams.filter(season_year=SELECTED_YEAR).first()
+                results_priority = season_team.results_priority if season_team else 0
+
                 team_results = Result.objects.filter(
                     team=team, 
-                    round__season_year=selected_year, 
+                    round__season_year=SELECTED_YEAR, 
                     team__category=category
                 ).select_related('round').order_by('round__datetime')
 
                 # Create a dictionary for quick lookup
                 results_by_round = {result.round.id: result for result in team_results}
-                
+
                 # Create ordered list of points for each round
                 team_round_stats = []
                 for round in rounds:
                     result = results_by_round.get(round.id)
                     team_round_stats.append({
                         'points': result.points if result else None,
+                        'lp': result.lp if result else None,
+                        'pp': result.pp if result else None,
                         'competitors_borrowed': result.competitors_borrowed if result else None,
                         'ranking_def': result.ranking_def if result else None,
                     })
-                
+
                 total_points = sum(s['points'] for s in team_round_stats if s['points'] is not None)
 
                 teams_with_results.append({
                     'team': team,
                     'team_round_stats': team_round_stats,
-                    'total_points': total_points
+                    'total_points': total_points,
+                    'results_priority': results_priority,
                 })
 
             # -------
             # SORTING
             # -------
             # TODO: Add more sorting rules - number of borrows, number of Ns, Ds
-            teams_with_results.sort(key=lambda x: x['total_points'], reverse=True)
+            teams_with_results.sort(key=lambda x: (x['total_points'], x['results_priority']), reverse=True)
             return teams_with_results
 
         # Get results for all categories
-        teams_with_results = get_teams_with_results(selected_category or CategoryChoices.MUZI)
+        teams_with_results = get_teams_with_results(SELECTED_CATEGORY or CategoryChoices.MUZI)
 
         context.update({
             'rounds': rounds,
-            'selected_year': selected_year,
+            'selected_year': SELECTED_YEAR,
             'rounds': rounds,
             'teams_with_results': teams_with_results,
         })

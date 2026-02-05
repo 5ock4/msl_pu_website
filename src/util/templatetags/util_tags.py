@@ -32,7 +32,7 @@ def show_enrollments(context):
         pass
     return {'enrollments_filtered': []}
 
-@register.inclusion_tag('msl_results/results_home_page.html', takes_context=True)
+@register.inclusion_tag('msl_results/results_card.html', takes_context=True)
 def show_results(context):
     request = context['request']
     try:

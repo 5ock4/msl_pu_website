@@ -1,0 +1,8 @@
+{% load wagtailcore_tags util_tags template_filters %}
+
+{% block content %}
+<div class="card shadow-sm mb-3">
+    {% include "msl_results/results_header.html"%}
+    {% include "msl_results/results_content.html" %}
+</div>
+{% endblock %}
