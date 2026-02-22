@@ -9,6 +9,14 @@ class CategoryChoices(models.TextChoices):
     ZENY = 'Ž', 'Ženy'
     VETERANI = '35+', '35+'
 
+
+class RankingDefChoices(models.TextChoices):
+    U = 'U', 'Účast'
+    NU = 'NU', 'Neúčast'
+    N = 'N', 'Nedokončeno'
+    D = 'D', 'Diskvalifikace'
+
+
 class GDPRPage(Page):
     body = RichTextField(blank=True)
     

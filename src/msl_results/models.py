@@ -5,7 +5,7 @@ from wagtail.models import Page
 from django.db.models import Max
 
 from msl_about.models import SeasonParameters, SeasonRounds, Team
-from util.models import CategoryChoices
+from util.models import CategoryChoices, RankingDefChoices
 
 
 class ResultsPage(Page):
@@ -132,9 +132,16 @@ class Result(models.Model):
     ranking_def = models.CharField(
         'Definice umístění',
         max_length=2,
+        choices=RankingDefChoices.choices,
         default='U',
     )
-    points = models.IntegerField('Body', default=0)
+    points = models.IntegerField('Body (obsolete)', default=0)
+    # Calculated fields before storing to database.
+    calc_penalty_points = models.IntegerField('Penalizace', default=0, help_text='Automaticky vypočtené penalizace pro dané kolo a kategorii.')
+    calc_points_before_penalty = models.IntegerField('Body pred penalizaci', default=0, help_text='Automaticky vypočtené body pro dané kolo a kategorii. (Dle pravidel umisteni pro dany rok)')
+    calc_points_after_penalty = models.IntegerField('Body po penalizaci', default=0, help_text='Automaticky vypočtené body po penalizacich.')
+    calc_position = models.IntegerField('Pořadí', default=1, help_text='Automaticky vypočítané pořadí pro dané kolo a kategorii.')
+    calc_prize_money = models.IntegerField('Finance', default=0, help_text='Automaticky vypočtené prize money pro dané kolo a kategorii.')
 
     class Meta:
         verbose_name = "Výsledek"
