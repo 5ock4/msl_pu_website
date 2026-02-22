@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Max, Sum
 
 # Create your models here.
 from wagtail.models import Page
@@ -137,7 +138,7 @@ class Result(models.Model):
     )
     points = models.IntegerField('Body (obsolete)', default=0)
     # Calculated fields before storing to database.
-    calc_penalty_points = models.IntegerField('Penalizace', default=0, help_text='Automaticky vypočtené penalizace pro dané kolo a kategorii.')
+    calc_penalty_points = models.IntegerField('Penalizace', default=0, help_text='Automaticky vypočtené penalizace za půjčené závodníky, neúčast nebo diskvalifikaci pro dané kolo a kategorii.')
     calc_points_before_penalty = models.IntegerField('Body pred penalizaci', default=0, help_text='Automaticky vypočtené body pro dané kolo a kategorii. (Dle pravidel umisteni pro dany rok)')
     calc_points_after_penalty = models.IntegerField('Body po penalizaci', default=0, help_text='Automaticky vypočtené body po penalizacich.')
     calc_position = models.IntegerField('Pořadí', default=1, help_text='Automaticky vypočítané pořadí pro dané kolo a kategorii.')
@@ -146,3 +147,14 @@ class Result(models.Model):
     class Meta:
         verbose_name = "Výsledek"
         verbose_name_plural = "Výsledky"
+
+    @staticmethod
+    def penalties_allowed(team: Team, round: SeasonRounds) -> bool:
+        """Check if penalties are allowed for the given team and round based on season parameters"""
+        total_borrowed = (
+            Result.objects
+            .filter(team=team, round__season_year=round.season_year)
+            .aggregate(total=Sum('competitors_borrowed'))['total'] or 0
+        )
+        # TODO: 2 borrows should nott be hardcoded here!
+        return total_borrowed >= 2

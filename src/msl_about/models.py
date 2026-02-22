@@ -245,6 +245,13 @@ class Team(models.Model):
     def __str__(self):
         return f'{self.name} [{self.district}] - {self.team_category}'
 
+    @staticmethod
+    def get_team(team_name: str, category: str):
+        try:
+            return Team.objects.get(name=team_name, category=category)
+        except Team.DoesNotExist:
+            return None
+
 
 class SeasonTeams(models.Model):
     

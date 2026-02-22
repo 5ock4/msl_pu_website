@@ -18,8 +18,8 @@ def upload_results(request, round_id):
     round_obj = get_object_or_404(SeasonRounds, id=round_id)
     
     if request.method == 'POST' and request.FILES.get('results_file'):
-        round_results_manipulator = RoundResultsPreprocessor(request.FILES['results_file'])
-        round_results_manipulator.store_to_results_model(round_obj)
+        round_results_manipulator = RoundResultsPreprocessor(round_obj, request.FILES['results_file'])
+        round_results_manipulator.store_to_results_model()
 
         messages.success(request, f'Výsledky pro kolo {round_obj.round} úspěšně vloženy!')
 

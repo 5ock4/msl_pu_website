@@ -3,13 +3,14 @@ import pandas as pd
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
 from msl_results.models import Result
+from msl_about.models import SeasonParametersPenalizations, Team
 from .models import SeasonRounds
 from util.models import CategoryChoices
 
 
-
 class RoundResultsPreprocessor:
-    def __init__(self, results_file: InMemoryUploadedFile):
+    def __init__(self, round_obj: SeasonRounds, results_file: InMemoryUploadedFile):
+        self.round_obj = round_obj
         self.results_df = self.file_to_dataframe(results_file)
 
     def file_to_dataframe(self, results_file: InMemoryUploadedFile) -> pd.DataFrame:
@@ -23,16 +24,16 @@ class RoundResultsPreprocessor:
             .rename(columns={
                 'LIGOVÉ BODY': 'points_excel',
                 'SDH': 'sdh',
-                'TEAM': 'team',
+                'TEAM': 'team_excel',
                 'LIGA -1   NELIGOVÝ - 0': 'msl',
                 'PŮJČENÝ ZÁVODNÍK M-1, Ž-1,2, SG-1': 'competitors_borrowed',
                 '1-M,  2-Ž, 3-35': 'category_excel',
                 'LEVÝ PROUD': 'lp',
                 'PRAVÝ PROUD': 'pp'
             })
-        results['team'] = np.where(
-            (results['team'].notna()) & (results['team'] != 'A'), 
-            results['sdh'] + ' ' + results['team'], 
+        results['team_excel'] = np.where(
+            (results['team_excel'].notna()) & (results['team_excel'] != 'A'), 
+            results['sdh'] + ' ' + results['team_excel'], 
             results['sdh']
         )
         results = results.drop(columns=['sdh'])
@@ -44,76 +45,101 @@ class RoundResultsPreprocessor:
             3: CategoryChoices.VETERANI.value
         }
         results['category_excel'] = results['category_excel'].map(category_mapping)
+        results['competitors_borrowed'] = pd.to_numeric(results['competitors_borrowed'], errors='coerce').fillna(0).astype(int)
         # Select only teams part of MSL
         results = results[results['msl'] == 1]
 
+        results = self.postprocess(results)
+
         return results
 
-    def store_to_results_model(self, round_obj: SeasonRounds):
+    def postprocess(self, results_df: pd.DataFrame) -> pd.DataFrame:
+        def _extract_ranking_def(val):
+            if pd.isna(val):
+                return None
+            try:
+                float(val)
+                # numeric -> no ranking_def from here
+                return None
+            except (ValueError, TypeError):
+                # text flag like "N", "D", etc.
+                return str(val)[:2]
+
+        # ranking_def from lp / pp
+        results_df['ranking_def'] = results_df.apply(
+            lambda row: (
+                _extract_ranking_def(row['lp'])
+                or _extract_ranking_def(row['pp'])
+                or 'U'  # default
+            ),
+            axis=1,
+        )
+        results_df['lp'] = pd.to_numeric(results_df['lp'], errors='coerce').fillna(0.0)
+        results_df['pp'] = pd.to_numeric(results_df['pp'], errors='coerce').fillna(0.0)
+        results_df['team'] = results_df.apply(
+            lambda row: Team.get_team(row['team_excel'], row['category_excel']),
+            axis=1,
+        )
+        results_df['penalties_allowed'] = results_df.apply(
+            lambda row: Result.penalties_allowed(team=row['team'], round=self.round_obj),
+            axis=1,
+        )
+
+        def _compute_penalty(row):
+            penalty = 0
+            if row['penalties_allowed'] and row['competitors_borrowed'] > 0:
+                penal_points = (
+                    SeasonParametersPenalizations.objects
+                    .filter(
+                        season_year=self.round_obj.season_year,
+                        category=row['category_excel'],
+                        competitors_borrowed=row['competitors_borrowed'],
+                    )
+                    .values_list('penalization_points', flat=True)
+                    .first()
+                )
+                if penal_points is not None:
+                    penalty += penal_points
+            # TODO: Minus 5 points for NU and D should not be hardcoded here!
+            if row['ranking_def'] in ['NU', 'D']:
+                penalty -= 5
+            return penalty
+
+        results_df['calc_penalty_points'] = results_df.apply(_compute_penalty, axis=1)
+
+        return results_df
+
+    def store_to_results_model(self):
         """
         Store results DataFrame to Result model in database
         """
-        from msl_about.models import Team
-        
         for _, row in self.results_df.iterrows():
             try:
-                team_name = row['team']
-                category_excel = row['category_excel']
-
-                # Try to find existing team by name and category
-                try:
-                    team = Team.objects.get(name=team_name, category=category_excel)
-                except Team.DoesNotExist:
-                    team = None
-                
-                # Process LP value
-                lp_value = 0.0
-                ranking_def = 'U'  # Default value
-                
-                if pd.notna(row['lp']):
-                    try:
-                        lp_value = float(row['lp'])
-                    except (ValueError, TypeError):
-                        # If conversion fails, it's text - store in ranking_def
-                        ranking_def = str(row['lp'])[:2]  # Limit to 2 characters as per model
-                
-                # Process PP value
-                pp_value = 0.0
-                if pd.notna(row['pp']):
-                    try:
-                        pp_value = float(row['pp'])
-                    except (ValueError, TypeError):
-                        # If conversion fails, it's text - store in ranking_def
-                        ranking_def = str(row['pp'])[:2]  # Limit to 2 characters as per model
-                
                 # Create or update the result
                 result, created = Result.objects.get_or_create(
-                    team_excel=team_name,
-                    round=round_obj,
-                    category_excel=category_excel,
+                    team_excel=row['team_excel'],
+                    round=self.round_obj,
+                    category_excel=row['category_excel'],
                     defaults={
-                        'team': team,
+                        'team': row['team'],
                         'competitors_borrowed': int(row['competitors_borrowed']) if pd.notna(row['competitors_borrowed']) else 0,
-                        'lp': lp_value,
-                        'pp': pp_value,
-                        'ranking_def': ranking_def,
+                        'lp': row['lp'],
+                        'pp': row['pp'],
+                        'ranking_def': row['ranking_def'],
                         'points': int(row['points_excel']) if pd.notna(row['points_excel']) else 0,
                     }
                 )
-                
+
                 # If the result already exists, update it
                 if not created:
-                    result.team = team
+                    result.team = row['team']
                     result.competitors_borrowed = int(row['competitors_borrowed']) if pd.notna(row['competitors_borrowed']) else 0
-                    result.lp = lp_value
-                    result.pp = pp_value
-                    result.ranking_def = ranking_def
+                    result.lp = row['lp']
+                    result.pp = row['pp']
+                    result.ranking_def = row['ranking_def']
                     result.points = int(row['points_excel']) if pd.notna(row['points_excel']) else 0
                     result.save()
-                    
+
             except Exception as e:
                 print(f'Error saving result for team {row["team"]} in category {row["category_excel"]}: {str(e)}')
                 continue
-
-        # Mark results as ready
-        round_obj.save()
