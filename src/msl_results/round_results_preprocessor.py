@@ -3,7 +3,7 @@ import pandas as pd
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
 from msl_results.models import Result
-from msl_about.models import SeasonParametersPenalizations, Team
+from msl_about.models import SeasonParameters, SeasonParametersPenalizations, Team
 from .models import SeasonRounds
 from util.models import CategoryChoices
 
@@ -54,15 +54,15 @@ class RoundResultsPreprocessor:
         return results
 
     def postprocess(self, results_df: pd.DataFrame) -> pd.DataFrame:
+        """Calculates extra columns for the results DataFrame"""
+
         def _extract_ranking_def(val):
             if pd.isna(val):
                 return None
             try:
                 float(val)
-                # numeric -> no ranking_def from here
                 return None
             except (ValueError, TypeError):
-                # text flag like "N", "D", etc.
                 return str(val)[:2]
 
         # ranking_def from lp / pp
@@ -76,6 +76,11 @@ class RoundResultsPreprocessor:
         )
         results_df['lp'] = pd.to_numeric(results_df['lp'], errors='coerce').fillna(0.0)
         results_df['pp'] = pd.to_numeric(results_df['pp'], errors='coerce').fillna(0.0)
+        results_df['max_lp_pp'] = results_df.apply(
+            lambda row: 0.0 if (row['lp'] == 0 or row['pp'] == 0) else max(row['lp'], row['pp']),
+            axis=1
+        )
+
         results_df['team'] = results_df.apply(
             lambda row: Team.get_team(row['team_excel'], row['category_excel']),
             axis=1,
@@ -105,8 +110,37 @@ class RoundResultsPreprocessor:
                 penalty -= 5
             return penalty
 
-        results_df['calc_penalty_points'] = results_df.apply(_compute_penalty, axis=1)
+        results_df['penalty_points'] = results_df.apply(_compute_penalty, axis=1)
 
+        # Order by max_lp_pp within each category_excel, but keep 0.0 at the end
+        results_df = (
+            results_df.sort_values(
+                by=['category_excel', 'ranking_def', 'max_lp_pp',],
+                ascending=[True, False, True],  # False (non-zero) first, True (zero) last
+                kind='mergesort',  # stable sort
+            )
+        )
+
+        # Assign ranking numbers within each category, replacing only 'U' with the rank number
+        results_df['_rank_within_category'] = results_df.groupby('category_excel').cumcount() + 1
+        results_df['ranking_def'] = results_df.apply(
+            lambda row: str(row['_rank_within_category']) if row['ranking_def'] == 'U' else row['ranking_def'],
+            axis=1,
+        )
+        results_df = results_df.drop(columns=['_rank_within_category'])
+
+        results_df['points'] = results_df.apply(
+            lambda row: SeasonParameters.get_points(
+                season_year=self.round_obj.season_year, category=row['category_excel'], ranking_def=row['ranking_def']
+            ) - row['penalty_points'],
+            axis=1,
+        )
+        results_df['prize_money'] = results_df.apply(
+            lambda row: SeasonParameters.get_finances(
+                season_year=self.round_obj.season_year, category=row['category_excel'], ranking_def=row['ranking_def']
+            ),
+            axis=1,
+        )
         return results_df
 
     def store_to_results_model(self):
@@ -126,7 +160,9 @@ class RoundResultsPreprocessor:
                         'lp': row['lp'],
                         'pp': row['pp'],
                         'ranking_def': row['ranking_def'],
-                        'points': int(row['points_excel']) if pd.notna(row['points_excel']) else 0,
+                        'penalty_points': int(row['penalty_points']) if pd.notna(row['penalty_points']) else 0,
+                        'points': int(row['points']) if pd.notna(row['points']) else 0,
+                        'prize_money': int(row['prize_money']) if pd.notna(row['prize_money']) else 0,
                     }
                 )
 
@@ -137,7 +173,9 @@ class RoundResultsPreprocessor:
                     result.lp = row['lp']
                     result.pp = row['pp']
                     result.ranking_def = row['ranking_def']
-                    result.points = int(row['points_excel']) if pd.notna(row['points_excel']) else 0
+                    result.penalty_points = int(row['penalty_points']) if pd.notna(row['penalty_points']) else 0
+                    result.points = int(row['points']) if pd.notna(row['points']) else 0
+                    result.prize_money = int(row['prize_money']) if pd.notna(row['prize_money']) else 0
                     result.save()
 
             except Exception as e:

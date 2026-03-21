@@ -10,7 +10,7 @@ class CategoryChoices(models.TextChoices):
     VETERANI = '35+', '35+'
 
 
-class RankingDefChoices(models.TextChoices):
+class RankingDefCharChoices(models.TextChoices):
     U = 'U', 'Účast'
     NU = 'NU', 'Neúčast'
     N = 'N', 'Nedokončeno'

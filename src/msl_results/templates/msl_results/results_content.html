@@ -68,7 +68,15 @@
                                     </a>
                                 </th>
                                 {% endfor %}
-                                <th class="sticky-right"><strong>Σ</strong></th>
+                                <th class="sticky-right">
+                                    <strong>
+                                        {% if display_total_metric == 'prize_money' %}
+                                            Kč
+                                        {% else %}
+                                            Σ
+                                        {% endif %}
+                                    </strong>
+                                </th>
                             </tr>
                             </thead>
                             <tbody>
@@ -98,7 +106,15 @@
                                     {% endif %}
                                 </td>
                                 {% endfor %}
-                                <td class="sticky-right"><strong>{{ team_data.total_points }}</strong></td>
+                                <td class="sticky-right">
+                                    <strong>
+                                        {% if display_total_metric == 'prize_money' %}
+                                            {{ team_data.display_total }},-
+                                        {% else %}
+                                            {{ team_data.display_total }}
+                                        {% endif %}
+                                    </strong>
+                                </td>
                             </tr>
                             {% endfor %}
                             </tbody>

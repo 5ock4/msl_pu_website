@@ -6,7 +6,7 @@ from wagtail.models import Page
 from django.db.models import Max
 
 from msl_about.models import SeasonParameters, SeasonRounds, Team
-from util.models import CategoryChoices, RankingDefChoices
+from util.models import CategoryChoices
 
 
 class ResultsPage(Page):
@@ -25,6 +25,9 @@ class ResultsPage(Page):
         SELECTED_YEAR = request.GET.get('season_year') or \
             SeasonParameters.objects.aggregate(Max('season_year'))['season_year__max']
         SELECTED_CATEGORY = request.GET.get('category')
+        # Controls whether we display total points or total prize money
+        metric_param = request.GET.get('metric')
+        RESULTS_METRIC = 'prize_money' if metric_param == 'prize_money' else 'points'
 
         # Get all rounds for the selected year
         rounds = SeasonRounds.objects.filter(season_year=SELECTED_YEAR).order_by('datetime')
@@ -65,14 +68,22 @@ class ResultsPage(Page):
                         'pp': result.pp if result else None,
                         'competitors_borrowed': result.competitors_borrowed if result else None,
                         'ranking_def': result.ranking_def if result else None,
+                        'prize_money': result.prize_money if result else None,
                     })
 
                 total_points = sum(s['points'] for s in team_round_stats if s['points'] is not None)
+                total_prize_money = sum(s['prize_money'] for s in team_round_stats if s['prize_money'] is not None)
+
+                if RESULTS_METRIC == 'prize_money':
+                    display_total = total_prize_money
+                else:
+                    display_total = total_points
 
                 teams_with_results.append({
                     'team': team,
                     'team_round_stats': team_round_stats,
                     'total_points': total_points,
+                    'display_total': display_total,
                     'results_priority': results_priority,
                 })
 
@@ -86,11 +97,15 @@ class ResultsPage(Page):
         # Get results for all categories
         teams_with_results = get_teams_with_results(SELECTED_CATEGORY or CategoryChoices.MUZI)
 
+        display_total_label = 'Body' if RESULTS_METRIC == 'points' else 'Prize Money'
+
         context.update({
             'rounds': rounds,
             'selected_year': SELECTED_YEAR,
             'rounds': rounds,
             'teams_with_results': teams_with_results,
+            'display_total_metric': RESULTS_METRIC,
+            'display_total_label': display_total_label,
         })
 
         return context
@@ -130,19 +145,16 @@ class Result(models.Model):
     competitors_borrowed = models.IntegerField('Půjčení závodníci', default=0)
     lp = models.FloatField('LP', default=0.0)
     pp = models.FloatField('PP', default=0.0)
+    # Calculated fields by RoundResultsPreprocessor
     ranking_def = models.CharField(
         'Definice umístění',
         max_length=2,
-        choices=RankingDefChoices.choices,
         default='U',
+        help_text='Automaticky vypočtené pole pro definici umístění (např. N, D, U) ale také integer pořadí ve stringu!'
     )
-    points = models.IntegerField('Body (obsolete)', default=0)
-    # Calculated fields before storing to database.
-    calc_penalty_points = models.IntegerField('Penalizace', default=0, help_text='Automaticky vypočtené penalizace za půjčené závodníky, neúčast nebo diskvalifikaci pro dané kolo a kategorii.')
-    calc_points_before_penalty = models.IntegerField('Body pred penalizaci', default=0, help_text='Automaticky vypočtené body pro dané kolo a kategorii. (Dle pravidel umisteni pro dany rok)')
-    calc_points_after_penalty = models.IntegerField('Body po penalizaci', default=0, help_text='Automaticky vypočtené body po penalizacich.')
-    calc_position = models.IntegerField('Pořadí', default=1, help_text='Automaticky vypočítané pořadí pro dané kolo a kategorii.')
-    calc_prize_money = models.IntegerField('Finance', default=0, help_text='Automaticky vypočtené prize money pro dané kolo a kategorii.')
+    penalty_points = models.IntegerField('Penalizace', default=0, help_text='Automaticky vypočtené penalizace za půjčené závodníky, neúčast nebo diskvalifikaci pro dané kolo a kategorii.')
+    points = models.IntegerField('Body po penalizaci', default=0, help_text='Automaticky vypočtené body po penalizacich.')
+    prize_money = models.IntegerField('Finance', default=0, help_text='Automaticky vypočtené prize money pro dané kolo a kategorii.')
 
     class Meta:
         verbose_name = "Výsledek"

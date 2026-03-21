@@ -7,7 +7,7 @@ from .models import Result
 class ResultsViewSet(SnippetViewSet):
     model = Result
     icon = "clipboard-list"
-    list_display = ["team_excel", "category_excel", "team", "round", "competitors_borrowed", "lp", "pp", "ranking_def", "points"]
+    list_display = ["team_excel", "category_excel", "team", "round", "competitors_borrowed", "lp", "pp", "ranking_def", "penalty_points", "points", "prize_money"]
     list_filter = {"round": ["exact"], "team__category": ["exact"]}
     list_per_page = 20
     menu_label = "Výsledky"
