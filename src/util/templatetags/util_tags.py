@@ -1,7 +1,7 @@
 import random
 from django import template
 
-from msl_about.models import AboutMSLPage, EnrollmentsPage, RoundsPage, SeasonParameters, SeasonRounds
+from msl_about.models import AboutMSLPage, EnrollPage, EnrollmentsPage, RoundsPage, SeasonParameters, SeasonRounds
 from msl_results.models import ResultsPage
 from util.models import CategoryChoices
 
@@ -16,7 +16,7 @@ def random_1_to_300():
 def is_msl_about_page(object):
     return isinstance(object, AboutMSLPage)
 
-@register.inclusion_tag('msl_about/enrollments_page.html', takes_context=True)
+@register.inclusion_tag('msl_about/enrollments_card.html', takes_context=True)
 def show_enrollments(context):
     request = context['request']
     try:
@@ -87,3 +87,8 @@ def is_wagtail_admin(context):
     if not request or not request.user.is_authenticated:
         return False
     return request.user.is_staff or request.user.is_superuser or request.user.username == 'RadaMSL'
+
+@register.simple_tag
+def has_enroll_page_in_menu():
+    """Return True if there is any EnrollPage that is live and shown in menus."""
+    return EnrollPage.objects.live().filter(show_in_menus=True).exists()

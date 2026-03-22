@@ -103,6 +103,12 @@
       </div>
 
       <!-- Enrollments -->
+      {% has_enroll_page_in_menu as show_enrollments_on_home %}
+      {% if show_enrollments_on_home %}
+        <div id="enrollments">
+          {% show_enrollments %}
+        </div>
+      {% endif %}
       <div id="results">
         {% show_results %}
       </div>
