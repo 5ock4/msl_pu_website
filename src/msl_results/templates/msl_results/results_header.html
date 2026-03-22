@@ -25,6 +25,31 @@
                 <option value="{{ category_value }}" {% if request.GET.category == category_value %} selected {% endif %}>{{ category_label }}</option>
             {% endfor %}
             </select>
+            <div class="btn-group ms-3" role="group" aria-label="Zobrazení součtu">
+                <input type="radio"
+                       class="btn-check"
+                       name="metric"
+                       id="metricPoints"
+                       value="points"
+                       autocomplete="off"
+                       onchange="this.form.submit()"
+                       {% if display_total_metric != 'prize_money' %}checked{% endif %}>
+                <label class="btn btn-outline-secondary btn-sm" for="metricPoints">
+                    Body
+                </label>
+
+                <input type="radio"
+                       class="btn-check"
+                       name="metric"
+                       id="metricMoney"
+                       value="prize_money"
+                       autocomplete="off"
+                       onchange="this.form.submit()"
+                       {% if display_total_metric == 'prize_money' %}checked{% endif %}>
+                <label class="btn btn-outline-secondary btn-sm" for="metricMoney">
+                    Kč
+                </label>
+            </div>
         </form>
     </div>
 </div>

@@ -16,7 +16,7 @@ from django.utils.safestring import mark_safe
 from wagtail.models import Site
 
 from msl_about.forms import EnrollForm
-from util.models import CategoryChoices
+from util.models import CategoryChoices, RankingDefChoices
 
 
 # ---------------------
@@ -245,6 +245,13 @@ class Team(models.Model):
     def __str__(self):
         return f'{self.name} [{self.district}] - {self.team_category}'
 
+    @staticmethod
+    def get_team(team_name: str, category: str):
+        try:
+            return Team.objects.get(name=team_name, category=category)
+        except Team.DoesNotExist:
+            return None
+
 
 class SeasonTeams(models.Model):
     
@@ -309,6 +316,35 @@ class SeasonParameters(models.Model):
     def __str__(self):
         return f'Sezóna: {self.season_year}, Umístění: {self.ranking_def}.'
 
+    @staticmethod
+    def get_points(season_year: int, category: str, ranking_def: str) -> int:
+        try:
+            return SeasonParameters.objects.get(
+                season_year=season_year,
+                category=category,
+                ranking_def=ranking_def
+            ).points
+        except SeasonParameters.DoesNotExist:
+            return SeasonParameters.objects.get(
+                season_year=season_year,
+                category=category,
+                ranking_def=RankingDefChoices.U.value
+            ).points
+
+    @staticmethod
+    def get_finances(season_year: int, category: str, ranking_def: str) -> int:
+        try:
+            return SeasonParameters.objects.get(
+                season_year=season_year,
+                category=category,
+                ranking_def=ranking_def
+            ).finance
+        except SeasonParameters.DoesNotExist:
+            return SeasonParameters.objects.get(
+                season_year=season_year,
+                category=category,
+                ranking_def=RankingDefChoices.U.value
+            ).finance
 
 class SeasonParametersPenalizations(models.Model):
     season_year = models.IntegerField(

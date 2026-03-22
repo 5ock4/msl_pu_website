@@ -14,6 +14,14 @@
             "justMyCode": true
         },
         {
+            "name": "fetch database",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "sys",
+            "args": [],
+            "preLaunchTask": "scp-fetch-database",
+        },
+        {
             "name": "makemigrations",
             "type": "debugpy",
             "request": "launch",

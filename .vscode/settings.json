@@ -1,5 +1,9 @@
 {
     "files.associations": {
-    "*.html": "jinja-html"
+        "*.html": "jinja-html"
     },
+    "python.testing.cwd": "${workspaceFolder}/src",
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "python.testing.pytestArgs": ["../test"]
 }
