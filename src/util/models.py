@@ -3,6 +3,11 @@ from wagtail.models import Page
 from wagtail.fields import RichTextField
 from wagtail.admin.panels import FieldPanel
 
+#############
+# Constants #
+#############
+D_NU_PENALTY_POINTS = 5
+MAX_BORROWED_COMPETITORS_IN_SEASON = 2
 
 class CategoryChoices(models.TextChoices):
     MUZI = 'M', 'Muži'
@@ -10,7 +15,7 @@ class CategoryChoices(models.TextChoices):
     VETERANI = '35+', '35+'
 
 
-class RankingDefCharChoices(models.TextChoices):
+class RankingDefChoices(models.TextChoices):
     U = 'U', 'Účast'
     NU = 'NU', 'Neúčast'
     N = 'N', 'Nedokončeno'

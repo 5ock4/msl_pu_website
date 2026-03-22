@@ -16,7 +16,7 @@ from django.utils.safestring import mark_safe
 from wagtail.models import Site
 
 from msl_about.forms import EnrollForm
-from util.models import CategoryChoices, RankingDefCharChoices
+from util.models import CategoryChoices, RankingDefChoices
 
 
 # ---------------------
@@ -328,7 +328,7 @@ class SeasonParameters(models.Model):
             return SeasonParameters.objects.get(
                 season_year=season_year,
                 category=category,
-                ranking_def=RankingDefCharChoices.U.value
+                ranking_def=RankingDefChoices.U.value
             ).points
 
     @staticmethod
@@ -343,7 +343,7 @@ class SeasonParameters(models.Model):
             return SeasonParameters.objects.get(
                 season_year=season_year,
                 category=category,
-                ranking_def=RankingDefCharChoices.U.value
+                ranking_def=RankingDefChoices.U.value
             ).finance
 
 class SeasonParametersPenalizations(models.Model):

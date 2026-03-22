@@ -6,7 +6,7 @@ from wagtail.models import Page
 from django.db.models import Max
 
 from msl_about.models import SeasonParameters, SeasonRounds, Team
-from util.models import CategoryChoices
+from util.models import MAX_BORROWED_COMPETITORS_IN_SEASON, CategoryChoices, RankingDefChoices
 
 
 class ResultsPage(Page):
@@ -90,7 +90,6 @@ class ResultsPage(Page):
             # -------
             # SORTING
             # -------
-            # TODO: Add more sorting rules - number of borrows, number of Ns, Ds
             teams_with_results.sort(key=lambda x: (x['total_points'], x['results_priority']), reverse=True)
             return teams_with_results
 
@@ -149,7 +148,8 @@ class Result(models.Model):
     ranking_def = models.CharField(
         'Definice umístění',
         max_length=2,
-        default='U',
+        choices=RankingDefChoices.choices,
+        default=RankingDefChoices.U.value,
         help_text='Automaticky vypočtené pole pro definici umístění (např. N, D, U) ale také integer pořadí ve stringu!'
     )
     penalty_points = models.IntegerField('Penalizace', default=0, help_text='Automaticky vypočtené penalizace za půjčené závodníky, neúčast nebo diskvalifikaci pro dané kolo a kategorii.')
@@ -166,7 +166,7 @@ class Result(models.Model):
         total_borrowed = (
             Result.objects
             .filter(team=team, round__season_year=round.season_year)
+            .exclude(round=round)
             .aggregate(total=Sum('competitors_borrowed'))['total'] or 0
         )
-        # TODO: 2 borrows should nott be hardcoded here!
-        return total_borrowed >= 2
+        return total_borrowed >= MAX_BORROWED_COMPETITORS_IN_SEASON
