@@ -1,9 +1,6 @@
 from django import template
 from wagtail.models import Site, Page
 
-from msl_about.models import SeasonParameters, SeasonRounds
-from util.models import CategoryChoices
-
 
 register = template.Library()
 

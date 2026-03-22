@@ -6,7 +6,7 @@ from wagtail.models import Page
 from django.db.models import Max
 
 from msl_about.models import SeasonParameters, SeasonRounds, Team
-from util.models import MAX_BORROWED_COMPETITORS_IN_SEASON, CategoryChoices, RankingDefChoices
+from util.models import FREE_BORROWED_COMPETITORS_IN_SEASON, CategoryChoices, RankingDefChoices
 
 
 class ResultsPage(Page):
@@ -169,4 +169,4 @@ class Result(models.Model):
             .exclude(round=round)
             .aggregate(total=Sum('competitors_borrowed'))['total'] or 0
         )
-        return total_borrowed >= MAX_BORROWED_COMPETITORS_IN_SEASON
+        return total_borrowed >= FREE_BORROWED_COMPETITORS_IN_SEASON
