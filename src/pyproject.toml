@@ -5,7 +5,8 @@ dependencies = [
     "wagtail",
     "pillow>=11.1.0",
     "pillow-heif>=0.21.0",
-    "pandas>=2.3.0"
+    "pandas>=2.3.0",
+    "requests>=2.31.0",
 ]
 requires-python = ">=3.13"
 
