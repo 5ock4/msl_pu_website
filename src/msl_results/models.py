@@ -166,6 +166,7 @@ class Result(models.Model):
         total_borrowed = (
             Result.objects
             .filter(team=team, round__season_year=round.season_year)
+            .exclude(round=round)
             .aggregate(total=Sum('competitors_borrowed'))['total'] or 0
         )
         # TODO: 2 borrows should nott be hardcoded here!
