@@ -49,7 +49,7 @@ class Command(BaseCommand):
         # Create a site with the new LanguageRedirectionPage set as the root
         # Note: this is wagtail's Site model, not django's.
         Site.objects.create(
-            hostname="msliga.cz",
+            hostname="msliga.info",
             root_page=home_page,
             is_default_site=True,
             site_name="MS liga v PÚ",
