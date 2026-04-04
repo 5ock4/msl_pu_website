@@ -46,7 +46,7 @@ class Migration(migrations.Migration):
                     "page_ptr",
                     models.OneToOneField(
                         auto_created=True,
-                        on_delete=models.deletion.CASCADE,
+                        on_delete=models.CASCADE,
                         parent_link=True,
                         primary_key=True,
                         serialize=False,
