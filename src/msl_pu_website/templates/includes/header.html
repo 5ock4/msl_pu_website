@@ -42,6 +42,13 @@
     <li class="nav-item bg-hover">
       <a class="nav-link" href="http://old.msliga.info/" target="_blank" rel="noopener noreferrer">Starý web</a>
     </li>
+    {% if request.user.is_authenticated %}
+    <li class="nav-item bg-hover">
+      <span class="nav-link text-success">
+        <i class="fa-solid fa-circle-user me-1"></i>{{ request.user.email }}
+      </span>
+    </li>
+    {% endif %}
   </ul>
 
   {% wagtailuserbar "top-right" %}

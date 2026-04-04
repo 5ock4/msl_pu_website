@@ -35,6 +35,8 @@ INSTALLED_APPS = [
     "msl_about",
     "msl_results",
     "msl_tips",
+    "msl_auth",
+    "sesame",
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.embeds",
@@ -178,6 +180,19 @@ STORAGES = {
 # Wagtail settings
 
 WAGTAIL_SITE_NAME = "msl_pu_website"
+
+# Authentication backends - standard + sesame (magic-link)
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "sesame.backends.ModelBackend",
+]
+
+# Magic-link authentication (django-sesame)
+# https://django-sesame.readthedocs.io/
+SESAME_MAX_AGE = 600  # token TTL: 10 minutes (600 seconds)
+
+# Security: prevent token leakage via Referer header
+SECURE_REFERRER_POLICY = "same-origin"
 
 # Search
 # https://docs.wagtail.org/en/stable/topics/search/backends.html

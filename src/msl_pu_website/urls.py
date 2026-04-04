@@ -18,6 +18,7 @@ urlpatterns = [
     path("upload-results/<int:round_id>/", msl_about_views.upload_results, name="upload_results"),
     path('round/<int:round_id>/<str:category>', msl_results_views.round_detail, name='round_detail'),
     path("facebook/", include("msl_news.urls")),
+    path("", include("msl_auth.urls")),
 ]
 
 
