@@ -21,7 +21,7 @@ def check_facebook_token_before_publish(request, page):
     and redirect the user to the Facebook OAuth flow.  After successful authorisation
     the user is directed back to the article's edit page to re-publish.
     """
-    from .models import FacebookToken, NewsPage
+    from .models import NewsPage
     from .facebook import get_stored_token
 
     # Only apply to NewsPage
