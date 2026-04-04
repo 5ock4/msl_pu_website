@@ -137,7 +137,7 @@ def post_news_to_facebook(page):
 
     url = GRAPH_API_URL.format(page_id=page_id)
     full_url = page.get_full_url()
-    message = f"Aktualita: {page.title}"
+    message = f"Aktualita: {page.title}\n\nVíce info pod odkazem -->"
 
     payload = {
         "message": message,

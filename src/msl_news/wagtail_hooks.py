@@ -41,8 +41,8 @@ def check_facebook_token_before_publish(request, page):
     )
     messages.warning(
         request,
-        "Your article has not been published yet. "
-        "Please authorise the app to post on your Facebook page, "
-        "then publish the article again.",
+        "Vaše aktualita nebyla zveřejněna. "
+        "Nejprve se přihlašte k facebookovému účtu, který má oprávnění spravovat FB stránku Moravskoslezské ligy. "
+        "Poté aktualitu znovu publikujte.",
     )
     return redirect(reverse("facebook_oauth_initiate"))

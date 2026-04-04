@@ -82,8 +82,8 @@ def facebook_oauth_callback(request):
         page_id, _ = exchange_code_for_page_token(code, callback_url)
         messages.success(
             request,
-            f"Facebook page (ID: {page_id}) connected successfully. "
-            "Please publish your news article again.",
+            f"Facebooková stránka (ID: {page_id}) byla úspěšně připojena. "
+            "Prosím, publikujte aktualitu znovu.",
         )
     except Exception:
         logger.error("Facebook OAuth callback error", exc_info=True)
