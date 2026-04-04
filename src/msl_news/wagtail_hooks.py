@@ -1,13 +1,9 @@
-import logging
-
 from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse
 
 from wagtail import hooks
-
-logger = logging.getLogger(__name__)
 
 _SESSION_NEXT_KEY = "facebook_oauth_next"
 

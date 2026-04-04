@@ -1,16 +1,15 @@
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 
 import requests
 from django.conf import settings
-from django.utils import timezone
 from django.utils.html import strip_tags
 
 logger = logging.getLogger(__name__)
 
-GRAPH_API_URL = "https://graph.facebook.com/v18.0/{page_id}/feed"
-OAUTH_TOKEN_URL = "https://graph.facebook.com/v18.0/oauth/access_token"
-ME_ACCOUNTS_URL = "https://graph.facebook.com/v18.0/me/accounts"
+GRAPH_API_URL = "https://graph.facebook.com/v25.0/{page_id}/feed"
+OAUTH_TOKEN_URL = "https://graph.facebook.com/v25.0/oauth/access_token"
+ME_ACCOUNTS_URL = "https://graph.facebook.com/v25.0/me/accounts"
 FACEBOOK_MAX_MESSAGE_LENGTH = 63206
 
 
