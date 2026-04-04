@@ -19,14 +19,28 @@ _SESSION_STATE_KEY = "facebook_oauth_state"
 _SESSION_NEXT_KEY = "facebook_oauth_next"
 
 
+def _get_missing_facebook_oauth_settings():
+    required_settings = (
+        "FACEBOOK_APP_ID",
+        "FACEBOOK_APP_SECRET",
+        "FACEBOOK_PAGE_ID",
+    )
+    return [setting_name for setting_name in required_settings if not getattr(settings, setting_name, "")]
+
+
 @login_required
 def facebook_oauth_initiate(request):
     """Redirect the authenticated user to Facebook's OAuth authorisation dialog."""
-    app_id = getattr(settings, "FACEBOOK_APP_ID", "")
-    if not app_id:
-        messages.error(request, "Facebook App ID (FACEBOOK_APP_ID) is not configured.")
+    missing_settings = _get_missing_facebook_oauth_settings()
+    if missing_settings:
+        messages.error(
+            request,
+            "Facebook OAuth is not fully configured. Missing setting(s): "
+            f"{', '.join(missing_settings)}.",
+        )
         return redirect(reverse("wagtailadmin_home"))
 
+    app_id = getattr(settings, "FACEBOOK_APP_ID", "")
     state = secrets.token_urlsafe(32)
     request.session[_SESSION_STATE_KEY] = state
 
