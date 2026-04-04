@@ -1,6 +1,7 @@
 from django.contrib.auth import login, logout as auth_logout
 from django.contrib import messages
 from django.shortcuts import render, redirect
+from django.utils.http import url_has_allowed_host_and_scheme
 
 from .forms import MagicLinkRequestForm
 from util.magic_link_auth import (
@@ -60,12 +61,8 @@ def verify_magic_link(request):
     Verify a magic-link token from the URL query string, authenticate the user,
     and redirect to a clean URL without the token to prevent referrer leakage.
     """
-    response = _do_verify(request)
-    return response
-
-
-def _do_verify(request):
     token = request.GET.get("sesame", "")
+    # next_url is validated below with url_has_allowed_host_and_scheme before use
     next_url = request.GET.get("next", "")
 
     if not token:
@@ -88,16 +85,17 @@ def _do_verify(request):
         )
         return _redirect_to_login(request)
 
-    if result is None:
-        messages.error(request, "Neplatný přihlašovací odkaz.")
-        return _redirect_to_login(request)
-
     # result is an authenticated User (backend already set by sesame.utils.get_user)
     login(request, result)
     messages.success(request, f"Byli jste přihlášeni jako {result.email}.")
 
-    # Redirect to a clean URL – removes the token from the address bar
-    if is_safe_next_url(request, next_url):
+    # Redirect to a clean URL – removes the token from the address bar.
+    # next_url is validated with url_has_allowed_host_and_scheme to prevent open redirects.
+    if url_has_allowed_host_and_scheme(
+        url=next_url,
+        allowed_hosts={request.get_host()},
+        require_https=request.is_secure(),
+    ):
         return redirect(next_url)
     return _redirect_to_login(request)
 

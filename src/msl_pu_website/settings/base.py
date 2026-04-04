@@ -194,6 +194,9 @@ SESAME_MAX_AGE = 600  # token TTL: 10 minutes (600 seconds)
 # Security: prevent token leakage via Referer header
 SECURE_REFERRER_POLICY = "same-origin"
 
+# Security: protect session cookie from JavaScript access
+SESSION_COOKIE_HTTPONLY = True
+
 # Search
 # https://docs.wagtail.org/en/stable/topics/search/backends.html
 WAGTAILSEARCH_BACKENDS = {
