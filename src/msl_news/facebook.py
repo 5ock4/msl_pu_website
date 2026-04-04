@@ -8,6 +8,7 @@ from django.utils.html import strip_tags
 logger = logging.getLogger(__name__)
 
 GRAPH_API_URL = "https://graph.facebook.com/v25.0/{page_id}/feed"
+GRAPH_POST_URL = "https://graph.facebook.com/v25.0/{post_id}"
 OAUTH_TOKEN_URL = "https://graph.facebook.com/v25.0/oauth/access_token"
 ME_ACCOUNTS_URL = "https://graph.facebook.com/v25.0/me/accounts"
 FACEBOOK_MAX_MESSAGE_LENGTH = 63206
@@ -125,21 +126,42 @@ def post_news_to_facebook(page):
         )
         return
 
-    url = GRAPH_API_URL.format(page_id=page_id)
     full_url = page.get_full_url()
     message = f"{page.title}\n\n{strip_tags(page.body)}"
     if len(message) > FACEBOOK_MAX_MESSAGE_LENGTH:
         message = message[:FACEBOOK_MAX_MESSAGE_LENGTH]
 
-    payload = {
-        "message": message,
-        "link": full_url,
-        "access_token": access_token,
-    }
+    existing_post_id = getattr(page, "facebook_post_id", "")
 
-    try:
-        response = requests.post(url, data=payload, timeout=10)
-        response.raise_for_status()
-        logger.info("Successfully posted article '%s' to Facebook.", page.title)
-    except requests.RequestException as e:
-        logger.error("Failed to post article '%s' to Facebook: %s", page.title, e)
+    if existing_post_id:
+        # Edit the existing Facebook post (only message is updatable)
+        url = GRAPH_POST_URL.format(post_id=existing_post_id)
+        payload = {
+            "message": message,
+            "access_token": access_token,
+        }
+        try:
+            response = requests.post(url, data=payload, timeout=10)
+            response.raise_for_status()
+            logger.info("Successfully updated Facebook post '%s' for article '%s'.", existing_post_id, page.title)
+        except requests.RequestException as e:
+            logger.error("Failed to update Facebook post '%s' for article '%s': %s", existing_post_id, page.title, e)
+    else:
+        # Create a new Facebook post
+        url = GRAPH_API_URL.format(page_id=page_id)
+        payload = {
+            "message": message,
+            "link": full_url,
+            "access_token": access_token,
+        }
+        try:
+            response = requests.post(url, data=payload, timeout=10)
+            response.raise_for_status()
+            fb_post_id = response.json().get("id", "")
+            if fb_post_id:
+                # Persist the FB post ID on the page without triggering another publish signal
+                page.specific.facebook_post_id = fb_post_id
+                page.specific.save(update_fields=["facebook_post_id"])
+            logger.info("Successfully posted article '%s' to Facebook (post ID: %s).", page.title, fb_post_id)
+        except requests.RequestException as e:
+            logger.error("Failed to post article '%s' to Facebook: %s", page.title, e)
