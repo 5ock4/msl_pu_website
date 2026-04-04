@@ -1,5 +1,3 @@
-from wagtail.signals import page_published
-
 from .facebook import post_news_to_facebook
 from .models import NewsPage
 
