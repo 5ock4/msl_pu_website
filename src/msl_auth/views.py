@@ -2,6 +2,7 @@ from django.contrib.auth import login, logout as auth_logout
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.utils.http import url_has_allowed_host_and_scheme
+from urllib.parse import urlparse
 
 from .forms import MagicLinkRequestForm
 from util.magic_link_auth import (
@@ -85,18 +86,28 @@ def verify_magic_link(request):
         )
         return _redirect_to_login(request)
 
-    # result is an authenticated User (backend already set by sesame.utils.get_user)
+    # result is an authenticated User.
+    # sesame.utils.get_user() calls authenticate() which sets user.backend;
+    # Django's login() uses that attribute when no explicit backend is given.
     login(request, result)
     messages.success(request, f"Byli jste přihlášeni jako {result.email}.")
 
     # Redirect to a clean URL – removes the token from the address bar.
-    # next_url is validated with url_has_allowed_host_and_scheme to prevent open redirects.
+    # After validating the URL with url_has_allowed_host_and_scheme we extract
+    # only the path/query/fragment (discarding any scheme+host), which ensures
+    # the redirect can never leave the current site.
     if url_has_allowed_host_and_scheme(
         url=next_url,
         allowed_hosts={request.get_host()},
         require_https=request.is_secure(),
     ):
-        return redirect(next_url)
+        parsed = urlparse(next_url)
+        safe_path = parsed.path
+        if parsed.query:
+            safe_path += "?" + parsed.query
+        if parsed.fragment:
+            safe_path += "#" + parsed.fragment
+        return redirect(safe_path or "/")
     return _redirect_to_login(request)
 
 

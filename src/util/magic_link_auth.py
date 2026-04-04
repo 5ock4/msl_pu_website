@@ -45,6 +45,8 @@ def get_or_create_user(email: str):
         defaults={"username": email[:150], "is_active": True},
     )
     if created:
+        # set_unusable_password() only sets the in-memory field;
+        # save() is required to persist it to the database.
         user.set_unusable_password()
         user.save(update_fields=["password"])
     return user
