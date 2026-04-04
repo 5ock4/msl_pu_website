@@ -3,14 +3,12 @@ from datetime import datetime, timezone
 
 import requests
 from django.conf import settings
-from django.utils.html import strip_tags
 
 logger = logging.getLogger(__name__)
 
 GRAPH_API_URL = "https://graph.facebook.com/v25.0/{page_id}/feed"
 OAUTH_TOKEN_URL = "https://graph.facebook.com/v25.0/oauth/access_token"
 ME_ACCOUNTS_URL = "https://graph.facebook.com/v25.0/me/accounts"
-FACEBOOK_MAX_MESSAGE_LENGTH = 63206
 
 
 def get_stored_token(page_id):
@@ -127,9 +125,7 @@ def post_news_to_facebook(page):
 
     url = GRAPH_API_URL.format(page_id=page_id)
     full_url = page.get_full_url()
-    message = f"{page.title}\n\n{strip_tags(page.body)}"
-    if len(message) > FACEBOOK_MAX_MESSAGE_LENGTH:
-        message = message[:FACEBOOK_MAX_MESSAGE_LENGTH]
+    message = f"Aktualita: {page.title}"
 
     payload = {
         "message": message,

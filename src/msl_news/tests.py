@@ -39,8 +39,7 @@ class PostNewsToFacebookTests(TestCase):
         call_kwargs = mock_post.call_args
         self.assertIn("123456", call_kwargs[0][0])
         payload = call_kwargs[1]["data"]
-        self.assertIn("Test Article", payload["message"])
-        self.assertIn("Body text", payload["message"])
+        self.assertEqual(payload["message"], "Aktualita: Test Article")
         self.assertEqual(payload["link"], "http://example.com/news/test/")
         self.assertEqual(payload["access_token"], "test-token")
 
@@ -57,18 +56,16 @@ class PostNewsToFacebookTests(TestCase):
     @override_settings(FACEBOOK_PAGE_ID="123456", FACEBOOK_APP_ID="app-id")
     @patch("msl_news.facebook.get_stored_token", return_value="test-token")
     @patch("msl_news.facebook.requests.post")
-    def test_strips_html_from_body(self, mock_post, _mock_token):
+    def test_message_format_is_aktualita_prefix(self, mock_post, _mock_token):
         mock_post.return_value.raise_for_status = MagicMock()
 
         from msl_news.facebook import post_news_to_facebook
 
-        page = _make_page(body="<p>Hello <strong>world</strong></p>")
+        page = _make_page(title="Nová zpráva")
         post_news_to_facebook(page)
 
         payload = mock_post.call_args[1]["data"]
-        self.assertNotIn("<p>", payload["message"])
-        self.assertNotIn("<strong>", payload["message"])
-        self.assertIn("Hello world", payload["message"])
+        self.assertEqual(payload["message"], "Aktualita: Nová zpráva")
 
     @override_settings(FACEBOOK_PAGE_ID="123456", FACEBOOK_APP_ID="app-id")
     @patch("msl_news.facebook.get_stored_token", return_value="test-token")
@@ -105,7 +102,7 @@ class FacebookOAuthInitiateTests(TestCase):
         self.user = User.objects.create_user("admin", password="pass")
         self.client.login(username="admin", password="pass")
 
-    @override_settings(FACEBOOK_APP_ID="test-app-id", FACEBOOK_PAGE_ID="123456")
+    @override_settings(FACEBOOK_APP_ID="test-app-id", FACEBOOK_APP_SECRET="test-secret", FACEBOOK_PAGE_ID="123456")
     def test_redirects_to_facebook_dialog(self):
         response = self.client.get(reverse("facebook_oauth_initiate"))
         self.assertEqual(response.status_code, 302)
