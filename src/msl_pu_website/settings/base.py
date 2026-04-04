@@ -186,3 +186,12 @@ WAGTAILSEARCH_BACKENDS = {
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
 WAGTAILADMIN_BASE_URL = "http://example.com"
+
+# Facebook integration
+# FACEBOOK_APP_ID and FACEBOOK_APP_SECRET are required to run the OAuth flow that
+# obtains a Page access token.  FACEBOOK_PAGE_ID identifies which Facebook Page to
+# post to.  The Page access token itself is stored in the database (FacebookToken
+# model) and refreshed via the OAuth flow whenever it is missing or expired.
+FACEBOOK_APP_ID = os.environ.get("FACEBOOK_APP_ID", "")
+FACEBOOK_APP_SECRET = os.environ.get("FACEBOOK_APP_SECRET", "")
+FACEBOOK_PAGE_ID = os.environ.get("FACEBOOK_PAGE_ID", "")

@@ -11,7 +11,8 @@
                 "localhost:8000"
             ],
             "django": true,
-            "justMyCode": true
+            "justMyCode": true,
+            "envFile": "${workspaceFolder}/.env"
         },
         {
             "name": "fetch database",

@@ -45,6 +45,16 @@ jobs:
           # Upload deployment info
           scp -P ${{ secrets.SSH_PORT }} DEPLOY_INFO ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/app/
 
+      - name: Upload environment file
+        run: |
+          cat > .env << EOF
+          FACEBOOK_APP_ID=${{ vars.FACEBOOK_APP_ID }}
+          FACEBOOK_PAGE_ID=${{ vars.FACEBOOK_PAGE_ID }}
+          FACEBOOK_APP_SECRET=${{ secrets.FACEBOOK_APP_SECRET }}
+          EOF
+
+          scp -P ${{ secrets.SSH_PORT }} .env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/srv/app/.env
+
       - name: Run migrations and collect static files
         run: |
           ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'

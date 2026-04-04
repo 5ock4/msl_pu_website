@@ -1,6 +1,7 @@
 from datetime import date
 
 from django.db import models
+from django.utils import timezone
 
 # Add these:
 from wagtail.models import Page
@@ -22,6 +23,13 @@ class NewsPage(Page):
     date = models.DateField("Post date", default=date.today, editable=False)
     author = models.CharField(max_length=20)
     body = RichTextField(blank=True)
+    facebook_post_id = models.CharField(
+        max_length=100,
+        blank=True,
+        default="",
+        editable=False,
+        help_text="ID of the Facebook post created when this article was first published.",
+    )
 
     search_fields = Page.search_fields + [
         index.SearchField("author"),
@@ -36,3 +44,24 @@ class NewsPage(Page):
     class Meta:
         verbose_name = "Aktualita"
         verbose_name_plural = "Aktuality"
+
+
+class FacebookToken(models.Model):
+    """Stores the Facebook Page access token obtained via OAuth."""
+
+    page_id = models.CharField(max_length=50, unique=True)
+    page_access_token = models.TextField()
+    expires_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text="Token expiry time. Null means the token does not expire.",
+    )
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def is_valid(self):
+        """Return True if the token is not expired."""
+        return self.expires_at is None or self.expires_at > timezone.now()
+
+    class Meta:
+        verbose_name = "Facebook Token"
+        verbose_name_plural = "Facebook Tokens"
