@@ -12,10 +12,14 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from pathlib import Path
+
+from dotenv import load_dotenv
+
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
-SITE_VERSION = "v1.0.0"
+SITE_VERSION = "v1.1.1"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -192,6 +196,7 @@ WAGTAILADMIN_BASE_URL = "http://example.com"
 # obtains a Page access token.  FACEBOOK_PAGE_ID identifies which Facebook Page to
 # post to.  The Page access token itself is stored in the database (FacebookToken
 # model) and refreshed via the OAuth flow whenever it is missing or expired.
+load_dotenv(Path(BASE_DIR) / ".env")
 FACEBOOK_APP_ID = os.environ.get("FACEBOOK_APP_ID", "")
 FACEBOOK_APP_SECRET = os.environ.get("FACEBOOK_APP_SECRET", "")
 FACEBOOK_PAGE_ID = os.environ.get("FACEBOOK_PAGE_ID", "")
