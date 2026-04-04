@@ -105,7 +105,19 @@ def exchange_code_for_page_token(code, redirect_uri):
 
 
 def post_news_to_facebook(page):
-    """Post a NewsPage article to the configured Facebook page."""
+    """Post a NewsPage article to the configured Facebook page.
+
+    If the article already has a ``facebook_post_id`` the post is skipped to
+    avoid duplicate Facebook posts on re-publish.
+    """
+    if getattr(page, "facebook_post_id", None):
+        logger.debug(
+            "Article '%s' already posted to Facebook (post ID: %s); skipping.",
+            page.title,
+            page.facebook_post_id,
+        )
+        return
+
     page_id = getattr(settings, "FACEBOOK_PAGE_ID", "")
     app_id = getattr(settings, "FACEBOOK_APP_ID", "")
 
@@ -136,6 +148,9 @@ def post_news_to_facebook(page):
     try:
         response = requests.post(url, data=payload, timeout=10)
         response.raise_for_status()
-        logger.info("Successfully posted article '%s' to Facebook.", page.title)
+        fb_post_id = response.json().get("id", "")
+        if fb_post_id:
+            page.__class__.objects.filter(pk=page.pk).update(facebook_post_id=fb_post_id)
+        logger.info("Successfully posted article '%s' to Facebook (post ID: %s).", page.title, fb_post_id)
     except requests.RequestException as e:
         logger.error("Failed to post article '%s' to Facebook: %s", page.title, e)

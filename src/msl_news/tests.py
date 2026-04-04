@@ -10,11 +10,15 @@ from django.urls import reverse
 # Helpers
 # ---------------------------------------------------------------------------
 
-def _make_page(title="Test Article", body="<p>Body text</p>", full_url="http://example.com/news/test/"):
+def _make_page(title="Test Article", body="<p>Body text</p>", full_url="http://example.com/news/test/", facebook_post_id=""):
     page = MagicMock()
     page.title = title
     page.body = body
     page.get_full_url.return_value = full_url
+    page.facebook_post_id = facebook_post_id
+    # Simulate the Django ORM used to persist facebook_post_id after posting.
+    page.__class__ = MagicMock()
+    page.__class__.objects.filter.return_value.update = MagicMock()
     return page
 
 
@@ -91,6 +95,31 @@ class PostNewsToFacebookTests(TestCase):
         post_news_to_facebook(page)
 
         mock_post.assert_not_called()
+
+    @override_settings(FACEBOOK_PAGE_ID="123456", FACEBOOK_APP_ID="app-id")
+    @patch("msl_news.facebook.requests.post")
+    def test_skips_when_already_posted(self, mock_post):
+        from msl_news.facebook import post_news_to_facebook
+
+        page = _make_page(facebook_post_id="123456_789")
+        post_news_to_facebook(page)
+
+        mock_post.assert_not_called()
+
+    @override_settings(FACEBOOK_PAGE_ID="123456", FACEBOOK_APP_ID="app-id")
+    @patch("msl_news.facebook.get_stored_token", return_value="test-token")
+    @patch("msl_news.facebook.requests.post")
+    def test_saves_post_id_after_successful_post(self, mock_post, _mock_token):
+        mock_post.return_value.raise_for_status = MagicMock()
+        mock_post.return_value.json.return_value = {"id": "111_222"}
+
+        from msl_news.facebook import post_news_to_facebook
+
+        page = _make_page()
+        post_news_to_facebook(page)
+
+        page.__class__.objects.filter.assert_called_once_with(pk=page.pk)
+        page.__class__.objects.filter.return_value.update.assert_called_once_with(facebook_post_id="111_222")
 
 
 # ---------------------------------------------------------------------------

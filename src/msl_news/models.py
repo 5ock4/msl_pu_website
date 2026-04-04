@@ -23,6 +23,13 @@ class NewsPage(Page):
     date = models.DateField("Post date", default=date.today, editable=False)
     author = models.CharField(max_length=20)
     body = RichTextField(blank=True)
+    facebook_post_id = models.CharField(
+        max_length=100,
+        blank=True,
+        default="",
+        editable=False,
+        help_text="ID of the Facebook post created when this article was first published.",
+    )
 
     search_fields = Page.search_fields + [
         index.SearchField("author"),
