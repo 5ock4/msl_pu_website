@@ -85,9 +85,12 @@ def facebook_oauth_callback(request):
             f"Facebook page (ID: {page_id}) connected successfully. "
             "Please publish your news article again.",
         )
-    except Exception as exc:
-        logger.error("Facebook OAuth callback error: %s", exc)
-        messages.error(request, f"Failed to connect Facebook page: {exc}")
+    except Exception:
+        logger.error("Facebook OAuth callback error", exc_info=True)
+        messages.error(
+            request,
+            "Failed to connect Facebook page. Please try again or contact an administrator if the problem persists.",
+        )
 
     next_url = request.session.pop(_SESSION_NEXT_KEY, None)
     return redirect(next_url or reverse("wagtailadmin_home"))
