@@ -32,3 +32,9 @@ def get_enrollment_page(context):
     except IndexError:
         enrollment_page = None
     return enrollment_page
+
+@register.simple_tag
+def get_login_page():
+    """Return the first live LoginPage, or None if none exists yet."""
+    from msl_auth.models import LoginPage
+    return LoginPage.objects.live().first()
