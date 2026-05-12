@@ -15,8 +15,10 @@ EMAIL_HOST_PASSWORD = "970ee714319c4bf0b897a199c199122d"
 # DEFAULT_FROM_EMAIL = "8148@rostiapp.cz"
 DEFAULT_FROM_EMAIL = "info@msliga.info"
 
-ALLOWED_HOSTS = ["*"] # TODO: set to production hostnames
+ALLOWED_HOSTS = ["msliga.info", "www.msliga.info"]
 SECRET_KEY = "django-insecure-=2=w-8a-k#fte^(-xsl-cc)a%!&$^a)$_qb#s0oaz^c=qifbx6" # TODO: decide how to generate and store this secret key
+
+WAGTAILADMIN_BASE_URL = "https://msliga.info"
 
 try:
     from .local import *

@@ -37,7 +37,7 @@ def serve_login_page(request, page):
             else:
                 increment_rate_limit(ip, email)
                 user = get_or_create_user(email)
-                generate_and_send_magic_link(request, user, next_url=next_url or None)
+                generate_and_send_magic_link(user, next_url=next_url or None)
                 # Always show the same message to avoid user enumeration
                 messages.success(
                     request,

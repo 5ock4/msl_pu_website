@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:16fec1cbbf59e249bca0f1de3a78c868e099538b9f885f18b79c28e18426d952"
+content_hash = "sha256:bf206ff5d7c3ea6aaa56bc3519289ad742b9c986d623291fae075ddc059935f0"
 
 [[metadata.targets]]
 requires_python = ">=3.13"
@@ -183,6 +183,20 @@ dependencies = [
 files = [
     {file = "django-permissionedforms-0.1.tar.gz", hash = "sha256:4340bb20c4477fffb13b4cc5cccf9f1b1010b64f79956c291c72d2ad2ed243f8"},
     {file = "django_permissionedforms-0.1-py2.py3-none-any.whl", hash = "sha256:d341a961a27cc77fde8cc42141c6ab55cc1f0cb886963cc2d6967b9674fa47d6"},
+]
+
+[[package]]
+name = "django-sesame"
+version = "3.2.3"
+requires_python = ">=3.9"
+summary = "Frictionless authentication with \"Magic Links\" for your Django project."
+groups = ["default"]
+dependencies = [
+    "django>=4.2",
+]
+files = [
+    {file = "django_sesame-3.2.3-py3-none-any.whl", hash = "sha256:5da0210a57a8f48dd61a6c8125e61121403042ed000c96187e4188a8241496d6"},
+    {file = "django_sesame-3.2.3.tar.gz", hash = "sha256:09977a1c55bdbcce0a024c712c4d683e1a69543a217626ffa1d5f7ef7ebffc58"},
 ]
 
 [[package]]

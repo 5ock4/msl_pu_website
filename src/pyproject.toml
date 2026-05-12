@@ -2,7 +2,7 @@
 dependencies = [
     "Django",
     "django-widget-tweaks",
-    "django-sesame>=3.2",
+    "django-sesame>=3.2.3",
     "wagtail",
     "pillow>=11.1.0",
     "pillow-heif>=0.21.0",

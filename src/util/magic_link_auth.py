@@ -61,7 +61,7 @@ def hash_token(token: str) -> str:
     return hashlib.sha256(token.encode("utf-8")).hexdigest()
 
 
-def generate_magic_link_url(request, user, next_url: str | None = None) -> str:
+def generate_magic_link_url(user, next_url: str | None = None) -> str:
     """
     Build an absolute magic-link URL for *user*.
 
@@ -74,9 +74,8 @@ def generate_magic_link_url(request, user, next_url: str | None = None) -> str:
     if next_url:
         params += f"&next={quote(next_url, safe='')}"
 
-    scheme = "https" if request.is_secure() else "http"
-    host = request.get_host()
-    return f"{scheme}://{host}{verify_path}?{params}"
+    base = settings.WAGTAILADMIN_BASE_URL.rstrip("/")
+    return f"{base}{verify_path}?{params}"
 
 
 def send_magic_link_email(email: str, magic_link_url: str) -> None:
@@ -99,13 +98,13 @@ def send_magic_link_email(email: str, magic_link_url: str) -> None:
     )
 
 
-def generate_and_send_magic_link(request, user, next_url: str | None = None) -> str:
+def generate_and_send_magic_link(user, next_url: str | None = None) -> str:
     """
     Generate a magic-link URL and dispatch the email.
 
     Returns the generated URL (useful in tests / admin commands).
     """
-    url = generate_magic_link_url(request, user, next_url=next_url)
+    url = generate_magic_link_url(user, next_url=next_url)
     send_magic_link_email(user.email, url)
     return url
 

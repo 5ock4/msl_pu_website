@@ -28,7 +28,6 @@ from util.magic_link_auth import (
     check_rate_limit,
     increment_rate_limit,
     is_safe_next_url,
-    generate_magic_link_url,
     RATE_LIMIT_MAX,
 )
 

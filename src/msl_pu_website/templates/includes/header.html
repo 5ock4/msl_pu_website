@@ -44,7 +44,7 @@
     </li>
     {% get_login_page as login_page %}
     {% if login_page %}
-    <li class="nav-item bg-hover ms-lg-auto">
+    <li class="nav-item bg-hover">
       {% if request.user.is_authenticated %}
       <a class="nav-link text-success" href="{% pageurl login_page %}">
         <i class="fa-solid fa-circle-user me-1"></i>{{ request.user.email }}
