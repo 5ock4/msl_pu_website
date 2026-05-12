@@ -49,6 +49,8 @@
                             <th scope="col" class="px-3">Datum registrace</th>
                             <th scope="col" class="px-3">Kategorie</th>
                             <th scope="col" class="px-3">Výsledky uveřejněny</th>
+                            <th scope="col" class="px-3">Pozvánka</th>
+                            <th scope="col" class="px-3">Startovka</th>
                             {% is_wagtail_admin as is_admin %}
                             {% if is_admin %}
                             <th scope="col" class="px-3">Výsledky</th>
@@ -68,6 +70,28 @@
                                     <i class="fas fa-check-circle text-success"></i>
                                 {% else %}
                                     <i class="fas fa-times-circle text-danger"></i>
+                                {% endif %}
+                            </td>
+                            <td class="px-3">
+                                {% if round.pozvanka_pdf %}
+                                    <a href="{{ round.pozvanka_pdf.url }}" target="_blank" class="btn btn-sm btn-outline-secondary me-1"><i class="fas fa-file-pdf"></i></a>
+                                {% endif %}
+                                {% if request.user.is_authenticated and round.uploads_open %}
+                                    <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#pozvankaModal{{ round.id }}">
+                                        <i class="fas fa-upload"></i>
+                                    </button>
+                                {% endif %}
+                            </td>
+                            <td class="px-3">
+                                {% if round.startovka_text %}
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#startovkaViewModal{{ round.id }}">
+                                        <i class="fas fa-list-ol"></i>
+                                    </button>
+                                {% endif %}
+                                {% if request.user.is_authenticated and round.uploads_open %}
+                                    <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#startovkaEditModal{{ round.id }}">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
                                 {% endif %}
                             </td>
                             {% is_wagtail_admin as is_admin %}
@@ -117,4 +141,101 @@
     {% endfor %}
 {% endif %}
 
+<!-- PDF upload modals (Pozvánka & Startovka edit) - authenticated users only -->
+{% if request.user.is_authenticated %}
+    {% for round in season_rounds_filtered %}
+    {% if round.uploads_open %}
+    <div class="modal fade" id="pozvankaModal{{ round.id }}" tabindex="-1" aria-labelledby="pozvankaModalLabel{{ round.id }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="pozvankaModalLabel{{ round.id }}">Nahrát pozvánku pro {{ round.round }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" enctype="multipart/form-data" action="{% url 'upload_pozvanka' round.id %}">
+                    <div class="modal-body">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="pozvanka_file{{ round.id }}" class="form-label">Prosím vyberte PDF soubor s pozvánkou (max 2 MB):</label>
+                            <input type="file" class="form-control" id="pozvanka_file{{ round.id }}" name="pozvanka_file" accept=".pdf" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Nahrát</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade startovka-edit-modal" id="startovkaEditModal{{ round.id }}" tabindex="-1" aria-labelledby="startovkaEditModalLabel{{ round.id }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="startovkaEditModalLabel{{ round.id }}">Upravit startovku – {{ round.round }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" action="{% url 'save_startovka' round.id %}">
+                    <div class="modal-body">
+                        {% csrf_token %}
+                        <p class="text-muted small mb-1">Jeden tým na řádek. Pořadí = číslování.</p>
+                        <div class="d-flex border rounded" style="font-family: monospace; font-size: 0.9rem;">
+                            <div id="lineNumbers{{ round.id }}" class="px-2 py-2 text-end text-muted border-end bg-light" style="user-select: none; min-width: 2.5rem; line-height: 1.5;"></div>
+                            <textarea id="startovkaTextarea{{ round.id }}" name="startovka_text" class="form-control border-0 rounded-0" rows="12" style="resize: vertical; line-height: 1.5; font-family: monospace; font-size: 0.9rem;">{{ round.startovka_text }}</textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Uložit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+{% endif %}
+
+<!-- Startovka view modals - visible to everyone -->
+{% for round in season_rounds_filtered %}
+{% if round.startovka_text %}
+<div class="modal fade" id="startovkaViewModal{{ round.id }}" tabindex="-1" aria-labelledby="startovkaViewModalLabel{{ round.id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="startovkaViewModalLabel{{ round.id }}">Startovka – {{ round.round }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <ol class="mb-0">
+                    {% for team in round.startovka_text|split_lines %}
+                    <li>{{ team }}</li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+document.querySelectorAll('.startovka-edit-modal').forEach(function(modal) {
+    var id = modal.id.replace('startovkaEditModal', '');
+    var textarea = document.getElementById('startovkaTextarea' + id);
+    var lineNumbers = document.getElementById('lineNumbers' + id);
+    function updateLines() {
+        var lines = textarea.value.split('\n');
+        var html = '';
+        for (var i = 1; i <= lines.length; i++) { html += i + '<br>'; }
+        lineNumbers.innerHTML = html;
+        lineNumbers.scrollTop = textarea.scrollTop;
+    }
+    modal.addEventListener('shown.bs.modal', updateLines);
+    textarea.addEventListener('input', updateLines);
+    textarea.addEventListener('scroll', function() { lineNumbers.scrollTop = textarea.scrollTop; });
+});
+</script>
 {% endblock %}

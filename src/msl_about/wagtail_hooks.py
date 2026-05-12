@@ -1,7 +1,8 @@
 from wagtail.snippets.models import register_snippet
 from wagtail.snippets.views.snippets import SnippetViewSet, SnippetViewSetGroup
+from wagtail.admin.panels import FieldPanel
 
-from .models import SeasonParametersPenalizations, Team, SeasonTeams, SeasonParameters, SeasonRounds
+from .models import SeasonParametersPenalizations, Team, SeasonTeams, SeasonParameters, SeasonRounds, RoundDocumentEdit
 
 
 class TeamViewSet(SnippetViewSet):
@@ -45,15 +46,33 @@ class SeasonParametersPenalizationsViewSet(SnippetViewSet):
 class SeasonRoundsViewSet(SnippetViewSet):
     model = SeasonRounds
     icon = "cog"
-    list_display = ["season_year", "round", "datetime", "date_registration", "categories", "results_ready"]
+    list_display = ["season_year", "round", "datetime", "date_registration", "categories", "results_ready", "uploads_force_open"]
     list_filter = {"season_year": ["exact"]}
     list_per_page = 20
     menu_label = "Ligová kola"
     menu_order = 204
 
 
+class RoundDocumentEditViewSet(SnippetViewSet):
+    model = RoundDocumentEdit
+    icon = "history"
+    list_display = ["round", "doc_type", "edited_by", "edited_at", "detail"]
+    list_filter = {"doc_type": ["exact"], "round": ["exact"]}
+    ordering = ["-edited_at"]
+    list_per_page = 30
+    menu_label = "Historie dokumentů"
+    menu_order = 205
+    panels = [
+        FieldPanel("round", read_only=True),
+        FieldPanel("doc_type", read_only=True),
+        FieldPanel("edited_by", read_only=True),
+        FieldPanel("edited_at", read_only=True),
+        FieldPanel("detail", read_only=True),
+    ]
+
+
 class AboutMSLGroup(SnippetViewSetGroup):
-    items = (TeamViewSet, SeasonTeamsViewSet, SeasonParametersViewSet, SeasonParametersPenalizationsViewSet, SeasonRoundsViewSet)
+    items = (TeamViewSet, SeasonTeamsViewSet, SeasonParametersViewSet, SeasonParametersPenalizationsViewSet, SeasonRoundsViewSet, RoundDocumentEditViewSet)
     menu_icon = "cogs"
     menu_label = "Parametry MSL"
     menu_name = "msl_parameters"

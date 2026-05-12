@@ -16,6 +16,8 @@ urlpatterns = [
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
     path("upload-results/<int:round_id>/", msl_about_views.upload_results, name="upload_results"),
+    path("upload-pozvanka/<int:round_id>/", msl_about_views.upload_pozvanka, name="upload_pozvanka"),
+    path("upload-startovka/<int:round_id>/", msl_about_views.save_startovka, name="save_startovka"),
     path('round/<int:round_id>/<str:category>', msl_results_views.round_detail, name='round_detail'),
     path("facebook/", include("msl_news.urls")),
     path("", include("msl_auth.urls")),

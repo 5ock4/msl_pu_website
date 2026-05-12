@@ -57,6 +57,37 @@
         </div>
       </div>
       {% wagtail_site as current_site %}
+      {% if rounds_with_pdfs %}
+      <div class="card shadow-sm mb-3">
+        <div class="card-header bg-gradient-primary py-2">
+          <h5 class="card-title mb-0">MSL {{ rounds_with_pdfs.0.season_year }}</h5>
+          <small class="text-muted">Informace ke kolům</small>
+        </div>
+        <div class="card-body p-2">
+          <table class="table table-sm table-hover mb-0">
+            <tbody>
+              {% for round in rounds_with_pdfs %}
+              <tr>
+                <td class="py-1">{{ round.round_number|to_roman }}. {{ round.round }}</td>
+                <td class="py-1 text-end">
+                  {% if round.pozvanka_pdf %}
+                  <a href="{{ round.pozvanka_pdf.url }}" target="_blank" class="btn btn-sm btn-outline-secondary me-1">
+                    <i class="fas fa-file-pdf"></i> Pozvánka
+                  </a>
+                  {% endif %}
+                  {% if round.startovka_text %}
+                  <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#startovkaHomeModal{{ round.id }}">
+                    <i class="fas fa-list-ol"></i> Startovka
+                  </button>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {% endif %}
       <div class="border-top mt-4 mb-2 pt-1 text-center">
         <small class="text-muted">AKTUALITY</small>
       </div>
@@ -116,3 +147,30 @@
   </div>
 </div>
 {% endblock content %}
+
+{% block extra_js %}
+{{ block.super }}
+{% if rounds_with_pdfs %}
+{% for round in rounds_with_pdfs %}
+{% if round.startovka_text %}
+<div class="modal fade" id="startovkaHomeModal{{ round.id }}" tabindex="-1" aria-labelledby="startovkaHomeModalLabel{{ round.id }}" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="startovkaHomeModalLabel{{ round.id }}">Startovka – {{ round.round }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <ol class="mb-0">
+          {% for team in round.startovka_text|split_lines %}
+          <li>{{ team }}</li>
+          {% endfor %}
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endblock extra_js %}
