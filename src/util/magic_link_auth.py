@@ -39,10 +39,12 @@ def get_or_create_user(email: str):
     standard password form.
     """
     email = email.lower().strip()
-    # Use email as the unique lookup; derive a username from it.
+    username = email[:150]
+    # Use username as the unique lookup and store the normalized email
+    # separately to avoid relying on a non-unique email field.
     user, created = User.objects.get_or_create(
-        email=email,
-        defaults={"username": email[:150], "is_active": True},
+        username=username,
+        defaults={"email": email, "is_active": True},
     )
     if created:
         # set_unusable_password() only sets the in-memory field;
