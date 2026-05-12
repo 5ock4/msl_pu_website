@@ -134,8 +134,11 @@ def verify_and_consume_token(token: str):
     if user is None:
         return "expired"
 
-    # Atomically record the token as consumed.
-    UsedToken.objects.get_or_create(token_hash=token_hash)
+    # Atomically record the token as consumed; only the caller that created the
+    # row wins — the unique constraint serializes concurrent requests.
+    _, created = UsedToken.objects.get_or_create(token_hash=token_hash)
+    if not created:
+        return "used"
     return user
 
 
