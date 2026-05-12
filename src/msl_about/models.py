@@ -149,7 +149,7 @@ class EnrollPage(Page):
                     team_category = enroll_form.cleaned_data['category']
                     team_representative = enroll_form.cleaned_data['team_representative']
                     team_representative_email = enroll_form.cleaned_data['team_representative_email']
-                    
+
                     new_team = Team.objects.create(
                         name=team_name,
                         category=team_category,

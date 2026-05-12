@@ -2,6 +2,7 @@
 dependencies = [
     "Django",
     "django-widget-tweaks",
+    "django-sesame>=3.2.3",
     "wagtail",
     "pillow>=11.1.0",
     "pillow-heif>=0.21.0",
@@ -16,3 +17,6 @@ dev = [
     "pytest",
     "pytest-django",
 ]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "msl_pu_website.settings.dev"

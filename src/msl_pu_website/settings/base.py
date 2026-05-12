@@ -19,7 +19,7 @@ from dotenv import load_dotenv
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
-SITE_VERSION = "v1.1.1"
+SITE_VERSION = "v1.2.0"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -35,6 +35,8 @@ INSTALLED_APPS = [
     "msl_about",
     "msl_results",
     "msl_tips",
+    "msl_auth",
+    "sesame",
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.embeds",
@@ -178,6 +180,22 @@ STORAGES = {
 # Wagtail settings
 
 WAGTAIL_SITE_NAME = "msl_pu_website"
+
+# Authentication backends - standard + sesame (magic-link)
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "sesame.backends.ModelBackend",
+]
+
+# Magic-link authentication (django-sesame)
+# https://django-sesame.readthedocs.io/
+SESAME_MAX_AGE = 600  # token TTL: 10 minutes (600 seconds)
+
+# Security: prevent token leakage via Referer header
+SECURE_REFERRER_POLICY = "same-origin"
+
+# Security: protect session cookie from JavaScript access
+SESSION_COOKIE_HTTPONLY = True
 
 # Search
 # https://docs.wagtail.org/en/stable/topics/search/backends.html
