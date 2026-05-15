@@ -7,6 +7,27 @@ from util.models import CategoryChoices
 
 register = template.Library()
 
+_ROMAN = [
+    (1000, 'M'), (900, 'CM'), (500, 'D'), (400, 'CD'),
+    (100, 'C'),  (90, 'XC'),  (50, 'L'),  (40, 'XL'),
+    (10, 'X'),   (9, 'IX'),   (5, 'V'),   (4, 'IV'), (1, 'I'),
+]
+
+@register.filter
+def to_roman(value):
+    try:
+        n = int(value)
+    except (TypeError, ValueError):
+        return value
+    if n < 1:
+        return value
+    result = ''
+    for val, numeral in _ROMAN:
+        while n >= val:
+            result += numeral
+            n -= val
+    return result
+
 
 @register.simple_tag()
 def random_1_to_300():
@@ -63,6 +84,12 @@ def get_season_params_years():
 @register.simple_tag
 def get_season_rounds_years():
     return SeasonRounds.objects.values_list('season_year', flat=True).distinct().order_by('-season_year')
+
+@register.filter
+def split_lines(value):
+    if not value:
+        return []
+    return [line for line in value.splitlines() if line.strip()]
 
 @register.simple_tag(takes_context=True)
 def get_categories(context):

@@ -396,6 +396,18 @@ class SeasonRounds(models.Model):
     date_registration = models.DateField('Datum začátku registrace', blank=False)
     categories = models.CharField('Soutěžní kategorie', max_length=20, blank=False, default='Muži, Ženy')
     results_ready = models.BooleanField('Výsledky uveřejněny', default=False)
+    uploads_force_open = models.BooleanField('Nahrávání dokumentů – manuální otevření', default=False)
+    pozvanka_pdf = models.FileField('Pozvánka (PDF)', upload_to='round_pdfs/', blank=True, null=True)
+    startovka_text = models.TextField('Startovka (seznam týmů)', blank=True, default='')
+
+    @property
+    def uploads_open(self):
+        if self.uploads_force_open:
+            return True
+        if self.date_registration is None or self.datetime is None:
+            return False
+        today = timezone.now().date()
+        return self.date_registration <= today <= self.datetime.date()
 
     @classmethod
     def get_next_round(cls):
@@ -424,3 +436,24 @@ class SeasonRounds(models.Model):
 
     def __str__(self):
         return f'Sezóna: {self.season_year}, Kolo: {self.round}'
+
+
+class RoundDocumentEdit(models.Model):
+    DOC_CHOICES = [('pozvanka', 'Pozvánka'), ('startovka', 'Startovka')]
+
+    round = models.ForeignKey(
+        SeasonRounds, on_delete=models.CASCADE,
+        related_name='document_edits', verbose_name='Kolo',
+    )
+    doc_type = models.CharField('Typ dokumentu', max_length=20, choices=DOC_CHOICES)
+    edited_by = models.CharField('Upravil', max_length=254, default='')
+    edited_at = models.DateTimeField('Čas úpravy', auto_now_add=True)
+    detail = models.CharField('Detail', max_length=255, blank=True)
+
+    class Meta:
+        verbose_name = 'Historie úprav dokumentů'
+        verbose_name_plural = 'Historie úprav dokumentů'
+        ordering = ['-edited_at']
+
+    def __str__(self):
+        return f'{self.get_doc_type_display()} – {self.round.round} – {self.edited_by} – {self.edited_at:%d.%m.%Y %H:%M}'
