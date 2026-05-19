@@ -14,7 +14,7 @@ class HomePage(Page):
         context["rounds_with_pdfs"] = (
             SeasonRounds.objects
             .filter(season_year=current_year)
-            .filter(Q(pozvanka_pdf__gt='') | Q(startovka_text__gt=''))
+            .filter(Q(pozvanka_pdf__isnull=False) | Q(startovka_text__gt=''))
             .order_by('datetime')
         )
         return context

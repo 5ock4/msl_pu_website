@@ -43,18 +43,41 @@ class RoundsPage(Page):
     def get_context(self, request):
         context = super().get_context(request)
 
-        # Get the selected year from the request, default to current year if not specified
         selected_year = request.GET.get('season_year') or \
             SeasonRounds.objects.aggregate(Max('season_year'))['season_year__max']
 
-        # Filter season_parameters based on the selected year
         season_rounds_filtered = SeasonRounds.objects \
             .filter(season_year=selected_year) \
             .order_by('datetime')
 
+        user = request.user
+        can_edit_pozvanka = set()
+        can_edit_startovka = set()
+
+        if user.is_authenticated:
+            round_ids = list(season_rounds_filtered.values_list('id', flat=True))
+            all_edits = (
+                RoundDocumentEdit.objects
+                .filter(round_id__in=round_ids)
+                .order_by('edited_at')
+                .values('round_id', 'doc_type', 'edited_by')
+            )
+            first_editors = {}
+            for edit in all_edits:
+                key = (edit['round_id'], edit['doc_type'])
+                if key not in first_editors:
+                    first_editors[key] = edit['edited_by']
+            for round_id in round_ids:
+                if first_editors.get((round_id, 'pozvanka'), user.email) == user.email:
+                    can_edit_pozvanka.add(round_id)
+                if first_editors.get((round_id, 'startovka'), user.email) == user.email:
+                    can_edit_startovka.add(round_id)
+
         context.update({
             'season_rounds_filtered': season_rounds_filtered,
             'selected_year': selected_year,
+            'can_edit_pozvanka': can_edit_pozvanka,
+            'can_edit_startovka': can_edit_startovka,
         })
         return context
 
@@ -397,7 +420,10 @@ class SeasonRounds(models.Model):
     categories = models.CharField('Soutěžní kategorie', max_length=20, blank=False, default='Muži, Ženy')
     results_ready = models.BooleanField('Výsledky uveřejněny', default=False)
     uploads_force_open = models.BooleanField('Nahrávání dokumentů – manuální otevření', default=False)
-    pozvanka_pdf = models.FileField('Pozvánka (PDF)', upload_to='round_pdfs/', blank=True, null=True)
+    pozvanka_pdf = models.ForeignKey(
+        'wagtaildocs.Document', verbose_name='Pozvánka (PDF)',
+        null=True, blank=True, on_delete=models.SET_NULL, related_name='+',
+    )
     startovka_text = models.TextField('Startovka (seznam týmů)', blank=True, default='')
 
     @property

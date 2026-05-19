@@ -76,7 +76,7 @@
                                 {% if round.pozvanka_pdf %}
                                     <a href="{{ round.pozvanka_pdf.url }}" target="_blank" class="btn btn-sm btn-outline-secondary me-1"><i class="fas fa-file-pdf"></i></a>
                                 {% endif %}
-                                {% if request.user.is_authenticated and round.uploads_open %}
+                                {% if round.id in can_edit_pozvanka and round.uploads_open %}
                                     <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#pozvankaModal{{ round.id }}">
                                         <i class="fas fa-upload"></i>
                                     </button>
@@ -88,7 +88,7 @@
                                         <i class="fas fa-list-ol"></i>
                                     </button>
                                 {% endif %}
-                                {% if request.user.is_authenticated and round.uploads_open %}
+                                {% if round.id in can_edit_startovka and round.uploads_open %}
                                     <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#startovkaEditModal{{ round.id }}">
                                         <i class="fas fa-edit"></i>
                                     </button>
