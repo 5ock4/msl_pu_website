@@ -51,15 +51,10 @@ class RoundsPage(Page):
             .order_by('datetime')
 
         user = request.user
-        is_admin = (
-            user.is_authenticated and
-            (user.is_staff or user.is_superuser or user.username == 'RadaMSL')
-        )
-
         can_edit_pozvanka = set()
         can_edit_startovka = set()
 
-        if is_admin:
+        if user.is_authenticated:
             round_ids = list(season_rounds_filtered.values_list('id', flat=True))
             all_edits = (
                 RoundDocumentEdit.objects

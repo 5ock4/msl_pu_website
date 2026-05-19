@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
+from django.db import transaction
 from wagtail.documents.models import Document
 
 from msl_results.round_results_preprocessor import RoundResultsPreprocessor
@@ -50,24 +51,33 @@ def upload_pozvanka(request, round_id):
         elif not _is_valid_pdf(uploaded_file):
             messages.error(request, 'Soubor pozvánky není platný PDF soubor.')
         else:
-            first_edit = RoundDocumentEdit.objects.filter(
-                round=round_obj, doc_type='pozvanka'
-            ).order_by('edited_at').first()
-            if first_edit and first_edit.edited_by != request.user.email:
-                messages.error(request, f'Pozvánku pro toto kolo může upravovat pouze {first_edit.edited_by}.')
-            else:
-                old_doc = round_obj.pozvanka_pdf
-                doc = Document(title=f'Pozvánka {round_obj}', file=uploaded_file)
-                doc.save()
-                round_obj.pozvanka_pdf = doc
-                round_obj.save()
-                if old_doc:
-                    old_doc.delete()
-                RoundDocumentEdit.objects.create(
-                    round=round_obj, doc_type='pozvanka',
-                    edited_by=request.user.email, detail=uploaded_file.name,
-                )
-                messages.success(request, f'Pozvánka pro kolo {round_obj.round} úspěšně nahrána!')
+            doc = None
+            try:
+                with transaction.atomic():
+                    round_obj = SeasonRounds.objects.select_for_update().get(id=round_id)
+                    first_edit = RoundDocumentEdit.objects.filter(
+                        round=round_obj, doc_type='pozvanka'
+                    ).order_by('edited_at').first()
+                    if first_edit and first_edit.edited_by != request.user.email:
+                        messages.error(request, f'Pozvánku pro toto kolo může upravovat pouze {first_edit.edited_by}.')
+                    else:
+                        old_doc = round_obj.pozvanka_pdf
+                        doc = Document(title=f'Pozvánka {round_obj}', file=uploaded_file)
+                        doc.save()
+                        round_obj.pozvanka_pdf = doc
+                        round_obj.save()
+                        if old_doc:
+                            old_doc.delete()
+                        RoundDocumentEdit.objects.create(
+                            round=round_obj, doc_type='pozvanka',
+                            edited_by=request.user.email, detail=uploaded_file.name,
+                        )
+                        doc = None  # transaction committed, no cleanup needed
+                        messages.success(request, f'Pozvánka pro kolo {round_obj.round} úspěšně nahrána!')
+            except Exception:
+                if doc is not None:
+                    doc.file.storage.delete(doc.file.name)
+                raise
 
     return _redirect_to_rounds_page()
 
@@ -87,20 +97,22 @@ def save_startovka(request, round_id):
             elif text.count('\n') + 1 > MAX_STARTOVKA_LINES:
                 messages.error(request, f'Startovka obsahuje příliš mnoho řádků (max {MAX_STARTOVKA_LINES}).')
             else:
-                first_edit = RoundDocumentEdit.objects.filter(
-                    round=round_obj, doc_type='startovka'
-                ).order_by('edited_at').first()
-                if first_edit and first_edit.edited_by != request.user.email:
-                    messages.error(request, f'Startovku pro toto kolo může upravovat pouze {first_edit.edited_by}.')
-                else:
-                    round_obj.startovka_text = text
-                    round_obj.save()
-                    team_count = len([l for l in text.splitlines() if l.strip()])
-                    RoundDocumentEdit.objects.create(
-                        round=round_obj, doc_type='startovka',
-                        edited_by=request.user.email, detail=f'{team_count} týmů',
-                    )
-                    messages.success(request, f'Startovka pro kolo {round_obj.round} úspěšně uložena!')
+                with transaction.atomic():
+                    round_obj = SeasonRounds.objects.select_for_update().get(id=round_id)
+                    first_edit = RoundDocumentEdit.objects.filter(
+                        round=round_obj, doc_type='startovka'
+                    ).order_by('edited_at').first()
+                    if first_edit and first_edit.edited_by != request.user.email:
+                        messages.error(request, f'Startovku pro toto kolo může upravovat pouze {first_edit.edited_by}.')
+                    else:
+                        round_obj.startovka_text = text
+                        round_obj.save()
+                        team_count = len([l for l in text.splitlines() if l.strip()])
+                        RoundDocumentEdit.objects.create(
+                            round=round_obj, doc_type='startovka',
+                            edited_by=request.user.email, detail=f'{team_count} týmů',
+                        )
+                        messages.success(request, f'Startovka pro kolo {round_obj.round} úspěšně uložena!')
 
     return _redirect_to_rounds_page()
 
