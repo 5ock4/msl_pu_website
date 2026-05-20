@@ -42,9 +42,7 @@ def upload_pozvanka(request, round_id):
 
     if request.method == 'POST' and request.FILES.get('pozvanka_file'):
         uploaded_file = request.FILES['pozvanka_file']
-        if not is_wagtail_admin(request.user):
-            messages.error(request, 'Nemáte oprávnění nahrávat dokumenty.')
-        elif not round_obj.uploads_open:
+        if not round_obj.uploads_open:
             messages.error(request, f'Nahrávání dokumentů pro kolo {round_obj.round} je uzavřeno.')
         elif uploaded_file.size > MAX_PDF_SIZE:
             messages.error(request, f'Soubor pozvánky je příliš velký (max {MAX_PDF_SIZE_MB} MB).')
@@ -86,9 +84,7 @@ def save_startovka(request, round_id):
     round_obj = get_object_or_404(SeasonRounds, id=round_id)
 
     if request.method == 'POST':
-        if not is_wagtail_admin(request.user):
-            messages.error(request, 'Nemáte oprávnění upravovat dokumenty.')
-        elif not round_obj.uploads_open:
+        if not round_obj.uploads_open:
             messages.error(request, f'Nahrávání dokumentů pro kolo {round_obj.round} je uzavřeno.')
         else:
             text = request.POST.get('startovka_text', '')
