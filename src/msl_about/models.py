@@ -10,6 +10,7 @@ from django.db.utils import IntegrityError
 from wagtail.fields import RichTextField
 from wagtail.models import Page
 from wagtail.admin.panels import FieldPanel
+from wagtail.search import index
 from django.db.models import Max
 from django.utils import timezone
 from django.utils.safestring import mark_safe
@@ -235,7 +236,7 @@ class TeamManager(models.Manager):
         return self.get(name=name, district=district, category=category)
 
 
-class Team(models.Model):
+class Team(index.Indexed, models.Model):
     name = models.CharField('Název týmu', max_length=50, blank=False)
     district = models.CharField('Okres', max_length=2, blank=False, default='*')
     category = models.CharField(
@@ -248,6 +249,11 @@ class Team(models.Model):
     confirmed = models.BooleanField('Schváleno', default=False)
 
     objects = TeamManager()
+
+    search_fields = [
+        index.AutocompleteField('name'),
+        index.AutocompleteField('district'),
+    ]
 
     class Meta:
         verbose_name = "Tým"

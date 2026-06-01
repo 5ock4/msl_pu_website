@@ -1,5 +1,11 @@
 RELEASE_NOTES = [
     {
+        "version": "v1.4.1",
+        "entries": [
+            "fix(admin): vyhledávání týmu ve výběrovém dialogu v admin sekci",
+        ]
+    },
+    {
         "version": "v1.4.0",
         "entries": [
             "feat: přidány release notes",

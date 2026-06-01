@@ -65,6 +65,7 @@ jobs:
             # Now python3 -m pdm works inside the venv
             python3 -m pdm sync --prod
             python3 -m pdm run python manage.py migrate
+            python3 -m pdm run python manage.py update_index
             python3 -m pdm run python manage.py collectstatic --noinput
           EOF
 

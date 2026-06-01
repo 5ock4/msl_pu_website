@@ -10,6 +10,7 @@ class TeamViewSet(SnippetViewSet):
     icon = "cog"
     list_display = ["name", "district", "team_category"]
     list_filter = {"category": ["exact"], "district": ["exact"]}
+    search_fields = ["name", "district"]
     list_per_page = 20
     menu_label = "Týmy"
     menu_order = 201
