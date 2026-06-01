@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block body_class %}template-release-notes{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% for release in release_notes %}
+    <div class="card shadow-sm mb-3 {% if release.version == current_version %}border-primary{% endif %}">
+        <div class="card-header bg-gradient-primary py-3">
+            <div class="row align-items-center">
+                <h5 class="col card-title mb-0">
+                    {{ release.version }}
+                    {% if release.version == current_version %}
+                    <span class="badge bg-light text-primary ms-2 small">aktuální</span>
+                    {% endif %}
+                </h5>
+                <small class="col text-end fst-italic">{{ release.date }}</small>
+            </div>
+        </div>
+        <div class="card-body">
+            <ul class="mb-0">
+                {% for entry in release.entries %}
+                <li>{{ entry }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

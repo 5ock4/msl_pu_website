@@ -1,0 +1,29 @@
+name: Check release notes bump
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check-release-notes:
+    name: release_notes.py must be edited
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check release_notes.py was modified
+        run: |
+          BASE="${{ github.event.pull_request.base.sha }}"
+          CHANGED=$(git diff --name-only "$BASE" HEAD -- src/util/release_notes.py)
+
+          if [ -z "$CHANGED" ]; then
+            echo "::error file=src/util/release_notes.py::release_notes.py was not updated. Add an entry for the new version before merging."
+            exit 1
+          fi
+
+          echo "release_notes.py was updated — OK."

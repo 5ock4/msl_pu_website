@@ -1,6 +1,6 @@
-from django.conf import settings
+from util.release_notes import RELEASE_NOTES
 
 
 def site_version(request):
-    """Add SITE_VERSION from settings into the template context."""
-    return {"SITE_VERSION": getattr(settings, "SITE_VERSION", "")}
+    version = RELEASE_NOTES[0]["version"] if RELEASE_NOTES else ""
+    return {"SITE_VERSION": version}

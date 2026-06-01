@@ -4,22 +4,25 @@
 <footer>
     <!-- Sponsors section -->
     <div class="container">
-        <div class="col-12">
         <div class="border-top mt-4 mb-2 pt-1 text-center">
             <small class="text-muted">SPONZOŘI</small>
         </div>
-        <div class="row">
-            <div class="col-6 text-end">
+        <div class="d-flex flex-wrap justify-content-center align-items-center gap-4 mb-3">
             <a href="https://www.derutex.cz/" target="_blank">
-                <img src="{% static 'images/derutex.png' %}" class="img-fluid mb-3 link-img" alt="Derutex" style="max-height: 80px;">
+                <img src="{% static 'images/derutex.png' %}" class="img-fluid link-img" alt="Derutex" style="max-height: 80px;">
             </a>
-            </div>
-            <div class="col-6 text-start">
             <a href="http://www.sportservisps.cz/" target="_blank">
-                <img src="{% static 'images/gaba.png' %}" class="img-fluid mb-3 link-img" alt="Gaba" style="max-height: 80px;">
+                <img src="{% static 'images/gaba.png' %}" class="img-fluid link-img" alt="Gaba" style="max-height: 80px;">
             </a>
-            </div>
-        </div>
+            <a href="https://mspact.cz/" target="_blank">
+                <img src="{% static 'images/mspact.png' %}" class="img-fluid link-img" alt="MSPACT" style="max-height: 80px;">
+            </a>
+            <a href="https://www.simvr.cz/" target="_blank">
+                <img src="{% static 'images/sim-vr.png' %}" class="img-fluid link-img" alt="SIMVR" style="max-height: 80px;">
+            </a>
+            <a href="https://sporflex.cz/" target="_blank">
+                <img src="{% static 'images/sporflex.png' %}" class="img-fluid link-img" alt="Sporflex" style="max-height: 80px;">
+            </a>
         </div>
     </div>
     <div class="border-top border-bottom py-3 bg-white footer-sticky">
@@ -28,8 +31,8 @@
                 <div class="col-12">
                     <div class="d-flex justify-content-center align-items-center mb-2">
                         <p class="mb-0 text-secondary small">
-                            © {% now "Y" %} Created by <strong>[ ASS ]</strong> - Adam Strakoš Solutions - 
-                            {{ SITE_VERSION }}
+                            © {% now "Y" %} Created by <strong>[ ASS ]</strong> - Adam Strakoš Solutions -
+                            <a href="{% url 'release_notes' %}" class="text-secondary">{{ SITE_VERSION }}</a>
                         </p>
                     </div>
                     <div class="d-flex justify-content-center mb-2">
