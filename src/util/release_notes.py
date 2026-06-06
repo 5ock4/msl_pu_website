@@ -1,5 +1,11 @@
 RELEASE_NOTES = [
     {
+        "version": "v1.5.1",
+        "entries": [
+            "fix: admini neviděli výsledky označené jako uveřejněné (results_ready=True) bez nahraného Excelu",
+        ]
+    },
+    {
         "version": "v1.5.0",
         "entries": [
             "feat: nahrávání výsledků (Excel) pro správce kola — stejná práva jako pozvánka/startovka",
