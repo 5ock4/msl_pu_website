@@ -38,7 +38,10 @@ class ResultsPage(Page):
         def get_teams_with_results(category):
             """Helper function to get teams with results for a specific category"""
              # Get all teams that have results in the selected year for this category
-            results_gate = models.Q(round__results_excel__isnull=False) if is_admin else models.Q(round__results_ready=True)
+            results_gate = (
+                models.Q(round__results_excel__isnull=False) | models.Q(round__results_ready=True)
+                if is_admin else models.Q(round__results_ready=True)
+            )
             teams = Result.objects.filter(
                 results_gate,
                 round__season_year=SELECTED_YEAR,
