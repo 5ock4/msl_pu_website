@@ -1,5 +1,12 @@
 RELEASE_NOTES = [
     {
+        "version": "v1.5.2",
+        "entries": [
+            "fix: výsledkový sloupec na mobilu již není sticky, zobrazí se na konci řádku",
+            "fix: ovládací prvky výsledků jsou na mobilu responzivní",
+        ]
+    },
+    {
         "version": "v1.5.1",
         "entries": [
             "fix: admini neviděli výsledky označené jako uveřejněné (results_ready=True) bez nahraného Excelu",
