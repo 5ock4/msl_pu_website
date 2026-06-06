@@ -1,5 +1,14 @@
 RELEASE_NOTES = [
     {
+        "version": "v1.5.0",
+        "entries": [
+            "feat: nahrávání výsledků (Excel) pro správce kola — stejná práva jako pozvánka/startovka",
+            "feat: nahraný Excel uložen ve Wagtail a ke stažení",
+            "feat: výsledky viditelné pro adminy ihned po nahrání, pro veřejnost až po zaškrtnutí 'Výsledky uveřejněny'",
+            "feat: pořadí povinné — nejdříve pozvánka, pak startovka, teprve pak výsledky",
+        ]
+    },
+    {
         "version": "v1.4.1",
         "entries": [
             "fix(admin): vyhledávání týmu ve výběrovém dialogu v admin sekci",

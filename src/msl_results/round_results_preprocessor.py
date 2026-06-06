@@ -1,57 +1,40 @@
-import numpy as np
 import pandas as pd
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
 from msl_results.models import Result
 from msl_about.models import SeasonParameters, SeasonParametersPenalizations, Team
 from .models import SeasonRounds
-from util.models import D_NU_PENALTY_POINTS, CategoryChoices
+from util.models import D_NU_PENALTY_POINTS
 
 
 class RoundResultsPreprocessor:
-    def __init__(self, round_obj: SeasonRounds, results_file: InMemoryUploadedFile):
+    def __init__(self, round_obj: SeasonRounds, new_results_file: InMemoryUploadedFile):
         self.round_obj = round_obj
-        self.results_df = self.file_to_dataframe(results_file)
+        self.results_df = self.file_to_dataframe(new_results_file)
 
     def file_to_dataframe(self, results_file: InMemoryUploadedFile) -> pd.DataFrame:
-        results = pd.read_excel(
-                results_file,
-                header=2,
-                usecols=['LIGOVÉ BODY', 'SDH', 'TEAM', 'LIGA -1   NELIGOVÝ - 0', 'PŮJČENÝ ZÁVODNÍK M-1, Ž-1,2, SG-1',
-                        '1-M,  2-Ž, 3-35', 'LEVÝ PROUD', 'PRAVÝ PROUD']
-            ) \
-            .dropna(subset=['SDH']) \
-            .rename(columns={
-                'LIGOVÉ BODY': 'points_excel',
-                'SDH': 'sdh',
-                'TEAM': 'team_excel',
-                'LIGA -1   NELIGOVÝ - 0': 'msl',
-                'PŮJČENÝ ZÁVODNÍK M-1, Ž-1,2, SG-1': 'competitors_borrowed',
-                '1-M,  2-Ž, 3-35': 'category_excel',
-                'LEVÝ PROUD': 'lp',
-                'PRAVÝ PROUD': 'pp'
-            })
-        results['team_excel'] = np.where(
-            (results['team_excel'].notna()) & (results['team_excel'] != 'A'), 
-            results['sdh'] + ' ' + results['team_excel'], 
-            results['sdh']
+        sheet_names = ["Pořadí muži", "Pořadí ženy", "Pořadí 35+"]
+        # N=13, Q=16, S=18, T=19, U=20 (0-indexed)
+        col_indices = [13, 16, 18, 19, 20]
+        col_names = ['team_excel', 'category_excel', 'competitors_borrowed', 'lp', 'pp']
+
+        all_sheets = pd.read_excel(
+            results_file,
+            sheet_name=sheet_names,
+            header=None,
+            skiprows=3,   # rows 1-3 skipped, data starts at row 4
+            nrows=27,     # rows 4-30 inclusive
+            usecols=col_indices,
         )
-        results = results.drop(columns=['sdh'])
-        
-        # Map category numeric values to readable text
-        category_mapping = {
-            1: CategoryChoices.MUZI.value,
-            2: CategoryChoices.ZENY.value,
-            3: CategoryChoices.VETERANI.value
-        }
-        results['category_excel'] = results['category_excel'].map(category_mapping)
-        results['competitors_borrowed'] = pd.to_numeric(results['competitors_borrowed'], errors='coerce').fillna(0).astype(int)
-        # Select only teams part of MSL
-        results = results[results['msl'] == 1]
 
-        results = self.postprocess(results)
+        dfs = []
+        for df in all_sheets.values():
+            df.columns = col_names
+            dfs.append(df)
 
-        return results
+        results = pd.concat(dfs, ignore_index=True).dropna(subset=['team_excel'])
+        results = results.apply(lambda col: col.str.strip() if pd.api.types.is_string_dtype(col) else col)
+        return self.postprocess(results)
 
     def postprocess(self, results_df: pd.DataFrame) -> pd.DataFrame:
         """Calculates extra columns for the results DataFrame"""

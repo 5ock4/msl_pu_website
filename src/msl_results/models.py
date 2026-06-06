@@ -27,6 +27,9 @@ class ResultsPage(Page):
         SELECTED_CATEGORY = request.GET.get('category')
         # Controls whether we display total points or total prize money
         metric_param = request.GET.get('metric')
+
+        user = request.user
+        is_admin = user.is_authenticated and (user.is_staff or user.is_superuser or user.username == 'RadaMSL')
         RESULTS_METRIC = 'prize_money' if metric_param == 'prize_money' else 'points'
 
         # Get all rounds for the selected year
@@ -35,9 +38,10 @@ class ResultsPage(Page):
         def get_teams_with_results(category):
             """Helper function to get teams with results for a specific category"""
              # Get all teams that have results in the selected year for this category
+            results_gate = models.Q(round__results_excel__isnull=False) if is_admin else models.Q(round__results_ready=True)
             teams = Result.objects.filter(
+                results_gate,
                 round__season_year=SELECTED_YEAR,
-                round__results_ready=True,
                 team__category=category
             ).values_list('team', flat=True).distinct()
 

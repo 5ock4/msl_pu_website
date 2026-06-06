@@ -54,6 +54,7 @@ class RoundsPage(Page):
         user = request.user
         can_edit_pozvanka = set()
         can_edit_startovka = set()
+        can_edit_results = set()
 
         if user.is_authenticated:
             round_ids = list(season_rounds_filtered.values_list('id', flat=True))
@@ -69,16 +70,23 @@ class RoundsPage(Page):
                 if key not in first_editors:
                     first_editors[key] = edit['edited_by']
             for round_id in round_ids:
-                if first_editors.get((round_id, 'pozvanka'), user.email) == user.email:
+                pozvanka_editor = first_editors.get((round_id, 'pozvanka'))
+                # pozvanka: any user can claim if nobody has uploaded yet
+                if pozvanka_editor is None or pozvanka_editor == user.email:
                     can_edit_pozvanka.add(round_id)
-                if first_editors.get((round_id, 'startovka'), user.email) == user.email:
+                # startovka and results: only the pozvanka uploader (pozvanka must exist first)
+                if pozvanka_editor == user.email:
                     can_edit_startovka.add(round_id)
+                    # results: additionally require startovka to be uploaded
+                    if (round_id, 'startovka') in first_editors:
+                        can_edit_results.add(round_id)
 
         context.update({
             'season_rounds_filtered': season_rounds_filtered,
             'selected_year': selected_year,
             'can_edit_pozvanka': can_edit_pozvanka,
             'can_edit_startovka': can_edit_startovka,
+            'can_edit_results': can_edit_results,
         })
         return context
 
@@ -431,6 +439,10 @@ class SeasonRounds(models.Model):
         null=True, blank=True, on_delete=models.SET_NULL, related_name='+',
     )
     startovka_text = models.TextField('Startovka (seznam týmů)', blank=True, default='')
+    results_excel = models.ForeignKey(
+        'wagtaildocs.Document', verbose_name='Výsledky (Excel)',
+        null=True, blank=True, on_delete=models.SET_NULL, related_name='+',
+    )
 
     @property
     def uploads_open(self):
@@ -471,7 +483,7 @@ class SeasonRounds(models.Model):
 
 
 class RoundDocumentEdit(models.Model):
-    DOC_CHOICES = [('pozvanka', 'Pozvánka'), ('startovka', 'Startovka')]
+    DOC_CHOICES = [('pozvanka', 'Pozvánka'), ('startovka', 'Startovka'), ('results', 'Výsledky')]
 
     round = models.ForeignKey(
         SeasonRounds, on_delete=models.CASCADE,
