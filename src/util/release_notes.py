@@ -1,5 +1,13 @@
 RELEASE_NOTES = [
     {
+        "version": "v1.6.0",
+        "entries": [
+            "feat: po prvním přihlášení si uživatel zvolí veřejné uživatelské jméno (3–30 znaků, unikátní)",
+            "feat: uživatelské jméno lze kdykoliv změnit přes tlačítko na stránce přihlášení",
+            "feat: v hlavičce a na profilu se místo e-mailu zobrazuje uživatelské jméno",
+        ]
+    },
+    {
         "version": "v1.5.2",
         "entries": [
             "fix: výsledkový sloupec na mobilu již není sticky, zobrazí se na konci řádku",

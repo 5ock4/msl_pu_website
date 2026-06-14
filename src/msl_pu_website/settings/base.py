@@ -67,6 +67,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
+    "msl_auth.middleware.RequireDisplayNameMiddleware",
 ]
 
 ROOT_URLCONF = "msl_pu_website.urls"

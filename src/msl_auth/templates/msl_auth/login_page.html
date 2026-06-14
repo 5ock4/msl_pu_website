@@ -31,12 +31,18 @@
             <div class="text-center mb-4">
               <i class="fa-solid fa-circle-check fa-3x text-success mb-3"></i>
               <p class="fs-5 mb-1">Jste přihlášeni jako:</p>
-              <p class="fw-bold fs-4">{{ request.user.email }}</p>
+              <p class="fw-bold fs-4 mb-0">{{ request.user.msl_profile.display_name|default:request.user.email }}</p>
+              {% if request.user.msl_profile.display_name %}
+                <p class="fs-4">{{ request.user.email }}</p>
+              {% endif %}
             </div>
 
             <form action="{% url 'msl_auth:magic_link_logout' %}" method="post">
               {% csrf_token %}
-              <div class="d-grid">
+              <div class="d-grid gap-2">
+                <a href="{% url 'msl_auth:setup_username' %}" class="btn btn-outline-primary btn-lg">
+                  <i class="fa-solid fa-pen me-2"></i>Změnit uživatelské jméno
+                </a>
                 <button type="submit" class="btn btn-outline-secondary btn-lg">
                   <i class="fa-solid fa-right-from-bracket me-2"></i>Odhlásit se
                 </button>

@@ -51,6 +51,12 @@ def get_or_create_user(email: str):
         # save() is required to persist it to the database.
         user.set_unusable_password()
         user.save(update_fields=["password"])
+
+    # Ensure every magic-link user has a UserProfile row so the display-name
+    # gate has something to read. Imported lazily to avoid app-loading cycles.
+    from msl_auth.models import UserProfile
+    UserProfile.objects.get_or_create(user=user)
+
     return user
 
 

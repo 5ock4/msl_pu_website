@@ -20,7 +20,8 @@ from django.urls import reverse
 
 import sesame.utils
 
-from msl_auth.models import UsedToken
+from msl_auth.models import UsedToken, UserProfile
+from msl_auth.forms import DisplayNameForm
 from util.magic_link_auth import (
     get_or_create_user,
     hash_token,
@@ -265,3 +266,164 @@ class LogoutViewTests(TestCase):
         self.client.get(self.logout_url)
         # User should still be logged in
         self.assertIn("_auth_user_id", self.client.session)
+
+
+# ── UserProfile creation ──────────────────────────────────────────────────────
+
+class UserProfileAutoCreateTests(TestCase):
+
+    def test_get_or_create_user_creates_profile(self):
+        user = get_or_create_user("profile@example.com")
+        self.assertTrue(UserProfile.objects.filter(user=user).exists())
+        self.assertIsNone(user.msl_profile.display_name)
+
+
+# ── DisplayNameForm ───────────────────────────────────────────────────────────
+
+class DisplayNameFormTests(TestCase):
+
+    def setUp(self):
+        self.user = get_or_create_user("form@example.com")
+
+    def test_accepts_valid_name(self):
+        form = DisplayNameForm({"display_name": "honza42"}, user=self.user)
+        self.assertTrue(form.is_valid(), form.errors)
+
+    def test_rejects_too_short(self):
+        form = DisplayNameForm({"display_name": "ab"}, user=self.user)
+        self.assertFalse(form.is_valid())
+
+    def test_rejects_too_long(self):
+        form = DisplayNameForm({"display_name": "x" * 31}, user=self.user)
+        self.assertFalse(form.is_valid())
+
+    def test_rejects_bad_chars(self):
+        form = DisplayNameForm({"display_name": "bad name!"}, user=self.user)
+        self.assertFalse(form.is_valid())
+
+    def test_rejects_duplicate_case_insensitive(self):
+        other = get_or_create_user("other@example.com")
+        other.msl_profile.display_name = "Honza42"
+        other.msl_profile.save()
+
+        form = DisplayNameForm({"display_name": "honza42"}, user=self.user)
+        self.assertFalse(form.is_valid())
+        self.assertIn("display_name", form.errors)
+
+    def test_allows_own_name_on_re_edit(self):
+        self.user.msl_profile.display_name = "honza42"
+        self.user.msl_profile.save()
+        form = DisplayNameForm({"display_name": "honza42"}, user=self.user)
+        self.assertTrue(form.is_valid(), form.errors)
+
+
+# ── setup_username view ──────────────────────────────────────────────────────
+
+_NON_MANIFEST_STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+}
+
+
+@override_settings(STORAGES=_NON_MANIFEST_STORAGES)
+class SetupUsernameViewTests(TestCase):
+
+    def setUp(self):
+        self.client = Client()
+        self.user = get_or_create_user("setup@example.com")
+        self.setup_url = reverse("msl_auth:setup_username")
+
+    def _login(self):
+        token = sesame.utils.get_token(self.user)
+        self.client.get(reverse("msl_auth:magic_link_verify"), {"sesame": token})
+
+    def test_anonymous_redirected(self):
+        resp = self.client.get(self.setup_url)
+        self.assertEqual(resp.status_code, 302)
+        self.assertNotIn("_auth_user_id", self.client.session)
+
+    def test_get_shows_form_when_logged_in(self):
+        self._login()
+        resp = self.client.get(self.setup_url)
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, "display_name")
+
+    def test_post_sets_display_name_and_redirects(self):
+        self._login()
+        resp = self.client.post(
+            self.setup_url,
+            {"display_name": "newname", "next": "/some-page/"},
+        )
+        self.assertRedirects(resp, "/some-page/", fetch_redirect_response=False)
+        self.user.msl_profile.refresh_from_db()
+        self.assertEqual(self.user.msl_profile.display_name, "newname")
+
+    def test_unsafe_next_falls_back_to_root(self):
+        self._login()
+        resp = self.client.post(
+            self.setup_url,
+            {"display_name": "newname2", "next": "https://evil.com/"},
+        )
+        self.assertRedirects(resp, "/", fetch_redirect_response=False)
+
+    def test_already_set_shows_form_prepopulated(self):
+        self._login()
+        self.user.msl_profile.display_name = "already"
+        self.user.msl_profile.save()
+        resp = self.client.get(self.setup_url)
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'value="already"')
+
+    def test_post_updates_existing_display_name(self):
+        self._login()
+        self.user.msl_profile.display_name = "oldname"
+        self.user.msl_profile.save()
+        resp = self.client.post(self.setup_url, {"display_name": "newname"})
+        self.assertRedirects(resp, "/", fetch_redirect_response=False)
+        self.user.msl_profile.refresh_from_db()
+        self.assertEqual(self.user.msl_profile.display_name, "newname")
+
+
+# ── RequireDisplayNameMiddleware ──────────────────────────────────────────────
+
+class RequireDisplayNameMiddlewareTests(TestCase):
+
+    def setUp(self):
+        self.client = Client()
+        self.user = get_or_create_user("mw@example.com")
+        self.setup_url = reverse("msl_auth:setup_username")
+
+    def _login(self):
+        token = sesame.utils.get_token(self.user)
+        self.client.get(reverse("msl_auth:magic_link_verify"), {"sesame": token})
+
+    def test_anonymous_request_passes_through(self):
+        # Anonymous hitting "/" — should not bounce to setup.
+        resp = self.client.get("/")
+        self.assertNotIn(self.setup_url, resp.get("Location", ""))
+
+    def test_authenticated_without_name_redirected_to_setup(self):
+        self._login()
+        resp = self.client.get("/")
+        self.assertEqual(resp.status_code, 302)
+        self.assertIn(self.setup_url, resp["Location"])
+        self.assertIn("next=/", resp["Location"])
+
+    def test_exempt_admin_path_not_redirected(self):
+        self._login()
+        resp = self.client.get("/admin/", follow=False)
+        # Whatever the admin returns (302 to login, 200, etc.), it must NOT
+        # be a redirect to our setup URL.
+        self.assertNotIn(self.setup_url, resp.get("Location", ""))
+
+    def test_exempt_auth_path_not_redirected(self):
+        self._login()
+        resp = self.client.get(reverse("msl_auth:magic_link_verify"))
+        self.assertNotIn(self.setup_url, resp.get("Location", ""))
+
+    def test_authenticated_with_name_passes_through(self):
+        self._login()
+        self.user.msl_profile.display_name = "namedone"
+        self.user.msl_profile.save()
+        resp = self.client.get("/")
+        self.assertNotIn(self.setup_url, resp.get("Location", ""))
