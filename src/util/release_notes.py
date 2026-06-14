@@ -1,5 +1,11 @@
 RELEASE_NOTES = [
     {
+        "version": "v1.6.1",
+        "entries": [
+            "fix(admin): v sekci 'Parametry MSL' lze zobrazit přehled uživatelských jmen a jejich uživatelů",
+        ]
+    },
+    {
         "version": "v1.6.0",
         "entries": [
             "feat: po prvním přihlášení si uživatel zvolí veřejné uživatelské jméno (3–30 znaků, unikátní)",

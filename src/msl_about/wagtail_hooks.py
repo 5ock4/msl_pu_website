@@ -2,6 +2,8 @@ from wagtail.snippets.models import register_snippet
 from wagtail.snippets.views.snippets import SnippetViewSet, SnippetViewSetGroup
 from wagtail.admin.panels import FieldPanel
 
+from msl_auth.wagtail_hooks import UserProfileViewSet
+
 from .models import SeasonParametersPenalizations, Team, SeasonTeams, SeasonParameters, SeasonRounds, RoundDocumentEdit
 
 
@@ -73,7 +75,15 @@ class RoundDocumentEditViewSet(SnippetViewSet):
 
 
 class AboutMSLGroup(SnippetViewSetGroup):
-    items = (TeamViewSet, SeasonTeamsViewSet, SeasonParametersViewSet, SeasonParametersPenalizationsViewSet, SeasonRoundsViewSet, RoundDocumentEditViewSet)
+    items = (
+        TeamViewSet,
+        SeasonTeamsViewSet,
+        SeasonParametersViewSet,
+        SeasonParametersPenalizationsViewSet,
+        SeasonRoundsViewSet,
+        RoundDocumentEditViewSet,
+        UserProfileViewSet
+    )
     menu_icon = "cogs"
     menu_label = "Parametry MSL"
     menu_name = "msl_parameters"
