@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% load template_filters %}
+
+{% block title %}Přehled tipů – {{ round.round }}{% endblock %}
+
+{% block content %}
+<div class="container">
+
+  <div class="card shadow-sm mb-3">
+    <div class="card-header bg-gradient-primary py-3">
+      <h5 class="card-title mb-0">
+        Přehled tipů –
+        {{ round.round_number|to_roman }}. kolo, {{ round.round }}
+        &#129170 {{ round.datetime|date:"d.m.Y H:i" }}
+      </h5>
+    </div>
+    <div class="card-body">
+      <p class="mb-0 small text-muted">
+        Zelený badge = správný tip (+1 bod). Pořadí níže je seřazeno podle bodů v tomto kole.
+      </p>
+    </div>
+  </div>
+
+  {# ---- Actual top 5 per category (reference) ---- #}
+  <div class="row g-3 mb-4">
+    {% for ar in actual_rows %}
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-header py-2"><strong>Skutečné pořadí – {{ ar.category_label }}</strong></div>
+        <div class="card-body p-0">
+          <table class="table table-sm mb-0">
+            <tbody>
+              {% for s in ar.slots %}
+              <tr>
+                <td style="width: 40px;"><strong>{{ s.position }}.</strong></td>
+                <td>
+                  {% if s.team %}
+                    {{ s.team.name }}
+                    {% if s.team.district and s.team.district != '*' %}
+                      <small class="text-muted">({{ s.team.district }})</small>
+                    {% endif %}
+                  {% else %}
+                    <span class="text-muted">—</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {# ---- Per-user tips ---- #}
+  {% if rows %}
+    <div class="small text-muted mb-2">
+      Zobrazeno {{ page_obj.start_index }}–{{ page_obj.end_index }} z {{ paginator.count }} tipujících
+    </div>
+    {% for row in rows %}
+    <div class="card shadow-sm mb-3">
+      <div class="card-header py-2 d-flex justify-content-between align-items-center">
+        <div>
+          <strong>{{ row.display_name }}</strong>
+          <small class="text-muted ms-2">{{ row.total_tips }} tipů</small>
+        </div>
+        <span class="badge bg-primary">{{ row.points }} b.</span>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-sm mb-0 align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>#</th>
+                {% for label in category_labels %}
+                  <th>{{ label }}</th>
+                {% endfor %}
+              </tr>
+            </thead>
+            <tbody>
+              {% for prow in row.position_rows %}
+              <tr>
+                <td><strong>{{ prow.position }}.</strong></td>
+                {% for cell in prow.cells %}
+                  <td>
+                    {% if cell.tip %}
+                      {% if cell.is_correct %}
+                        <span class="badge bg-success">
+                          <i class="fa-solid fa-check me-1"></i>{{ cell.tip.team.name }}
+                        </span>
+                      {% else %}
+                        <span class="text-muted">{{ cell.tip.team.name }}</span>
+                      {% endif %}
+                    {% else %}
+                      <span class="text-muted">—</span>
+                    {% endif %}
+                  </td>
+                {% endfor %}
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+    {% if paginator.num_pages > 1 %}
+    <nav aria-label="Stránkování tipujících" class="mt-3">
+      <ul class="pagination pagination-sm justify-content-center mb-0">
+        <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
+          <a class="page-link"
+             href="{% if page_obj.has_previous %}?page={{ page_obj.previous_page_number }}{% else %}#{% endif %}"
+             aria-label="Předchozí">&laquo;</a>
+        </li>
+        {% for num in paginator.page_range %}
+          {% if num == page_obj.number %}
+            <li class="page-item active" aria-current="page">
+              <span class="page-link">{{ num }}</span>
+            </li>
+          {% elif num >= page_obj.number|add:'-2' and num <= page_obj.number|add:'2' %}
+            <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+          {% endif %}
+        {% endfor %}
+        <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
+          <a class="page-link"
+             href="{% if page_obj.has_next %}?page={{ page_obj.next_page_number }}{% else %}#{% endif %}"
+             aria-label="Další">&raquo;</a>
+        </li>
+      </ul>
+    </nav>
+    {% endif %}
+  {% else %}
+    <div class="alert alert-light text-center">Pro toto kolo nikdo netipoval.</div>
+  {% endif %}
+</div>
+{% endblock %}

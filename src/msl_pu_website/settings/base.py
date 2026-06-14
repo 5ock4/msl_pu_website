@@ -57,6 +57,12 @@ INSTALLED_APPS = [
     "widget_tweaks",
 ]
 
+# Map Django message levels to Bootstrap alert classes (alert-danger, not alert-error).
+from django.contrib.messages import constants as messages_constants  # noqa: E402
+MESSAGE_TAGS = {
+    messages_constants.ERROR: "danger",
+}
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",

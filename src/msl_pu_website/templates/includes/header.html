@@ -15,14 +15,15 @@
   <ul class="nav nav-pills justify-content-center py-3">
     {% for menuitem in site_root.get_children.live.in_menu %}
       {% is_msl_about_page menuitem.specific as is_msl_about_page %}
-      {% if is_msl_about_page %}
+      {% is_msl_tips_page menuitem.specific as is_msl_tips_page %}
+      {% if is_msl_about_page or is_msl_tips_page %}
          <li class="nav-item bg-hover">
             <a class="nav-link dropdown-toggle {% if menuitem.url in request.path %}active{% endif %}" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
               {{ menuitem.title }}
             </a>
             <ul class="dropdown-menu">
-              {% for msl_about_item in menuitem.get_children.live.in_menu %}
-                <li><a class="dropdown-item" href="{% pageurl msl_about_item %}">{{ msl_about_item.title }}</a></li>
+              {% for child_item in menuitem.get_children.live.in_menu %}
+                <li><a class="dropdown-item" href="{% pageurl child_item %}">{{ child_item.title }}</a></li>
               {% endfor %}
             </ul>
           </li>

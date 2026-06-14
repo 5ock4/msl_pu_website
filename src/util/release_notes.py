@@ -1,5 +1,16 @@
 RELEASE_NOTES = [
     {
+        "version": "v1.7.0",
+        "entries": [
+            "feat: tipovačka — uživatelé tipují prvních 5 týmů v každé kategorii pro každé kolo",
+            "feat: tipy se zamykají při odeslání, nedotipované pozice lze doplnit do startu kola",
+            "feat: po startu kola je veřejně dostupný přehled všech tipů s vyznačením správných",
+            "feat: průběžné pořadí tipovačky za sezónu (body, počet tipů, trefy 1.–5. místa)",
+            "feat: filtr sezóny na stránkách tipovačky",
+            "feat(admin): správa tipů v sekci 'Tipovačka' s filtrem dle kola, kategorie, pozice a e-mailu uživatele",
+        ]
+    },
+    {
         "version": "v1.6.1",
         "entries": [
             "fix(admin): v sekci 'Parametry MSL' lze zobrazit přehled uživatelských jmen a jejich uživatelů",
