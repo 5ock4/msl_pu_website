@@ -1,4 +1,6 @@
+from django.conf import settings
 from django.db import models
+from django.db.models.functions import Lower
 from wagtail.models import Page
 
 
@@ -20,6 +22,30 @@ class UsedToken(models.Model):
 
     def __str__(self):
         return f"UsedToken({self.token_hash[:12]}…, {self.created_at})"
+
+
+class UserProfile(models.Model):
+    """Per-user display name for the public frontend (set after first login)."""
+
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="msl_profile",
+    )
+    display_name = models.CharField(max_length=30, null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Profil uživatele"
+        verbose_name_plural = "Profily uživatelů"
+        constraints = [
+            models.UniqueConstraint(
+                Lower("display_name"),
+                name="msl_auth_userprofile_display_name_ci_unique",
+            ),
+        ]
+
+    def __str__(self):
+        return self.display_name or f"<no name> ({self.user_id})"
 
 
 class LoginPage(Page):

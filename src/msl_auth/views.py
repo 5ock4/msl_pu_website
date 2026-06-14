@@ -1,10 +1,12 @@
 from django.contrib.auth import login, logout as auth_logout
 from django.contrib import messages
+from django.db import IntegrityError
 from django.shortcuts import render, redirect
 from django.utils.http import url_has_allowed_host_and_scheme
 from urllib.parse import urlparse
 
-from .forms import MagicLinkRequestForm
+from .forms import DisplayNameForm, MagicLinkRequestForm
+from .models import UserProfile
 from util.magic_link_auth import (
     get_or_create_user,
     generate_and_send_magic_link,
@@ -90,7 +92,9 @@ def verify_magic_link(request):
     # sesame.utils.get_user() calls authenticate() which sets user.backend;
     # Django's login() uses that attribute when no explicit backend is given.
     login(request, result)
-    messages.success(request, f"Byli jste přihlášeni jako {result.email}.")
+    profile = getattr(result, "msl_profile", None)
+    display = (profile.display_name if profile else None) or result.email
+    messages.success(request, f"Byli jste přihlášeni jako {display}.")
 
     # Redirect to a clean URL – removes the token from the address bar.
     # After validating the URL with url_has_allowed_host_and_scheme we extract
@@ -117,6 +121,53 @@ def logout_view(request):
         auth_logout(request)
         messages.success(request, "Byli jste úspěšně odhlášeni.")
     return _redirect_to_login(request)
+
+
+def setup_username(request):
+    """Set or change the public display name.
+
+    The middleware bounces users here when no name is set yet. Users with a
+    name can also reach this view directly to update it.
+    """
+    if not request.user.is_authenticated:
+        return _redirect_to_login(request)
+
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+    next_url = request.GET.get("next") or request.POST.get("next") or ""
+    safe_next = next_url if is_safe_next_url(request, next_url) else "/"
+    is_edit = bool(profile.display_name)
+
+    if request.method == "POST":
+        form = DisplayNameForm(request.POST, user=request.user)
+        if form.is_valid():
+            profile.display_name = form.cleaned_data["display_name"]
+            try:
+                profile.save(update_fields=["display_name"])
+            except IntegrityError:
+                # The DB's case-insensitive unique constraint caught a race
+                # the form-level check missed (concurrent submissions).
+                form.add_error(
+                    "display_name",
+                    "Toto uživatelské jméno je již obsazené.",
+                )
+            else:
+                messages.success(
+                    request,
+                    "Uživatelské jméno bylo změněno." if is_edit
+                    else "Uživatelské jméno bylo uloženo.",
+                )
+                return redirect(safe_next)
+    else:
+        form = DisplayNameForm(
+            initial={"display_name": profile.display_name or ""},
+            user=request.user,
+        )
+
+    return render(
+        request,
+        "msl_auth/setup_username.html",
+        {"form": form, "next": next_url, "is_edit": is_edit},
+    )
 
 
 def _redirect_to_login(request):

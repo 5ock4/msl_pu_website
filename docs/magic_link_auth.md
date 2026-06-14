@@ -70,13 +70,42 @@ SECURE_REFERRER_POLICY = "same-origin"
 
 | Path | Purpose |
 |---|---|
-| `src/msl_auth/` | Django app containing `LoginPage`, `UsedToken`, views, URLs, template |
-| `src/msl_auth/models.py` | `LoginPage` (Wagtail page), `UsedToken` (single-use token registry) |
-| `src/msl_auth/views.py` | `serve_login_page`, `verify_magic_link`, `logout_view` |
-| `src/msl_auth/urls.py` | `/auth/verify/` and `/auth/logout/` URL patterns |
+| `src/msl_auth/` | Django app containing `LoginPage`, `UsedToken`, `UserProfile`, views, URLs, templates, middleware |
+| `src/msl_auth/models.py` | `LoginPage` (Wagtail page), `UsedToken` (single-use token registry), `UserProfile` (per-user public display name) |
+| `src/msl_auth/views.py` | `serve_login_page`, `verify_magic_link`, `logout_view`, `setup_username` |
+| `src/msl_auth/middleware.py` | `RequireDisplayNameMiddleware` — redirects logged-in users without a display name to the setup page |
+| `src/msl_auth/urls.py` | `/auth/verify/`, `/auth/logout/`, `/auth/setup-username/` URL patterns |
 | `src/msl_auth/templates/msl_auth/login_page.html` | Login page template |
+| `src/msl_auth/templates/msl_auth/setup_username.html` | One-shot display-name setup template |
 | `src/util/magic_link_auth.py` | All business logic: token generation, email, verification, rate limiting |
 | `src/msl_auth/tests.py` | Automated tests |
+
+---
+
+## Display name (public username)
+
+To avoid exposing email addresses on the public site, every authenticated user
+must pick a **display name** (3–30 chars, `[A-Za-z0-9_.\-]`, unique
+case-insensitively) before they can browse anything but the auth endpoints and
+the Wagtail admin.
+
+- The name lives on `msl_auth.UserProfile.display_name` (OneToOne to
+  `auth.User`). The Django `username` field is **not** changed — it stays
+  email-based so the existing `username == 'RadaMSL'` admin checks in
+  `util/templatetags/util_tags.py` and `msl_results/models.py` keep working.
+- `get_or_create_user()` creates an empty `UserProfile` on first login; a
+  data migration (`msl_auth.0003_backfill_userprofiles`) backfills profiles
+  for users that existed before the feature shipped.
+- `RequireDisplayNameMiddleware` redirects any authenticated user without a
+  `display_name` to `/auth/setup-username/?next=<original-path>`. Exempt
+  prefixes: `/admin/`, `/django-admin/`, `/documents/`, `/static/`, `/media/`,
+  `/auth/`.
+- Templates render the display name with a defensive email fallback:
+  `{{ request.user.msl_profile.display_name|default:request.user.email }}`.
+- Users can revisit `/auth/setup-username/` at any time to change their name;
+  the login page (`login_page.html`) exposes a "Změnit uživatelské jméno"
+  button when the user is signed in. Uniqueness is re-checked on every save
+  and excludes the current user's own row.
 
 ---
 
