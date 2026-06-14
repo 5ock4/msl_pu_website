@@ -71,6 +71,22 @@ class GetOrCreateUserTests(TestCase):
         user = get_or_create_user("UPPER@EXAMPLE.COM")
         self.assertEqual(user.email, "upper@example.com")
 
+    def test_matches_existing_user_with_non_email_username(self):
+        """Pre-existing admin account (username != email) must be reused."""
+        admin = User.objects.create_user(
+            username="as", email="strakosadam@gmail.com", password="x"
+        )
+        user = get_or_create_user("strakosadam@gmail.com")
+        self.assertEqual(user.pk, admin.pk)
+        self.assertEqual(user.username, "as")
+
+    def test_email_match_case_insensitive(self):
+        admin = User.objects.create_user(
+            username="as", email="Strakosadam@Gmail.com", password="x"
+        )
+        user = get_or_create_user("strakosadam@gmail.com")
+        self.assertEqual(user.pk, admin.pk)
+
 
 # ── Token hash ────────────────────────────────────────────────────────────────
 

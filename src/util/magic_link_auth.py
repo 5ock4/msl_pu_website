@@ -35,18 +35,25 @@ def get_or_create_user(email: str):
     """
     Return (and possibly create) a User whose identity is *email*.
 
+    Lookup is by email (case-insensitive) so pre-existing accounts created via
+    Wagtail/Django admin with a non-email username are reused instead of
+    forked into a duplicate magic-link account.
+
     New users receive an unusable password so they cannot log in via the
     standard password form.
     """
     email = email.lower().strip()
-    username = email[:150]
-    # Use username as the unique lookup and store the normalized email
-    # separately to avoid relying on a non-unique email field.
-    user, created = User.objects.get_or_create(
-        username=username,
-        defaults={"email": email, "is_active": True},
-    )
-    if created:
+
+    # Match by email first so admin accounts (username != email) are reused.
+    # Deterministic ordering avoids picking a different duplicate per request
+    # if legacy data already contains email collisions.
+    user = User.objects.filter(email__iexact=email).order_by("pk").first()
+    if user is None:
+        user = User.objects.create(
+            username=email[:150],
+            email=email,
+            is_active=True,
+        )
         # set_unusable_password() only sets the in-memory field;
         # save() is required to persist it to the database.
         user.set_unusable_password()

@@ -1,5 +1,11 @@
 RELEASE_NOTES = [
     {
+        "version": "v1.7.1",
+        "entries": [
+            "fix: přihlášení magickým odkazem najde existující účet podle e-mailu (dříve vznikal duplicitní účet, pokud měl admin jiné uživatelské jméno než svůj e-mail)",
+        ]
+    },
+    {
         "version": "v1.7.0",
         "entries": [
             "feat: tipovačka — uživatelé tipují prvních 5 týmů v každé kategorii pro každé kolo",
