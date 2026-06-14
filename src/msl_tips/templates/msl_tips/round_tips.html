@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% load template_filters navigation_tags wagtailcore_tags %}
+
+{% block title %}Tipovačka – {{ round.round }}{% endblock %}
+
+{% block content %}
+<div class="container">
+
+  {% if messages %}
+    <div class="mb-3">
+      {% for message in messages %}
+      <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <div class="card shadow-sm mb-3">
+    <div class="card-header bg-gradient-primary py-3">
+      <h5 class="card-title mb-0">
+        Tipovačka –
+        {{ round.round_number|to_roman }}. kolo, {{ round.round }}
+        &#129170 {{ round.datetime|date:"d.m.Y H:i" }}
+      </h5>
+    </div>
+    <div class="card-body">
+      {% if tipping_open %}
+        <div class="alert alert-success py-2 mb-0">
+          <i class="fa-regular fa-clock me-1"></i>
+          Tipování otevřeno do <strong>{{ round.datetime|date:"d.m.Y H:i" }}</strong>.
+          Odeslané tipy už nelze měnit.
+        </div>
+      {% elif results_visible %}
+        <div class="alert alert-secondary py-2 mb-0">
+          Kolo již odstartovalo. Nové tipy už nelze odesílat.
+          {% if user_score %}
+            Tvůj výsledek: <strong>{{ user_score.points }}</strong> b. z {{ user_score.total_tips }} tipů.
+          {% endif %}
+        </div>
+      {% else %}
+        <div class="alert alert-light py-2 mb-0">
+          Tipování bude otevřeno od <strong>{{ round.date_registration|date:"d.m.Y" }}</strong>.
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+
+    {% if not request.user.is_authenticated %}
+    {% get_login_page as login_page %}
+    <div class="alert alert-info d-flex flex-wrap align-items-center justify-content-between gap-2">
+      <div>
+        <i class="fa-solid fa-right-to-bracket me-2"></i>
+        Pro tipování se musíš nejprve <strong>přihlásit</strong>.
+      </div>
+      {% if login_page %}
+      <a href="{% pageurl login_page %}?next={{ request.get_full_path|urlencode }}" class="btn btn-primary btn-sm">
+        Přihlásit se
+      </a>
+      {% endif %}
+    </div>
+    {% else %}
+
+    {% for block in blocks %}
+    <div class="card shadow-sm mb-3">
+      <div class="card-header py-2">
+        <strong>{{ block.category_label }}</strong>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-sm mb-0 align-middle">
+            <thead class="table-light">
+              <tr>
+                <th style="width: 60px;">Pozice</th>
+                <th>Tým</th>
+                <th style="width: 1%;"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for slot in block.slots %}
+              <tr>
+                <td><strong>{{ slot.position }}.</strong></td>
+                <td>
+                  {% if slot.locked %}
+                    <span class="badge bg-secondary me-1"><i class="fa-solid fa-lock"></i></span>
+                    {{ slot.tip.team.name }}
+                    {% if slot.tip.team.district and slot.tip.team.district != '*' %}
+                      <small class="text-muted">({{ slot.tip.team.district }})</small>
+                    {% endif %}
+                    {% if results_visible %}
+                      {% if slot.is_correct %}
+                        <span class="badge bg-success ms-2"><i class="fa-solid fa-check me-1"></i>+1</span>
+                      {% elif slot.correct_team %}
+                        <span class="badge bg-light text-dark ms-2">
+                          správně: {{ slot.correct_team.name }}
+                        </span>
+                      {% endif %}
+                    {% endif %}
+                  {% elif tipping_open %}
+                    <select name="tip_{{ block.category }}_{{ slot.position }}" class="form-select form-select-sm">
+                      <option value="">— vyber tým —</option>
+                      {% for team in block.teams %}
+                        <option value="{{ team.id }}">
+                          {{ team.name }}{% if team.district and team.district != '*' %} ({{ team.district }}){% endif %}
+                        </option>
+                      {% endfor %}
+                    </select>
+                  {% else %}
+                    <span class="text-muted">—</span>
+                    {% if results_visible and slot.correct_team %}
+                      <span class="badge bg-light text-dark ms-2">správně: {{ slot.correct_team.name }}</span>
+                    {% endif %}
+                  {% endif %}
+                </td>
+                <td class="text-end">
+                  {% if slot.locked %}
+                    <small class="text-muted">{{ slot.tip.submitted_at|date:"d.m. H:i" }}</small>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="alert alert-light text-center">Pro toto kolo nejsou definovány žádné kategorie.</div>
+    {% endfor %}
+
+    {% if tipping_open and blocks %}
+    <div class="d-flex justify-content-end mb-4">
+      <button type="submit" class="btn btn-primary">
+        <i class="fa-solid fa-paper-plane me-1"></i>Odeslat vybrané tipy
+      </button>
+    </div>
+    {% endif %}
+    {% endif %}
+  </form>
+</div>
+{% endblock %}

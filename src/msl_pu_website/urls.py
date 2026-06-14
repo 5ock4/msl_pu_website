@@ -22,6 +22,7 @@ urlpatterns = [
     path("facebook/", include("msl_news.urls")),
     path("", include("msl_auth.urls")),
     path("", include("util.urls")),
+    path("", include("msl_tips.urls")),
 ]
 
 

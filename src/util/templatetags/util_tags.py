@@ -3,6 +3,7 @@ from django import template
 
 from msl_about.models import AboutMSLPage, EnrollPage, EnrollmentsPage, RoundsPage, SeasonParameters, SeasonRounds
 from msl_results.models import ResultsPage
+from msl_tips.models import TipsIndexPage
 from util.models import CategoryChoices
 
 register = template.Library()
@@ -36,6 +37,10 @@ def random_1_to_300():
 @register.simple_tag()
 def is_msl_about_page(object):
     return isinstance(object, AboutMSLPage)
+
+@register.simple_tag()
+def is_msl_tips_page(object):
+    return isinstance(object, TipsIndexPage)
 
 @register.inclusion_tag('msl_about/enrollments_card.html', takes_context=True)
 def show_enrollments(context):

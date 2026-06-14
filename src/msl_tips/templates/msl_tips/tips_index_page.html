@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+{% block body_class %}template-tipsindex{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="card shadow-sm mb-3">
+    <div class="card-header bg-gradient-primary py-3">
+      <h5 class="card-title mb-0">
+        <i class="fa-solid fa-bullseye me-2"></i>{{ page.title }}
+      </h5>
+    </div>
+    <div class="card-body">
+      {% if page.body %}
+        {{ page.body|richtext }}
+      {% else %}
+        <p class="mb-2">
+          Tipuj prvních 5 týmů v každé kategorii každého kola. Za každý správný tip získáš <strong>1 bod</strong>.
+          V jednom kole tak můžeš získat až <strong>15 bodů</strong>.
+        </p>
+        <p class="mb-0 text-muted small">
+          V horní nabídce vyber <em>Zadej tipy</em> nebo <em>Průběžné pořadí</em>.
+        </p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

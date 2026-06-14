@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+{% block title %}{{ page.title }}{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="card shadow-sm mb-3">
+    <div class="card-header bg-gradient-primary py-3">
+      <h5 class="card-title mb-0">
+        <i class="fa-solid fa-trophy me-2"></i>{{ page.title }}
+      </h5>
+    </div>
+    <div class="bg-light py-2 border-bottom d-flex justify-content-end">
+      <div class="px-3">
+        <form method="get" action="" class="d-flex align-items-center gap-2">
+          <label for="season_year" class="form-label mb-0 small text-muted text-nowrap">Sezóna:</label>
+          <select class="form-select form-select-sm" id="season_year" name="season_year"
+                  onchange="this.form.submit()" aria-label="Vyber sezónu">
+            {% for year in seasons %}
+              <option value="{{ year }}" {% if season_year == year %}selected{% endif %}>{{ year }}</option>
+            {% endfor %}
+          </select>
+        </form>
+      </div>
+    </div>
+    <div class="card-body p-0">
+      {% if leaderboard %}
+      <div class="table-responsive card-body">
+        <table class="table table-sm table-hover mb-0 align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>#</th>
+              <th>Tipující</th>
+              <th class="text-end">Body</th>
+              <th class="text-end">Tipů</th>
+              <th class="text-center">1.</th>
+              <th class="text-center">2.</th>
+              <th class="text-center">3.</th>
+              <th class="text-center">4.</th>
+              <th class="text-center">5.</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in leaderboard %}
+            <tr>
+              <td>{{ forloop.counter }}.</td>
+              <td>{{ row.display_name }}</td>
+              <td class="text-end"><strong>{{ row.points }}</strong></td>
+              <td class="text-end text-muted">{{ row.total_tips }}</td>
+              <td class="text-center">{{ row.hits.1 }}</td>
+              <td class="text-center">{{ row.hits.2 }}</td>
+              <td class="text-center">{{ row.hits.3 }}</td>
+              <td class="text-center">{{ row.hits.4 }}</td>
+              <td class="text-center">{{ row.hits.5 }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="alert alert-light text-center mb-0 m-3">Zatím žádné tipy.</div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
