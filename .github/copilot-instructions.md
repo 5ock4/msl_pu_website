@@ -37,7 +37,6 @@ All commands run from the repo root unless noted. Manage dependencies with `pdm`
 
 ## Gotchas
 
-- `Dockerfile` targets Python 3.8 and `requirements.txt` (legacy from the Wagtail starter). The real deploy uses PDM + Python 3.13 via the GitHub Actions workflow — prefer that over Docker unless you're updating both.
-- After a rebase, run `python src/manage.py migrate` even if you didn't touch models (other branches may have added migrations).
+- Docker build is currently not maintained in this repo; deployment uses PDM + Python 3.13 via the GitHub Actions workflow.- After a rebase, run `python src/manage.py migrate` even if you didn't touch models (other branches may have added migrations).
 - Tests for the round-results Excel preprocessor live in `test/` at the repo root (not under `src/`), and use fixture `.xlsx` files committed alongside them.
 - Test renderings of templates that extend `base.html` need `@override_settings(STORAGES=...)` with a non-manifest staticfiles backend, otherwise `ManifestStaticFilesStorage` errors on missing manifest entries (see `SetupUsernameViewTests` in `src/msl_auth/tests.py` for the pattern).

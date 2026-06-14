@@ -383,6 +383,21 @@ class SetupUsernameViewTests(TestCase):
         self.user.msl_profile.refresh_from_db()
         self.assertEqual(self.user.msl_profile.display_name, "newname")
 
+    def test_integrity_error_on_save_shown_as_form_error(self):
+        """A race past the form check (DB unique constraint) renders cleanly."""
+        from django.db import IntegrityError
+
+        self._login()
+        with patch(
+            "msl_auth.models.UserProfile.save",
+            side_effect=IntegrityError("duplicate"),
+        ):
+            resp = self.client.post(self.setup_url, {"display_name": "racey"})
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, "již obsazené")
+        self.user.msl_profile.refresh_from_db()
+        self.assertIsNone(self.user.msl_profile.display_name)
+
 
 # ── RequireDisplayNameMiddleware ──────────────────────────────────────────────
 

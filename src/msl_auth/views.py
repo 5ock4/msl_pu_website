@@ -1,5 +1,6 @@
 from django.contrib.auth import login, logout as auth_logout
 from django.contrib import messages
+from django.db import IntegrityError
 from django.shortcuts import render, redirect
 from django.utils.http import url_has_allowed_host_and_scheme
 from urllib.parse import urlparse
@@ -140,13 +141,22 @@ def setup_username(request):
         form = DisplayNameForm(request.POST, user=request.user)
         if form.is_valid():
             profile.display_name = form.cleaned_data["display_name"]
-            profile.save(update_fields=["display_name"])
-            messages.success(
-                request,
-                "Uživatelské jméno bylo změněno." if is_edit
-                else "Uživatelské jméno bylo uloženo.",
-            )
-            return redirect(safe_next)
+            try:
+                profile.save(update_fields=["display_name"])
+            except IntegrityError:
+                # The DB's case-insensitive unique constraint caught a race
+                # the form-level check missed (concurrent submissions).
+                form.add_error(
+                    "display_name",
+                    "Toto uživatelské jméno je již obsazené.",
+                )
+            else:
+                messages.success(
+                    request,
+                    "Uživatelské jméno bylo změněno." if is_edit
+                    else "Uživatelské jméno bylo uloženo.",
+                )
+                return redirect(safe_next)
     else:
         form = DisplayNameForm(
             initial={"display_name": profile.display_name or ""},
