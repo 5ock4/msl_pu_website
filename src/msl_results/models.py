@@ -6,6 +6,7 @@ from wagtail.models import Page
 from django.db.models import Max
 
 from msl_about.models import SeasonParameters, SeasonRounds, Team
+from util.auth import is_msl_admin
 from util.models import FREE_BORROWED_COMPETITORS_IN_SEASON, CategoryChoices, RankingDefChoices
 
 
@@ -29,7 +30,7 @@ class ResultsPage(Page):
         metric_param = request.GET.get('metric')
 
         user = request.user
-        is_admin = user.is_authenticated and (user.is_staff or user.is_superuser or user.username == 'RadaMSL')
+        is_admin = is_msl_admin(user)
         RESULTS_METRIC = 'prize_money' if metric_param == 'prize_money' else 'points'
 
         # Get all rounds for the selected year
@@ -69,14 +70,20 @@ class ResultsPage(Page):
                 team_round_stats = []
                 for round in rounds:
                     result = results_by_round.get(round.id)
-                    team_round_stats.append({
-                        'points': result.points if result else None,
-                        'lp': result.lp if result else None,
-                        'pp': result.pp if result else None,
-                        'competitors_borrowed': result.competitors_borrowed if result else None,
-                        'ranking_def': result.ranking_def if result else None,
-                        'prize_money': result.prize_money if result else None,
-                    })
+                    if not is_admin and not round.results_ready:
+                        team_round_stats.append({
+                            'points': None, 'lp': None, 'pp': None,
+                            'competitors_borrowed': None, 'ranking_def': None, 'prize_money': None,
+                        })
+                    else:
+                        team_round_stats.append({
+                            'points': result.points if result else None,
+                            'lp': result.lp if result else None,
+                            'pp': result.pp if result else None,
+                            'competitors_borrowed': result.competitors_borrowed if result else None,
+                            'ranking_def': result.ranking_def if result else None,
+                            'prize_money': result.prize_money if result else None,
+                        })
 
                 total_points = sum(s['points'] for s in team_round_stats if s['points'] is not None)
                 total_prize_money = sum(s['prize_money'] for s in team_round_stats if s['prize_money'] is not None)
@@ -108,7 +115,6 @@ class ResultsPage(Page):
         context.update({
             'rounds': rounds,
             'selected_year': SELECTED_YEAR,
-            'rounds': rounds,
             'teams_with_results': teams_with_results,
             'display_total_metric': RESULTS_METRIC,
             'display_total_label': display_total_label,
@@ -170,6 +176,7 @@ class Result(models.Model):
     @staticmethod
     def penalties_allowed(team: Team, round: SeasonRounds) -> bool:
         """Check if penalties are allowed for the given team and round based on season parameters"""
+        # TODO: Rework this (edge case Proskovice zeny 2026)
         total_borrowed = (
             Result.objects
             .filter(team=team, round__season_year=round.season_year)

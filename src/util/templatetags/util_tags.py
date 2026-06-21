@@ -4,6 +4,7 @@ from django import template
 from msl_about.models import AboutMSLPage, EnrollPage, EnrollmentsPage, RoundsPage, SeasonParameters, SeasonRounds
 from msl_results.models import ResultsPage
 from msl_tips.models import TipsIndexPage
+from util.auth import is_msl_admin
 from util.models import CategoryChoices
 
 register = template.Library()
@@ -114,11 +115,10 @@ def get_categories(context):
 
 @register.simple_tag(takes_context=True)
 def is_wagtail_admin(context):
-    """Check if the current user is a Wagtail admin user."""
     request = context.get('request')
-    if not request or not request.user.is_authenticated:
+    if not request:
         return False
-    return request.user.is_staff or request.user.is_superuser or request.user.username == 'RadaMSL'
+    return is_msl_admin(request.user)
 
 @register.simple_tag
 def has_enroll_page_in_menu():
