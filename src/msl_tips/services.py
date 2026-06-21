@@ -10,6 +10,7 @@ from django.utils import timezone
 
 from msl_about.models import SeasonRounds, SeasonTeams, Team
 from msl_results.models import Result
+from util.auth import is_msl_admin
 from util.models import CategoryChoices
 
 from .models import Tip
@@ -54,9 +55,11 @@ def is_tipping_open(round_obj: SeasonRounds) -> bool:
     return round_obj.date_registration <= today and now < round_obj.datetime
 
 
-def is_results_visible(round_obj: SeasonRounds) -> bool:
-    """True once the round has started — i.e. everyone may see others' tips."""
-    return bool(round_obj.datetime and timezone.now() >= round_obj.datetime)
+def is_results_visible(round_obj: SeasonRounds, is_admin: bool = False) -> bool:
+    """True once the round has started AND results are published (or user is admin)."""
+    if not round_obj.datetime or timezone.now() < round_obj.datetime:
+        return False
+    return is_admin or bool(round_obj.results_ready)
 
 
 def season_teams_for(round_obj: SeasonRounds, category: str):
@@ -106,7 +109,7 @@ def _top5_cache(round_obj: SeasonRounds, categories: Iterable[str]) -> dict[str,
 def score_user_round(user, round_obj: SeasonRounds) -> dict:
     """Score one user for one round. Returns points, total_tips, hits_by_position."""
     categories = parse_round_categories(round_obj)
-    top = _top5_cache(round_obj, categories) if is_results_visible(round_obj) else {}
+    top = _top5_cache(round_obj, categories) if is_results_visible(round_obj, is_msl_admin(user)) else {}
 
     tips = Tip.objects.filter(user=user, round=round_obj)
     total_tips = tips.count()
@@ -127,7 +130,7 @@ def score_user_round(user, round_obj: SeasonRounds) -> dict:
     }
 
 
-def leaderboard(season_year: int | None) -> list[dict]:
+def leaderboard(season_year: int | None, is_admin: bool = False) -> list[dict]:
     """Season leaderboard sorted by points DESC, then total_tips DESC."""
     if not season_year:
         return []
@@ -139,7 +142,7 @@ def leaderboard(season_year: int | None) -> list[dict]:
     # Pre-compute top-5 only for rounds whose results are visible
     top_by_round: dict[int, dict[str, dict[int, Team]]] = {}
     for r in rounds:
-        if is_results_visible(r):
+        if is_results_visible(r, is_admin):
             top_by_round[r.id] = _top5_cache(r, parse_round_categories(r))
 
     tip_qs = (
@@ -205,6 +208,7 @@ def build_round_cards(season_year: int | None, user) -> list[dict]:
     """Per-round cards for the index page: state, links, optional user score."""
     if not season_year:
         return []
+    admin = is_msl_admin(user)
     rounds = SeasonRounds.objects.filter(season_year=season_year).order_by("datetime")
     round_ids = [r.id for r in rounds]
     rounds_with_tips = set(
@@ -224,7 +228,7 @@ def build_round_cards(season_year: int | None, user) -> list[dict]:
     cards = []
     for r in rounds:
         tipping_open = is_tipping_open(r)
-        results_visible = is_results_visible(r)
+        results_visible = is_results_visible(r, admin)
         user_has_tips = r.id in user_rounds_with_tips
         round_has_tips = r.id in rounds_with_tips
         user_score = None

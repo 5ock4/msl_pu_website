@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from msl_about.models import SeasonRounds
 
+from util.auth import is_msl_admin
 from .models import Tip
 from .services import (
     actual_top5,
@@ -49,8 +50,9 @@ def round_tips(request, round_id):
     """User's own tipping screen for one round."""
     round_obj = get_object_or_404(SeasonRounds, id=round_id)
     categories = parse_round_categories(round_obj)
+    admin = is_msl_admin(request.user)
     tipping_open = is_tipping_open(round_obj) and request.user.is_authenticated
-    results_visible = is_results_visible(round_obj)
+    results_visible = is_results_visible(round_obj, admin)
 
     if request.method == "POST":
         if not request.user.is_authenticated:
@@ -139,7 +141,7 @@ def round_tips(request, round_id):
 def round_tips_overview(request, round_id):
     """All users' tips for one round (only after the round has started)."""
     round_obj = get_object_or_404(SeasonRounds, id=round_id)
-    if not is_results_visible(round_obj):
+    if not is_results_visible(round_obj, is_msl_admin(request.user)):
         raise Http404("Přehled tipů bude dostupný po startu kola.")
 
     categories = parse_round_categories(round_obj)

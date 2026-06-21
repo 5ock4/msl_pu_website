@@ -7,6 +7,7 @@ from wagtail.fields import RichTextField
 from wagtail.models import Page
 
 from msl_about.models import SeasonRounds, Team
+from util.auth import is_msl_admin
 from util.models import CategoryChoices
 
 
@@ -92,7 +93,7 @@ class TipsLeaderboardPage(Page):
         context.update({
             "season_year": season_year,
             "seasons": seasons,
-            "leaderboard": leaderboard(season_year) if season_year else [],
+            "leaderboard": leaderboard(season_year, is_msl_admin(request.user)) if season_year else [],
         })
         return context
 
