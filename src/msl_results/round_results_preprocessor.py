@@ -88,8 +88,6 @@ class RoundResultsPreprocessor:
                 )
                 if penal_points is not None:
                     penalty += penal_points
-            if row['ranking_def'] in ['NU', 'D']:
-                penalty += D_NU_PENALTY_POINTS
             return penalty
 
         results_df['penalty_points'] = results_df.apply(_compute_penalty, axis=1)

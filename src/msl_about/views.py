@@ -5,6 +5,7 @@ from django.db import transaction
 from wagtail.documents.models import Document
 
 from msl_results.round_results_preprocessor import RoundResultsPreprocessor
+from util.auth import is_msl_admin
 from .models import SeasonRounds, RoundsPage, RoundDocumentEdit
 
 MAX_PDF_SIZE_MB = 2
@@ -34,11 +35,15 @@ def _is_valid_xlsx(uploaded_file):
 @login_required
 def upload_results(request, round_id):
     round_obj = get_object_or_404(SeasonRounds, id=round_id)
+    user = request.user
+    is_admin = is_msl_admin(user)
 
     if request.method == 'POST' and request.FILES.get('results_file'):
         uploaded_file = request.FILES['results_file']
         if not round_obj.uploads_open:
             messages.error(request, f'Nahrávání dokumentů pro kolo {round_obj.round} je uzavřeno.')
+        elif round_obj.results_ready:
+            messages.error(request, f'Výsledky pro kolo {round_obj.round} jsou již uveřejněny a nelze je přepsat.')
         elif uploaded_file.size > MAX_EXCEL_SIZE:
             messages.error(request, f'Soubor výsledků je příliš velký (max {MAX_EXCEL_SIZE_MB} MB).')
         elif not _is_valid_xlsx(uploaded_file):
@@ -55,7 +60,7 @@ def upload_results(request, round_id):
                     ).order_by('edited_at').first()
                     if not pozvanka_edit:
                         messages.error(request, f'Nejdříve nahrajte pozvánku pro kolo {round_obj.round}.')
-                    elif pozvanka_edit.edited_by != request.user.email:
+                    elif pozvanka_edit.edited_by != request.user.email and not is_admin:
                         messages.error(request, f'Výsledky pro toto kolo může nahrávat pouze {pozvanka_edit.edited_by}.')
                     elif not RoundDocumentEdit.objects.filter(round=round_obj, doc_type='startovka').exists():
                         messages.error(request, f'Nejdříve nahrajte startovku pro kolo {round_obj.round}.')
@@ -90,6 +95,7 @@ def upload_pozvanka(request, round_id):
 
     if request.method == 'POST' and request.FILES.get('pozvanka_file'):
         uploaded_file = request.FILES['pozvanka_file']
+        is_admin = is_msl_admin(request.user)
         if not round_obj.uploads_open:
             messages.error(request, f'Nahrávání dokumentů pro kolo {round_obj.round} je uzavřeno.')
         elif uploaded_file.size > MAX_PDF_SIZE:
@@ -104,7 +110,7 @@ def upload_pozvanka(request, round_id):
                     first_edit = RoundDocumentEdit.objects.filter(
                         round=round_obj, doc_type='pozvanka'
                     ).order_by('edited_at').first()
-                    if first_edit and first_edit.edited_by != request.user.email:
+                    if first_edit and first_edit.edited_by != request.user.email and not is_admin:
                         messages.error(request, f'Pozvánku pro toto kolo může upravovat pouze {first_edit.edited_by}.')
                     else:
                         old_doc = round_obj.pozvanka_pdf
@@ -132,6 +138,7 @@ def save_startovka(request, round_id):
     round_obj = get_object_or_404(SeasonRounds, id=round_id)
 
     if request.method == 'POST':
+        is_admin = is_msl_admin(request.user)
         if not round_obj.uploads_open:
             messages.error(request, f'Nahrávání dokumentů pro kolo {round_obj.round} je uzavřeno.')
         else:
@@ -148,7 +155,7 @@ def save_startovka(request, round_id):
                     ).order_by('edited_at').first()
                     if not pozvanka_edit:
                         messages.error(request, f'Nejdříve nahrajte pozvánku pro kolo {round_obj.round}.')
-                    elif pozvanka_edit.edited_by != request.user.email:
+                    elif pozvanka_edit.edited_by != request.user.email and not is_admin:
                         messages.error(request, f'Startovku pro toto kolo může upravovat pouze {pozvanka_edit.edited_by}.')
                     else:
                         round_obj.startovka_text = text

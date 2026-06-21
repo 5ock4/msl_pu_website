@@ -17,6 +17,7 @@ from django.utils.safestring import mark_safe
 from wagtail.models import Site
 
 from msl_about.forms import EnrollForm
+from util.auth import is_msl_admin
 from util.models import CategoryChoices, RankingDefChoices
 
 
@@ -52,12 +53,15 @@ class RoundsPage(Page):
             .order_by('datetime')
 
         user = request.user
+        admin = is_msl_admin(user)
         can_edit_pozvanka = set()
         can_edit_startovka = set()
         can_edit_results = set()
 
         if user.is_authenticated:
-            round_ids = list(season_rounds_filtered.values_list('id', flat=True))
+            round_data = list(season_rounds_filtered.values('id', 'results_ready'))
+            round_ids = [r['id'] for r in round_data]
+            results_locked = {r['id'] for r in round_data if r['results_ready']}
             all_edits = (
                 RoundDocumentEdit.objects
                 .filter(round_id__in=round_ids)
@@ -71,15 +75,13 @@ class RoundsPage(Page):
                     first_editors[key] = edit['edited_by']
             for round_id in round_ids:
                 pozvanka_editor = first_editors.get((round_id, 'pozvanka'))
-                # pozvanka: any user can claim if nobody has uploaded yet
-                if pozvanka_editor is None or pozvanka_editor == user.email:
+                if admin or pozvanka_editor is None or pozvanka_editor == user.email:
                     can_edit_pozvanka.add(round_id)
-                # startovka and results: only the pozvanka uploader (pozvanka must exist first)
-                if pozvanka_editor == user.email:
+                if admin or pozvanka_editor == user.email:
                     can_edit_startovka.add(round_id)
-                    # results: additionally require startovka to be uploaded
-                    if (round_id, 'startovka') in first_editors:
-                        can_edit_results.add(round_id)
+                    if round_id not in results_locked:
+                        if admin or (round_id, 'startovka') in first_editors:
+                            can_edit_results.add(round_id)
 
         context.update({
             'season_rounds_filtered': season_rounds_filtered,
