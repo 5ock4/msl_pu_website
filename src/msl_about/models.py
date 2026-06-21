@@ -77,11 +77,10 @@ class RoundsPage(Page):
                 pozvanka_editor = first_editors.get((round_id, 'pozvanka'))
                 if admin or pozvanka_editor is None or pozvanka_editor == user.email:
                     can_edit_pozvanka.add(round_id)
-                if admin or pozvanka_editor == user.email:
+                if pozvanka_editor is not None and (admin or pozvanka_editor == user.email):
                     can_edit_startovka.add(round_id)
-                    if round_id not in results_locked:
-                        if admin or (round_id, 'startovka') in first_editors:
-                            can_edit_results.add(round_id)
+                    if round_id not in results_locked and (round_id, 'startovka') in first_editors:
+                        can_edit_results.add(round_id)
 
         context.update({
             'season_rounds_filtered': season_rounds_filtered,

@@ -4,7 +4,6 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from msl_results.models import Result
 from msl_about.models import SeasonParameters, SeasonParametersPenalizations, Team
 from .models import SeasonRounds
-from util.models import D_NU_PENALTY_POINTS
 
 
 class RoundResultsPreprocessor:

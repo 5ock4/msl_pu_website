@@ -6,7 +6,6 @@ from wagtail.admin.panels import FieldPanel
 #############
 # Constants #
 #############
-D_NU_PENALTY_POINTS = 5
 FREE_BORROWED_COMPETITORS_IN_SEASON = 2
 
 class CategoryChoices(models.TextChoices):

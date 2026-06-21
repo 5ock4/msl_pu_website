@@ -55,10 +55,11 @@ def upload_results(request, round_id):
             try:
                 with transaction.atomic():
                     round_obj = SeasonRounds.objects.select_for_update().get(id=round_id)
-                    pozvanka_edit = RoundDocumentEdit.objects.filter(
+                    if round_obj.results_ready:
+                        messages.error(request, f'Výsledky pro kolo {round_obj.round} jsou již uveřejněny a nelze je přepsat.')
+                    elif not (pozvanka_edit := RoundDocumentEdit.objects.filter(
                         round=round_obj, doc_type='pozvanka'
-                    ).order_by('edited_at').first()
-                    if not pozvanka_edit:
+                    ).order_by('edited_at').first()):
                         messages.error(request, f'Nejdříve nahrajte pozvánku pro kolo {round_obj.round}.')
                     elif pozvanka_edit.edited_by != request.user.email and not is_admin:
                         messages.error(request, f'Výsledky pro toto kolo může nahrávat pouze {pozvanka_edit.edited_by}.')
@@ -90,6 +91,7 @@ def upload_results(request, round_id):
     return _redirect_to_rounds_page()
 
 
+@login_required
 def upload_pozvanka(request, round_id):
     round_obj = get_object_or_404(SeasonRounds, id=round_id)
 
@@ -134,6 +136,7 @@ def upload_pozvanka(request, round_id):
     return _redirect_to_rounds_page()
 
 
+@login_required
 def save_startovka(request, round_id):
     round_obj = get_object_or_404(SeasonRounds, id=round_id)
 
