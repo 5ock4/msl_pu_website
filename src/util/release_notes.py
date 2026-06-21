@@ -1,5 +1,11 @@
 RELEASE_NOTES = [
     {
+        "version": "v1.7.3",
+        "entries": [
+            "fix: časy kol se zobrazují správně v české časové zóně (Europe/Prague) místo UTC",
+        ]
+    },
+    {
         "version": "v1.7.2",
         "entries": [
             "fix(admin): admin může nahrávat a upravovat pozvánku, startovku i výsledky pro libovolné kolo bez ohledu na to, kdo dokument nahrál jako první",
