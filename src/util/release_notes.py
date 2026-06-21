@@ -1,5 +1,14 @@
 RELEASE_NOTES = [
     {
+        "version": "v1.7.2",
+        "entries": [
+            "fix(admin): admin může nahrávat a upravovat pozvánku, startovku i výsledky pro libovolné kolo bez ohledu na to, kdo dokument nahrál jako první",
+            "fix: po uveřejnění výsledků (Výsledky uveřejněny ✓) nelze výsledkový Excel přepsat — ochrana je vynucena i uvnitř databázové transakce (ochrana před race condition)",
+            "fix: neuveřejněné výsledky kola jsou v tabulce výsledků a v tipovačce viditelné pouze pro admina",
+            "fix: tlačítka pro úpravu startovky a výsledků se v UI zobrazí až po nahrání prerekvizitních dokumentů (pozvánka resp. startovka), i pro admina",
+        ]
+    },
+    {
         "version": "v1.7.1",
         "entries": [
             "fix: přihlášení magickým odkazem najde existující účet podle e-mailu (dříve vznikal duplicitní účet, pokud měl admin jiné uživatelské jméno než svůj e-mail)",
