@@ -173,6 +173,42 @@ def save_startovka(request, round_id):
     return _redirect_to_rounds_page()
 
 
+@login_required
+def save_video_url(request, round_id):
+    round_obj = get_object_or_404(SeasonRounds, id=round_id)
+
+    if request.method == 'POST':
+        is_admin = is_msl_admin(request.user)
+        url = request.POST.get('video_url', '').strip()
+        if url and not (url.startswith('https://') or url.startswith('http://')):
+            messages.error(request, 'Odkaz musí začínat https:// nebo http://.')
+        elif len(url) > 200:
+            messages.error(request, 'Odkaz je příliš dlouhý (max 200 znaků).')
+        else:
+            pozvanka_edit = RoundDocumentEdit.objects.filter(
+                round=round_obj, doc_type='pozvanka'
+            ).order_by('edited_at').first()
+            if pozvanka_edit and pozvanka_edit.edited_by != request.user.email and not is_admin:
+                messages.error(request, f'Videa pro toto kolo může upravovat pouze {pozvanka_edit.edited_by}.')
+            else:
+                round_obj.video_url = url
+                round_obj.save(update_fields=['video_url'])
+                messages.success(request, f'Odkaz na videa pro kolo {round_obj.round} úspěšně uložen!')
+
+    return _redirect_to_rounds_page()
+
+    return _redirect_to_rounds_page()
+
+
+@login_required
+def toggle_results_ready(request, round_id):
+    round_obj = get_object_or_404(SeasonRounds, id=round_id)
+    if request.method == 'POST' and is_msl_admin(request.user):
+        round_obj.results_ready = not round_obj.results_ready
+        round_obj.save(update_fields=['results_ready'])
+    return _redirect_to_rounds_page()
+
+
 def _redirect_to_rounds_page():
     try:
         rounds_page = RoundsPage.objects.live().first()

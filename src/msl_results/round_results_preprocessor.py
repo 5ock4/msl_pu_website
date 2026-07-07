@@ -62,6 +62,7 @@ class RoundResultsPreprocessor:
             lambda row: 0.0 if (row['lp'] == 0 or row['pp'] == 0) else max(row['lp'], row['pp']),
             axis=1
         )
+        results_df['sum_lp_pp'] = results_df['lp'] + results_df['pp']
 
         results_df['team'] = results_df.apply(
             lambda row: Team.get_team(row['team_excel'], row['category_excel']),
@@ -94,8 +95,8 @@ class RoundResultsPreprocessor:
         # Order by max_lp_pp within each category_excel, but keep ranking_def=N (max_lp_pp=0.0) at the end
         results_df = (
             results_df.sort_values(
-                by=['category_excel', 'ranking_def', 'max_lp_pp',],
-                ascending=[True, False, True],  # False (non-zero) first, True (zero) last
+                by=['category_excel', 'ranking_def', 'max_lp_pp', 'sum_lp_pp'],
+                ascending=[True, False, True, True],  # False (non-zero) first, True (zero) last; lower sum ranks better
                 kind='mergesort',  # stable sort
             )
         )

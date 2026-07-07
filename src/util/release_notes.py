@@ -1,5 +1,13 @@
 RELEASE_NOTES = [
     {
+        "version": "v1.8.0",
+        "entries": [
+            "feat: odkaz na videa (YouTube) pro každé kolo — správci kola mohou vložit nebo upravit odkaz",
+            "feat(admin): přepínač 'Výsledky uveřejněny' v tabulce kol je pro admina klikatelný — jedním klikem lze stav zapnout i vypnout",
+            "fix: při shodném max(lp, pp) se kola řadí sekundárně podle součtu lp + pp (vzestupně)",
+        ]
+    },
+    {
         "version": "v1.7.3",
         "entries": [
             "fix: časy kol se zobrazují správně v české časové zóně (Europe/Prague) místo UTC",

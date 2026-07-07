@@ -57,6 +57,7 @@ class RoundsPage(Page):
         can_edit_pozvanka = set()
         can_edit_startovka = set()
         can_edit_results = set()
+        can_edit_video = set()
 
         if user.is_authenticated:
             round_data = list(season_rounds_filtered.values('id', 'results_ready'))
@@ -81,13 +82,17 @@ class RoundsPage(Page):
                     can_edit_startovka.add(round_id)
                     if round_id not in results_locked and (round_id, 'startovka') in first_editors:
                         can_edit_results.add(round_id)
+                if admin or pozvanka_editor is None or pozvanka_editor == user.email:
+                    can_edit_video.add(round_id)
 
         context.update({
             'season_rounds_filtered': season_rounds_filtered,
             'selected_year': selected_year,
+            'is_admin': admin,
             'can_edit_pozvanka': can_edit_pozvanka,
             'can_edit_startovka': can_edit_startovka,
             'can_edit_results': can_edit_results,
+            'can_edit_video': can_edit_video,
         })
         return context
 
@@ -440,6 +445,7 @@ class SeasonRounds(models.Model):
         null=True, blank=True, on_delete=models.SET_NULL, related_name='+',
     )
     startovka_text = models.TextField('Startovka (seznam týmů)', blank=True, default='')
+    video_url = models.URLField('Odkaz na videa', blank=True, default='')
     results_excel = models.ForeignKey(
         'wagtaildocs.Document', verbose_name='Výsledky (Excel)',
         null=True, blank=True, on_delete=models.SET_NULL, related_name='+',
