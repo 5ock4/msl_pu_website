@@ -18,6 +18,8 @@ urlpatterns = [
     path("upload-results/<int:round_id>/", msl_about_views.upload_results, name="upload_results"),
     path("upload-pozvanka/<int:round_id>/", msl_about_views.upload_pozvanka, name="upload_pozvanka"),
     path("upload-startovka/<int:round_id>/", msl_about_views.save_startovka, name="save_startovka"),
+    path("save-video-url/<int:round_id>/", msl_about_views.save_video_url, name="save_video_url"),
+    path("toggle-results-ready/<int:round_id>/", msl_about_views.toggle_results_ready, name="toggle_results_ready"),
     path('round/<int:round_id>/<str:category>', msl_results_views.round_detail, name='round_detail'),
     path("facebook/", include("msl_news.urls")),
     path("", include("msl_auth.urls")),

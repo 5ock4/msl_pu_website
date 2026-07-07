@@ -52,6 +52,7 @@
                             <th scope="col" class="px-3">Pozvánka</th>
                             <th scope="col" class="px-3">Startovka</th>
                             <th scope="col" class="px-3">Výsledky</th>
+                            <th scope="col" class="px-3">Videa</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -63,7 +64,18 @@
                             <td class="px-3">{{ round.date_registration|date:"d.m." }}</td>
                             <td class="px-3">{{ round.categories }}</td>
                             <td class="px-3">
-                                {% if round.results_ready %}
+                                {% if is_admin %}
+                                    <form method="post" action="{% url 'toggle_results_ready' round.id %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-link p-0 border-0">
+                                            {% if round.results_ready %}
+                                                <i class="fas fa-check-circle text-success"></i>
+                                            {% else %}
+                                                <i class="fas fa-times-circle text-danger"></i>
+                                            {% endif %}
+                                        </button>
+                                    </form>
+                                {% elif round.results_ready %}
                                     <i class="fas fa-check-circle text-success"></i>
                                 {% else %}
                                     <i class="fas fa-times-circle text-danger"></i>
@@ -98,6 +110,16 @@
                                 {% if round.id in can_edit_results and round.uploads_open %}
                                     <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#uploadModal{{ round.id }}">
                                         <i class="fas fa-upload"></i>
+                                    </button>
+                                {% endif %}
+                            </td>
+                            <td class="px-3">
+                                {% if round.video_url %}
+                                    <a href="{{ round.video_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-secondary me-1"><i class="fab fa-youtube"></i></a>
+                                {% endif %}
+                                {% if round.id in can_edit_video %}
+                                    <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#videoModal{{ round.id }}">
+                                        <i class="fas fa-edit"></i>
                                     </button>
                                 {% endif %}
                             </td>
@@ -178,6 +200,36 @@
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Nahrát</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+{% endif %}
+
+<!-- Video URL edit modals - authenticated users with edit permission -->
+{% if request.user.is_authenticated %}
+    {% for round in season_rounds_filtered %}
+    {% if round.id in can_edit_video %}
+    <div class="modal fade" id="videoModal{{ round.id }}" tabindex="-1" aria-labelledby="videoModalLabel{{ round.id }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="videoModalLabel{{ round.id }}">Odkaz na videa – {{ round.round }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" action="{% url 'save_video_url' round.id %}">
+                    <div class="modal-body">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="video_url{{ round.id }}" class="form-label">Odkaz na YouTube kanál nebo playlist:</label>
+                            <input type="url" class="form-control" id="video_url{{ round.id }}" name="video_url" value="{{ round.video_url }}" maxlength="200" placeholder="https://www.youtube.com/...">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Uložit</button>
                     </div>
                 </form>
             </div>
