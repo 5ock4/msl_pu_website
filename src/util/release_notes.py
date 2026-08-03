@@ -1,5 +1,12 @@
 RELEASE_NOTES = [
     {
+        "version": "v1.8.1",
+        "entries": [
+            "feat: Ligová kola mají nový sloupec 'Delegáti' (model `SeasonRounds.delegates`) včetně zobrazení na veřejné stránce i v administraci",
+            "feat(data): doplněni delegáti pro sezónu 2026 podle aktuálního přiřazení kol",
+        ]
+    },
+    {
         "version": "v1.8.0",
         "entries": [
             "feat: odkaz na videa (YouTube) pro každé kolo — správci kola mohou vložit nebo upravit odkaz",
