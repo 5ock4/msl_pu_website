@@ -48,6 +48,7 @@
                             <th scope="col" class="px-3">Datum konání</th>
                             <th scope="col" class="px-3">Datum registrace</th>
                             <th scope="col" class="px-3">Kategorie</th>
+                            <th scope="col" class="px-3">Delegáti</th>
                             <th scope="col" class="px-3">Výsledky uveřejněny</th>
                             <th scope="col" class="px-3">Pozvánka</th>
                             <th scope="col" class="px-3">Startovka</th>
@@ -63,6 +64,7 @@
                             <td class="px-3">{{ round.datetime|date:"d.m. H:i" }}</td>
                             <td class="px-3">{{ round.date_registration|date:"d.m." }}</td>
                             <td class="px-3">{{ round.categories }}</td>
+                            <td class="px-3">{{ round.delegates|default:"-" }}</td>
                             <td class="px-3">
                                 {% if is_admin %}
                                     <form method="post" action="{% url 'toggle_results_ready' round.id %}" class="d-inline">

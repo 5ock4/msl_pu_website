@@ -49,7 +49,7 @@ class SeasonParametersPenalizationsViewSet(SnippetViewSet):
 class SeasonRoundsViewSet(SnippetViewSet):
     model = SeasonRounds
     icon = "cog"
-    list_display = ["season_year", "round", "datetime", "date_registration", "categories", "results_ready", "uploads_force_open"]
+    list_display = ["season_year", "round", "datetime", "date_registration", "categories", "delegates", "results_ready", "uploads_force_open"]
     list_filter = {"season_year": ["exact"]}
     list_per_page = 20
     menu_label = "Ligová kola"

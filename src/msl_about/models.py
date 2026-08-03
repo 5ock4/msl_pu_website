@@ -438,6 +438,7 @@ class SeasonRounds(models.Model):
     datetime = models.DateTimeField('Datum konání', blank=False)
     date_registration = models.DateField('Datum začátku registrace', blank=False)
     categories = models.CharField('Soutěžní kategorie', max_length=20, blank=False, default='Muži, Ženy')
+    delegates = models.CharField('Delegáti', max_length=100, blank=True, default='')
     results_ready = models.BooleanField('Výsledky uveřejněny', default=False)
     uploads_force_open = models.BooleanField('Nahrávání dokumentů – manuální otevření', default=False)
     pozvanka_pdf = models.ForeignKey(
